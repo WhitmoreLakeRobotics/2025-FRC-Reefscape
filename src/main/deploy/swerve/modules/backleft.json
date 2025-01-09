@@ -10,13 +10,13 @@
     "canbus": 5
   },
   "angle": {
-    "type": "sparkmax_neo",
+    "type": "sparkmax_neo550",
     "id": 0,
     "canbus": 6
   },
   "encoder": {
-    "type": "none",
-    "id": 0,
+    "type": "thrifty",
+    "id": 2,
     "canbus": null
   },
   "inverted": {
