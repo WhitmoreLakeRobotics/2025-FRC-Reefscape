@@ -13,8 +13,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Translation3d;
 import swervelib.math.Matter;
 import edu.wpi.first.math.util.Units;
-import frc.robot.subsystems.Elevator;
-
+//
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -61,6 +60,7 @@ public class Constants {
   public static class CanIds {
     // Can id 1-8 are for the drive train
     public static final int ELEVATOR_MOTOR = 9;
+    public static final int ARM_MOTOR = 10;
   }
 
 }
