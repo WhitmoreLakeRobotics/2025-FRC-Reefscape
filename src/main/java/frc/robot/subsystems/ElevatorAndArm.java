@@ -69,7 +69,8 @@ public class ElevatorAndArm extends SubsystemBase {
         armMotor.getClosedLoopController().setReference(armCmdPos,
                 ControlType.kPosition, ArmCurrentSlot, 
                 Math.abs(Math.sin(armCurPos)) * armDirection);
-
+        // Probably should add some safety logic here
+        // recommend storing new target position in a variable and then executing the safety logic here.
     }
 
     @Override
@@ -87,13 +88,20 @@ public class ElevatorAndArm extends SubsystemBase {
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
+    public void setNewPos(ElevAndArmPos tpos) {
+        // Need to insert safety logic here
+
+
+        setElvatorCmdPos(tpos.getElevPos());
+        setArmCmdPos(tpos.getArmPos());
+    }
     // expose the current position
     public double getElevatorCurPos() {
         return (elevatorCurPos);
     }
 
-    public void setElvatorCmdPos(double newPos) {
-        this.elevatorCmdPos = newPos;
+    private void setElvatorCmdPos(double newPos) {
+        elevatorCmdPos = newPos;
         if (newPos > elevatorCurPos) {
             ElevatorCurrentSlot = ELEVATOR_CLOSED_LOOP_SLOT_UP;
         } else {
@@ -108,7 +116,7 @@ public class ElevatorAndArm extends SubsystemBase {
     }
 
     // Set the new ArmCommandPos
-    public void setArmCmdPos(double newPos) {
+    private void setArmCmdPos(double newPos) {
         this.armCmdPos = newPos;
         if (newPos > armCurPos) {
             ArmCurrentSlot = ARM_CLOSED_LOOP_SLOT_UP;
@@ -177,5 +185,30 @@ public class ElevatorAndArm extends SubsystemBase {
 
         armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
+    }
+
+    public enum ElevAndArmPos {
+        PICKUP(0,0), 
+        SAFETYPOS(1,1),
+        LEVEL1(1,1), 
+        LEVEL2(2,2), 
+        LEVEL3(3,3), 
+        LEVEL4(4,4), 
+        OUTOFWAY(5,5);
+
+        private final double armPos;
+        private final double elevPos;
+
+        ElevAndArmPos(double armPos, double elevPos) {
+            this.armPos = armPos;
+            this.elevPos = elevPos;
+        }
+
+        public double getArmPos() {
+            return armPos;
+        }
+        public double getElevPos() {
+            return elevPos;
+        }
     }
 }
