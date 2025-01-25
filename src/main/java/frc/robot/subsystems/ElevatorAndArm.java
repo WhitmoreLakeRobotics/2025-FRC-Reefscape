@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import frc.robot.Constants.CanIds;
 import frc.robot.commands.*;
+import frc.utils.CommonLogic;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.config.BaseConfig;
@@ -34,7 +35,10 @@ public class ElevatorAndArm extends SubsystemBase {
     // https://www.andymark.com/products/35-series-symmetrical-hub-sprockets?via=Z2lkOi8vYW5keW1hcmsvV29ya2FyZWE6Ok5hdmlnYXRpb246OlNlYXJjaFJlc3VsdHMvJTdCJTIycSUyMiUzQSUyMjE0K3Rvb3RoK3Nwcm9ja2V0JTIyJTdE&Tooth%20Count=14%20(am-4790)&quantity=1;
     private double elevatorCurPos = 0.0;
     private double elevatorCmdPos = 0.0;
+    private final double elevatorPosTol = 0.5;
 
+
+    private final double armPosTol = 3.0;
     private double arm_gearRatio = (5 / 1);
     private double arm_gearDiameter = 1.685; // 14 tooth
     // https://www.andymark.com/products/35-series-symmetrical-hub-sprockets?via=Z2lkOi8vYW5keW1hcmsvV29ya2FyZWE6Ok5hdmlnYXRpb246OlNlYXJjaFJlc3VsdHMvJTdCJTIycSUyMiUzQSUyMjE0K3Rvb3RoK3Nwcm9ja2V0JTIyJTdE&Tooth%20Count=14%20(am-4790)&quantity=1;
@@ -92,7 +96,7 @@ public class ElevatorAndArm extends SubsystemBase {
         // Need to insert safety logic here
 
 
-        setElvatorCmdPos(tpos.getElevPos());
+        setElevatorCmdPos(tpos.getElevPos());
         setArmCmdPos(tpos.getArmPos());
     }
     // expose the current position
@@ -100,7 +104,7 @@ public class ElevatorAndArm extends SubsystemBase {
         return (elevatorCurPos);
     }
 
-    private void setElvatorCmdPos(double newPos) {
+    private void setElevatorCmdPos(double newPos) {
         elevatorCmdPos = newPos;
         if (newPos > elevatorCurPos) {
             ElevatorCurrentSlot = ELEVATOR_CLOSED_LOOP_SLOT_UP;
@@ -109,6 +113,13 @@ public class ElevatorAndArm extends SubsystemBase {
         }
         elevatorMotor.getClosedLoopController().setReference(newPos, ControlType.kPosition);
     }
+
+    public void setElevatorAndArmPos(ElevAndArmPos tpos) {
+        setElevatorCmdPos(tpos.getElevPos());
+        setArmCmdPos(tpos.getArmPos());
+    }
+
+
 
     // expose the current position
     public double getArmCurPos() {
@@ -127,6 +138,23 @@ public class ElevatorAndArm extends SubsystemBase {
                 ControlType.kPosition, ArmCurrentSlot, Math.sin(armCurPos));
     }
 
+    public boolean isElevatorAtTarget(ElevAndArmPos tpos) {
+    
+        return (CommonLogic.isInRange(getElevatorCurPos(), tpos.elevPos, elevatorPosTol));
+    }
+
+
+    public boolean isArmAtTarget(ElevAndArmPos tpos) {
+    
+        return (CommonLogic.isInRange(getArmCurPos(), tpos.armPos, armPosTol));
+    }
+
+
+    
+    public boolean isElevatorAndArmAtTarget(ElevAndArmPos tpos) {
+    
+        return (isElevatorAtTarget(tpos) && isArmAtTarget(tpos));
+    }
     // configure the elevator motor spark
     private void configElevatorMotor() {
         SparkMaxConfig config = new SparkMaxConfig();

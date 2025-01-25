@@ -61,6 +61,7 @@ public class Constants {
     // Can id 1-8 are for the drive train
     public static final int ELEVATOR_MOTOR = 9;
     public static final int ARM_MOTOR = 10;
+    public static final int CORAL_MOTOR = 11;
   }
 
 }
