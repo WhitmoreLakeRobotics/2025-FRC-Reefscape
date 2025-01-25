@@ -62,6 +62,10 @@ public class Constants {
     public static final int ELEVATOR_MOTOR = 9;
     public static final int ARM_MOTOR = 10;
     public static final int CORAL_MOTOR = 11;
+    public static final int ALGAE_PIVOT_MOTOR = 12;
+    public static final int ALGAE_INTAKE_MOTOR = 13;
+    public static final int BOTTOM_LIFT_MOTOR = 14;
+
   }
 
 }
