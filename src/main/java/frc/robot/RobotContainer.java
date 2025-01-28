@@ -154,4 +154,8 @@ public class RobotContainer {
     return m_chooser.getSelected();
   }
 
+  public void updateSmartDashboard() {
+    SmartDashboard.putNumber("Arm Targ", m_elevatorAndArm.getTargetArmPos());
+  }
+
 }

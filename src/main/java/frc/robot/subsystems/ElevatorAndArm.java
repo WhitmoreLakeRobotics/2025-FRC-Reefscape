@@ -44,7 +44,7 @@ public class ElevatorAndArm extends SubsystemBase {
     // https://www.andymark.com/products/35-series-symmetrical-hub-sprockets?via=Z2lkOi8vYW5keW1hcmsvV29ya2FyZWE6Ok5hdmlnYXRpb246OlNlYXJjaFJlc3VsdHMvJTdCJTIycSUyMiUzQSUyMjE0K3Rvb3RoK3Nwcm9ja2V0JTIyJTdE&Tooth%20Count=14%20(am-4790)&quantity=1;
 
     private double armCurPos = 0.0;
-    private double armCmdPos = 0.0;
+    private double armCmdPos = 22.0;
     private double armDirection = 0;
 
     private final ClosedLoopSlot ELEVATOR_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
@@ -66,12 +66,12 @@ public class ElevatorAndArm extends SubsystemBase {
         // This method will be called once per scheduler run
         elevatorCurPos = elevatorMotor.getEncoder().getPosition();
 
-        armCurPos = armMotor.getEncoder().getPosition();
+        armCurPos = armMotor.getAbsoluteEncoder().getPosition();
 
         // Arm direction is positive when cmdPos is greater than curPos
         armDirection = Math.signum(armCmdPos - armCurPos);
         armMotor.getClosedLoopController().setReference(armCmdPos,
-                ControlType.kPosition, ArmCurrentSlot, 
+                ControlType.kMAXMotionPositionControl, ArmCurrentSlot, 
                 Math.abs(Math.sin(armCurPos)) * armDirection);
         // Probably should add some safety logic here
         // recommend storing new target position in a variable and then executing the safety logic here.
@@ -167,12 +167,12 @@ public class ElevatorAndArm extends SubsystemBase {
         config.idleMode(IdleMode.kBrake);
         //// Down Velocity Values
         config.closedLoop.maxMotion.maxAcceleration(1, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.maxMotion.maxVelocity(5000, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.maxMotion.maxVelocity(1000, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
         config.closedLoop.pidf(.004, 0.0, 0.0, 0.5, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
 
         //// Up Velocity Values
         config.closedLoop.maxMotion.maxAcceleration(1, ELEVATOR_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.maxMotion.maxVelocity(5000, ELEVATOR_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.maxMotion.maxVelocity(1000, ELEVATOR_CLOSED_LOOP_SLOT_UP);
         config.closedLoop.pidf(.004, 0.0, 0.0, 0.5, ELEVATOR_CLOSED_LOOP_SLOT_UP);
 
         config.smartCurrentLimit(50);
@@ -187,26 +187,26 @@ public class ElevatorAndArm extends SubsystemBase {
 
         config.encoder.positionConversionFactor(Math.PI * arm_gearDiameter / arm_gearRatio);
         config.softLimit.forwardSoftLimit(100);
-        config.softLimit.forwardSoftLimitEnabled(true);
+        config.softLimit.forwardSoftLimitEnabled(false);
         config.softLimit.reverseSoftLimit(0);
-        config.softLimit.reverseSoftLimitEnabled(true);
+        config.softLimit.reverseSoftLimitEnabled(false);
         config.idleMode(IdleMode.kBrake);
         //// Down Velocity Values
         config.closedLoop.maxMotion.maxAcceleration(1, ARM_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.maxMotion.maxVelocity(5000, ARM_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.maxMotion.maxVelocity(1, ARM_CLOSED_LOOP_SLOT_DOWN);
         config.closedLoop.pidf(.004, 0.0, 0.0, 0.5, ARM_CLOSED_LOOP_SLOT_DOWN);
 
         //// Up Velocity Values
         config.closedLoop.maxMotion.maxAcceleration(1, ARM_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.maxMotion.maxVelocity(5000, ARM_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.maxMotion.maxVelocity(1, ARM_CLOSED_LOOP_SLOT_UP);
         config.closedLoop.pidf(.004, 0.0, 0.0, 0.5, ARM_CLOSED_LOOP_SLOT_UP);
 
         config.smartCurrentLimit(50);
         config.smartCurrentLimit(50, 50);
 
         AbsoluteEncoderConfig absEncConfig = new AbsoluteEncoderConfig();
-        absEncConfig.zeroOffset(0);
-        absEncConfig.inverted(true);
+        absEncConfig.zeroOffset(0.649);
+        absEncConfig.inverted(false);
         absEncConfig.positionConversionFactor(360);
 
         config.absoluteEncoder.apply(absEncConfig);
@@ -216,13 +216,13 @@ public class ElevatorAndArm extends SubsystemBase {
     }
 
     public enum ElevAndArmPos {
-        PICKUP(0,0), 
-        SAFETYPOS(1,1),
-        LEVEL1(1,1), 
-        LEVEL2(2,2), 
-        LEVEL3(3,3), 
-        LEVEL4(4,4), 
-        OUTOFWAY(5,5);
+        PICKUP(22,0), 
+        SAFETYPOS(22,1),
+        LEVEL1(22,1), 
+        LEVEL2(22,2), 
+        LEVEL3(22,3), 
+        LEVEL4(22,4), 
+        OUTOFWAY(22,5);
 
         private final double armPos;
         private final double elevPos;
@@ -238,5 +238,8 @@ public class ElevatorAndArm extends SubsystemBase {
         public double getElevPos() {
             return elevPos;
         }
+    }
+    public double getTargetArmPos() {
+        return armCmdPos;
     }
 }
