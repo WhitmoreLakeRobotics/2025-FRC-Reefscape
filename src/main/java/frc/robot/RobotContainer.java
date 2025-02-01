@@ -166,6 +166,10 @@ public class RobotContainer {
   public void updateSmartDashboard() {
     SmartDashboard.putNumber("Arm Targ", m_elevatorAndArm.getTargetArmPos());
     SmartDashboard.putNumber("Arm Cur", m_elevatorAndArm.getArmCurPos());
+    SmartDashboard.putNumber("Elev Targ", m_elevatorAndArm.getTargetElevPos());
+    SmartDashboard.putNumber("Elev Cur", m_elevatorAndArm.getElevatorCurPos());
+    SmartDashboard.putNumber("ArmCurrent",m_elevatorAndArm.getArmCurrent()); 
+    SmartDashboard.putNumber("ArmSpeed",m_elevatorAndArm.getArmSpeed());
   }
 
 }
