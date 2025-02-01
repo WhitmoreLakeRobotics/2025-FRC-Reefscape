@@ -71,7 +71,7 @@ public class ElevatorAndArm extends SubsystemBase {
         // Arm direction is positive when cmdPos is greater than curPos
         armDirection = Math.signum(armCmdPos - armCurPos);
        /* armMotor.getClosedLoopController().setReference(armCmdPos,
-                ControlType.kPosition, ArmCurrentSlot, 
+                ControlType.kMAXMotionPositionControl, ArmCurrentSlot, 
                 Math.abs(Math.sin(armCurPos)) * armDirection); */
         // Probably should add some safety logic here
         // recommend storing new target position in a variable and then executing the safety logic here.

@@ -71,7 +71,7 @@ public class RobotContainer {
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(m_driveTrain.getSwerveDrive(),
       () -> drive_Controller.getLeftY() * 1,
       () -> drive_Controller.getLeftX() * 1)
-      .withControllerRotationAxis(drive_Controller::getRightX)
+      .withControllerRotationAxis(this::getRightXInverted)
       .deadband(OperatorConstants.DEADBAND)
       .scaleTranslation(0.8)
       .allianceRelativeControl(true);
@@ -85,7 +85,10 @@ public class RobotContainer {
 
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
+  private double getRightXInverted() {
+    return this.drive_Controller.getRightX() * -1;
 
+  }
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
