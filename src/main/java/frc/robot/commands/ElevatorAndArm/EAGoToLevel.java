@@ -55,7 +55,7 @@ public class EAGoToLevel extends Command {
     public void initialize() {
         m_elevator = RobotContainer.getInstance().m_elevatorAndArm;
         addRequirements(m_elevator);
-        m_elevator.setElevatorAndArmPos(targPos);
+        m_elevator.setNewPos(targPos);;
 
 
     }
