@@ -32,30 +32,16 @@ public class AlgaeIntake extends SubsystemBase {
 
     private double pivot_gearRatio = 1.0;
     private double pivotCurPos = 0.0;
-    private double pivotCmdPos = ElevAndArmPos.START.elevPos;
-    private final double elevatorPosTol = 0.5;
+    private double pivotCmdPos = PivotPos.START.pivotAngle;
+    private final double pivotPosTol = 0.5;
 
+    private PivotPos targetPos = PivotPos.START;;
 
-    private final double armPosTol = 3.0;
-    private double arm_gearRatio = (2.89 * 3.61 * 74 / 14);
-    private double arm_gearDiameter = 1.685; // 14 tooth
-    // https://www.andymark.com/products/35-series-symmetrical-hub-sprockets?via=Z2lkOi8vYW5keW1hcmsvV29ya2FyZWE6Ok5hdmlnYXRpb246OlNlYXJjaFJlc3VsdHMvJTdCJTIycSUyMiUzQSUyMjE0K3Rvb3RoK3Nwcm9ja2V0JTIyJTdE&Tooth%20Count=14%20(am-4790)&quantity=1;
+    private final ClosedLoopSlot PIVOT_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
+    private final ClosedLoopSlot PIVOT_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
+    private ClosedLoopSlot PivotCurrentSlot = PIVOT_CLOSED_LOOP_SLOT_UP;
 
-    private double armCurPos = 0.0;
-    private double armCmdPos = ElevAndArmPos.START.armPos;
-    private double armDirection = 0;
-
-    private PivotPos targetPos = ElevAndArmPos.START;
-
-    private final ClosedLoopSlot ELEVATOR_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
-    private final ClosedLoopSlot ELEVATOR_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
-    private ClosedLoopSlot ElevatorCurrentSlot = ELEVATOR_CLOSED_LOOP_SLOT_UP;
-
-    private final ClosedLoopSlot ARM_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
-    private final ClosedLoopSlot ARM_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
-    private ClosedLoopSlot ArmCurrentSlot = ARM_CLOSED_LOOP_SLOT_UP;
-
-    public ElevatorAndArm() {
+    public AlgaeIntake() {
         configElevatorMotor();
         configArmMotor();
 
@@ -69,7 +55,6 @@ public class AlgaeIntake extends SubsystemBase {
         
 
         // Arm direction is positive when cmdPos is greater than curPos
-        armDirection = Math.signum(armCmdPos - armCurPos);
        /* armMotor.getClosedLoopController().setReference(armCmdPos,
                 ControlType.kMAXMotionPositionControl, ArmCurrentSlot, 
                 Math.abs(Math.sin(armCurPos)) * armDirection); */
@@ -85,83 +70,52 @@ public class AlgaeIntake extends SubsystemBase {
 
     public void disablePeriodic() {
         
-        elevatorMotor.getClosedLoopController().setIAccum(0);
-        armMotor.getClosedLoopController().setIAccum(0);
+        pivotMotor.getClosedLoopController().setIAccum(0);
+        intakeMotor.getClosedLoopController().setIAccum(0);
     }
 
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
-    public void setNewPos(ElevAndArmPos tpos) {
+    public void setNewPos(PivotPos tpos) {
         // Need to insert safety logic here
 
 
-        setElevatorCmdPos(tpos.getElevPos());
-        setArmCmdPos(tpos.getArmPos());
+        setPivotCmdPos(tpos.getPivotPos());
     }
     // expose the current position
-    public double getElevatorCurPos() {
-        return (elevatorCurPos);
+
+    public void setElevatorAndArmPos(PivotPos tpos) {
+        setPivotCmdPos(tpos.getPivotPos());
     }
-
-    private void setElevatorCmdPos(double newPos) {
-        elevatorCmdPos = newPos;
-        if (newPos > elevatorCurPos) {
-            ElevatorCurrentSlot = ELEVATOR_CLOSED_LOOP_SLOT_UP;
-        } else {
-            ElevatorCurrentSlot = ELEVATOR_CLOSED_LOOP_SLOT_DOWN;
-        }
-        elevatorMotor.getClosedLoopController().setReference(newPos, ControlType.kPosition);
-    }
-
-    public void setElevatorAndArmPos(ElevAndArmPos tpos) {
-        setElevatorCmdPos(tpos.getElevPos());
-        setArmCmdPos(tpos.getArmPos());
-    }
-
-
 
     // expose the current position
-    public double getArmCurPos() {
-        return (armCurPos);
+    public double getPivotCurPos() {
+        return (pivotCurPos);
     }
 
     // Set the new ArmCommandPos
-    public void setArmCmdPos(double newPos) {
-        this.armCmdPos = newPos;
-        if (newPos > armCurPos) {
-            ArmCurrentSlot = ARM_CLOSED_LOOP_SLOT_UP;
+    public void setPivotCmdPos(double newPos) {
+        this.pivotCmdPos = newPos;
+        if (newPos > pivotCurPos) {
+            PivotCurrentSlot = PIVOT_CLOSED_LOOP_SLOT_UP;
         } else {
-            ArmCurrentSlot = ARM_CLOSED_LOOP_SLOT_DOWN;
+            PivotCurrentSlot = PIVOT_CLOSED_LOOP_SLOT_DOWN;
         }
-        armMotor.getClosedLoopController().setReference(newPos,
-                ControlType.kMAXMotionPositionControl, ArmCurrentSlot); 
+        pivotMotor.getClosedLoopController().setReference(newPos,
+                ControlType.kMAXMotionPositionControl, PivotCurrentSlot); 
     }
 
-    public boolean isElevatorAtTarget(ElevAndArmPos tpos) {
+    public boolean isPivotAtTarget(PivotPos tpos) {
     
-        return (CommonLogic.isInRange(getElevatorCurPos(), tpos.elevPos, elevatorPosTol));
-    }
-
-
-    public boolean isArmAtTarget(ElevAndArmPos tpos) {
-    
-        return (CommonLogic.isInRange(getArmCurPos(), tpos.armPos, armPosTol));
-    }
-    public boolean isArmAtTarget(Double tpos) {
-    
-        return (CommonLogic.isInRange(getArmCurPos(), tpos, armPosTol));
+        return (CommonLogic.isInRange(getPivotCurPos(), tpos.getPivotPos(), pivotPosTol));
     }
 
     
-    public boolean  isElevatorAndArmAtTarget(ElevAndArmPos tpos) {
-    
-        return (isElevatorAtTarget(tpos) && isArmAtTarget(tpos));
-    }
     // configure the elevator motor spark
     private void configElevatorMotor() {
         SparkMaxConfig config = new SparkMaxConfig();
-
+/*
         config.encoder.positionConversionFactor(Math.PI * elvator_gearDiameter / elevator_gearRatio);
         config.softLimit.forwardSoftLimit(100);
         config.softLimit.forwardSoftLimitEnabled(true);
@@ -182,46 +136,47 @@ public class AlgaeIntake extends SubsystemBase {
         config.smartCurrentLimit(50, 50);
         
         elevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
+ */
     }
 
     private void configArmMotor() {
         SparkMaxConfig config = new SparkMaxConfig();
 
-        config.softLimit.forwardSoftLimit(100);
+        config.softLimit.forwardSoftLimit(0);
         config.softLimit.forwardSoftLimitEnabled(false);
         config.softLimit.reverseSoftLimit(0);
         config.softLimit.reverseSoftLimitEnabled(false);
         config.idleMode(IdleMode.kBrake);
         //// Down Velocity Values
-        config.closedLoop.maxMotion.maxAcceleration(1000, ARM_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.maxMotion.maxVelocity(1500, ARM_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.pidf(.004, 0.0, 0.0, 0.0, ARM_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.maxMotion.maxAcceleration(1000, PIVOT_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.maxMotion.maxVelocity(1500, PIVOT_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.pidf(.004, 0.0, 0.0, 0.0, PIVOT_CLOSED_LOOP_SLOT_DOWN);
 
         //// Up Velocity Values
-        config.closedLoop.maxMotion.maxAcceleration(1000, ARM_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.maxMotion.maxVelocity(1500, ARM_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.pidf(.004, 0.0, 0.0, 0.0, ARM_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.maxMotion.maxAcceleration(1000, PIVOT_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.maxMotion.maxVelocity(1500, PIVOT_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.pidf(.004, 0.0, 0.0, 0.0, PIVOT_CLOSED_LOOP_SLOT_UP);
 
         config.smartCurrentLimit(50);
         config.smartCurrentLimit(50, 50);
 
+      /* 
         AbsoluteEncoderConfig absEncConfig = new AbsoluteEncoderConfig();
         absEncConfig.zeroOffset(0.649);
         absEncConfig.inverted(false);
         absEncConfig.positionConversionFactor(360);
 
         config.absoluteEncoder.apply(absEncConfig);
-
-        armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+*/
+        pivotMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }
 
     public enum PivotPos {
-        PICKUP(22,0), 
-        START(22,0),
-        SAFETYPOS(37,0),
-        OUTOFWAY(65,50);
+        PICKUP(22), 
+        START(22),
+        SAFETYPOS(37),
+        OUTOFWAY(65);
 
         private final double pivotAngle;
 
@@ -235,7 +190,7 @@ public class AlgaeIntake extends SubsystemBase {
 
     }
     public double getTargetArmPos() {
-        return armCmdPos;
+        return pivotCmdPos;
     }
 
 }
