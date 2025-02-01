@@ -34,7 +34,7 @@ public class ElevatorAndArm extends SubsystemBase {
     private double elvator_gearDiameter = 1.685; // 14 tooth
     // https://www.andymark.com/products/35-series-symmetrical-hub-sprockets?via=Z2lkOi8vYW5keW1hcmsvV29ya2FyZWE6Ok5hdmlnYXRpb246OlNlYXJjaFJlc3VsdHMvJTdCJTIycSUyMiUzQSUyMjE0K3Rvb3RoK3Nwcm9ja2V0JTIyJTdE&Tooth%20Count=14%20(am-4790)&quantity=1;
     private double elevatorCurPos = 0.0;
-    private double elevatorCmdPos = 0.0;
+    private double elevatorCmdPos = ElevAndArmPos.START.elevPos;
     private final double elevatorPosTol = 0.5;
 
 
@@ -44,8 +44,10 @@ public class ElevatorAndArm extends SubsystemBase {
     // https://www.andymark.com/products/35-series-symmetrical-hub-sprockets?via=Z2lkOi8vYW5keW1hcmsvV29ya2FyZWE6Ok5hdmlnYXRpb246OlNlYXJjaFJlc3VsdHMvJTdCJTIycSUyMiUzQSUyMjE0K3Rvb3RoK3Nwcm9ja2V0JTIyJTdE&Tooth%20Count=14%20(am-4790)&quantity=1;
 
     private double armCurPos = 0.0;
-    private double armCmdPos = 22.0;
+    private double armCmdPos = ElevAndArmPos.START.armPos;
     private double armDirection = 0;
+
+    private ElevAndArmPos targetPos = ElevAndArmPos.START;
 
     private final ClosedLoopSlot ELEVATOR_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
     private final ClosedLoopSlot ELEVATOR_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
@@ -114,7 +116,7 @@ public class ElevatorAndArm extends SubsystemBase {
         elevatorMotor.getClosedLoopController().setReference(newPos, ControlType.kPosition);
     }
 
-    public void setElevatorAndArmPos(ElevAndArmPos tpos) {
+    private void setElevatorAndArmPos(ElevAndArmPos tpos) {
         setElevatorCmdPos(tpos.getElevPos());
         setArmCmdPos(tpos.getArmPos());
     }
@@ -219,12 +221,13 @@ public class ElevatorAndArm extends SubsystemBase {
 
     public enum ElevAndArmPos {
         PICKUP(22,0), 
-        SAFETYPOS(22,1),
-        LEVEL1(40,1), 
-        LEVEL2(22,2), 
-        LEVEL3(22,3), 
-        LEVEL4(22,4), 
-        OUTOFWAY(22,5);
+        START(22,0),
+        SAFETYPOS(37,0),
+        LEVEL1(45,10), 
+        LEVEL2(50,20), 
+        LEVEL3(55,30), 
+        LEVEL4(60,40), 
+        OUTOFWAY(65,50);
 
         private final double armPos;
         private final double elevPos;
