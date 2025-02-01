@@ -37,7 +37,7 @@ public class ElevatorAndArm extends SubsystemBase {
     private double elevatorCmdPos = ElevAndArmPos.START.elevPos;
     private final double elevatorPosTol = 0.5;
 
-    private final double armPosTol = 3.0;
+    private final double armPosTol = 0.75;
     private double arm_gearRatio = (2.89 * 3.61 * 74 / 14);
     private double arm_gearDiameter = 1.685; // 14 tooth
     // https://www.andymark.com/products/35-series-symmetrical-hub-sprockets?via=Z2lkOi8vYW5keW1hcmsvV29ya2FyZWE6Ok5hdmlnYXRpb246OlNlYXJjaFJlc3VsdHMvJTdCJTIycSUyMiUzQSUyMjE0K3Rvb3RoK3Nwcm9ja2V0JTIyJTdE&Tooth%20Count=14%20(am-4790)&quantity=1;
@@ -196,6 +196,8 @@ public class ElevatorAndArm extends SubsystemBase {
         config.closedLoop.maxMotion.allowedClosedLoopError(elevatorPosTol, ELEVATOR_CLOSED_LOOP_SLOT_UP);
         config.closedLoop.pidf(.004, 0.0, 0.0, 0.0, ELEVATOR_CLOSED_LOOP_SLOT_UP);
 
+        config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+
         config.smartCurrentLimit(50);
         config.smartCurrentLimit(50, 50);
 
@@ -207,23 +209,24 @@ public class ElevatorAndArm extends SubsystemBase {
 
         SparkMaxConfig config = new SparkMaxConfig();
 
-        config.softLimit.forwardSoftLimit(100);
-        config.softLimit.forwardSoftLimitEnabled(false);
-        config.softLimit.reverseSoftLimit(0);
-        config.softLimit.reverseSoftLimitEnabled(false);
+        config.softLimit.forwardSoftLimit(ElevAndArmPos.OUTOFWAY.armPos);
+        config.softLimit.forwardSoftLimitEnabled(true);
+        config.softLimit.reverseSoftLimit(ElevAndArmPos.PICKUP.armPos);
+        config.softLimit.reverseSoftLimitEnabled(true);
         config.idleMode(IdleMode.kBrake);
         config.inverted(false);
         //// Down Velocity Values
-        config.closedLoop.maxMotion.maxAcceleration(1000, ARM_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.maxMotion.maxVelocity(1500, ARM_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.maxMotion.maxAcceleration(25, ARM_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.maxMotion.maxVelocity(1000, ARM_CLOSED_LOOP_SLOT_DOWN);
         config.closedLoop.maxMotion.allowedClosedLoopError(armPosTol, ARM_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.pidf(.004, 0.0, 0.0, 0.0, ARM_CLOSED_LOOP_SLOT_DOWN);
-
+        config.closedLoop.pidf(.008, 0.0, 0.0, 0.0, ARM_CLOSED_LOOP_SLOT_DOWN);
         //// Up Velocity Values
-        config.closedLoop.maxMotion.maxAcceleration(1000, ARM_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.maxMotion.maxVelocity(1500, ARM_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.maxMotion.maxAcceleration(25, ARM_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.maxMotion.maxVelocity(1000, ARM_CLOSED_LOOP_SLOT_UP);
         config.closedLoop.maxMotion.allowedClosedLoopError(armPosTol, ARM_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.pidf(.004, 0.0, 0.0, 0.0, ARM_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.pidf(.02, 0.0, 0.0, 0.0, ARM_CLOSED_LOOP_SLOT_UP);
+
+        config.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
 
         config.smartCurrentLimit(50);
         config.smartCurrentLimit(50, 50);
@@ -232,7 +235,7 @@ public class ElevatorAndArm extends SubsystemBase {
         absEncConfig.zeroOffset(0.649);
         absEncConfig.inverted(false);
         absEncConfig.positionConversionFactor(360);
-
+        
         config.absoluteEncoder.apply(absEncConfig);
 
         armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -242,12 +245,12 @@ public class ElevatorAndArm extends SubsystemBase {
     public enum ElevAndArmPos {
         PICKUP(22, 0),
         START(22, 0),
-        SAFETYPOS(37, 0),
-        LEVEL1(45, 10),
-        LEVEL2(50, 20),
-        LEVEL3(55, 30),
-        LEVEL4(60, 40),
-        OUTOFWAY(65, 50);
+        SAFETYPOS(40, 0),
+        LEVEL1(65, 0),
+        LEVEL2(85, 0),
+        LEVEL3(128, 0),
+        LEVEL4(170, 0),
+        OUTOFWAY(175, 0);
 
         private final double armPos;
         private final double elevPos;
