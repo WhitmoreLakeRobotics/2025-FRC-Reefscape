@@ -37,7 +37,6 @@ public class ElevatorAndArm extends SubsystemBase {
     private double elevatorCmdPos = ElevAndArmPos.START.elevPos;
     private final double elevatorPosTol = 0.5;
 
-
     private final double armPosTol = 3.0;
     private double arm_gearRatio = (2.89 * 3.61 * 74 / 14);
     private double arm_gearDiameter = 1.685; // 14 tooth
@@ -62,7 +61,7 @@ public class ElevatorAndArm extends SubsystemBase {
         configArmMotor();
 
     }
- 
+
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
@@ -72,11 +71,31 @@ public class ElevatorAndArm extends SubsystemBase {
 
         // Arm direction is positive when cmdPos is greater than curPos
         armDirection = Math.signum(armCmdPos - armCurPos);
-       /* armMotor.getClosedLoopController().setReference(armCmdPos,
-                ControlType.kMAXMotionPositionControl, ArmCurrentSlot, 
-                Math.abs(Math.sin(armCurPos)) * armDirection); */
+        /*
+         * armMotor.getClosedLoopController().setReference(armCmdPos,
+         * ControlType.kMAXMotionPositionControl, ArmCurrentSlot,
+         * Math.abs(Math.sin(armCurPos)) * armDirection);
+         */
         // Probably should add some safety logic here
-        // recommend storing new target position in a variable and then executing the safety logic here.
+        // recommend storing new target position in a variable and then executing the
+        // safety logic here.
+       
+       
+       /*  if (!isElevatorAndArmAtTarget(targetPos)) {
+            if (targetPos.armPos > ElevAndArmPos.SAFETYPOS.armPos && armCurPos < ElevAndArmPos.SAFETYPOS.armPos) {
+                setArmCmdPos(ElevAndArmPos.SAFETYPOS.armPos);
+            } else if (targetPos.armPos > ElevAndArmPos.SAFETYPOS.armPos
+                    && isArmAtTarget(ElevAndArmPos.SAFETYPOS)) {
+                setElevatorAndArmPos(targetPos);
+
+            } else if (targetPos.armPos < ElevAndArmPos.SAFETYPOS.armPos
+                    && elevatorCurPos > ElevAndArmPos.SAFETYPOS.elevPos) {
+                setElevatorAndArmPos(ElevAndArmPos.SAFETYPOS);
+            } else if (targetPos.armPos < ElevAndArmPos.SAFETYPOS.armPos
+                    && isElevatorAtTarget(ElevAndArmPos.SAFETYPOS)) {
+                setElevatorAndArmPos(targetPos);
+            }
+        }*/
     }
 
     @Override
@@ -86,7 +105,7 @@ public class ElevatorAndArm extends SubsystemBase {
     }
 
     public void disablePeriodic() {
-        
+
         elevatorMotor.getClosedLoopController().setIAccum(0);
         armMotor.getClosedLoopController().setIAccum(0);
     }
@@ -96,11 +115,12 @@ public class ElevatorAndArm extends SubsystemBase {
 
     public void setNewPos(ElevAndArmPos tpos) {
         // Need to insert safety logic here
-
+        targetPos = tpos;
 
         setElevatorCmdPos(tpos.getElevPos());
         setArmCmdPos(tpos.getArmPos());
     }
+
     // expose the current position
     public double getElevatorCurPos() {
         return (elevatorCurPos);
@@ -121,8 +141,6 @@ public class ElevatorAndArm extends SubsystemBase {
         setArmCmdPos(tpos.getArmPos());
     }
 
-
-
     // expose the current position
     public double getArmCurPos() {
         return (armCurPos);
@@ -137,29 +155,24 @@ public class ElevatorAndArm extends SubsystemBase {
             ArmCurrentSlot = ARM_CLOSED_LOOP_SLOT_DOWN;
         }
         armMotor.getClosedLoopController().setReference(newPos,
-                ControlType.kMAXMotionPositionControl, ArmCurrentSlot); 
+                ControlType.kPosition, ArmCurrentSlot);
     }
 
     public boolean isElevatorAtTarget(ElevAndArmPos tpos) {
-    
+
         return (CommonLogic.isInRange(getElevatorCurPos(), tpos.elevPos, elevatorPosTol));
     }
 
-
     public boolean isArmAtTarget(ElevAndArmPos tpos) {
-    
+
         return (CommonLogic.isInRange(getArmCurPos(), tpos.armPos, armPosTol));
     }
-    public boolean isArmAtTarget(Double tpos) {
-    
-        return (CommonLogic.isInRange(getArmCurPos(), tpos, armPosTol));
-    }
 
-    
-    public boolean  isElevatorAndArmAtTarget(ElevAndArmPos tpos) {
-    
+    public boolean isElevatorAndArmAtTarget(ElevAndArmPos tpos) {
+
         return (isElevatorAtTarget(tpos) && isArmAtTarget(tpos));
     }
+
     // configure the elevator motor spark
     private void configElevatorMotor() {
         SparkMaxConfig config = new SparkMaxConfig();
@@ -170,24 +183,28 @@ public class ElevatorAndArm extends SubsystemBase {
         config.softLimit.reverseSoftLimit(0);
         config.softLimit.reverseSoftLimitEnabled(true);
         config.idleMode(IdleMode.kBrake);
+        config.inverted(false);
         //// Down Velocity Values
         config.closedLoop.maxMotion.maxAcceleration(1, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
         config.closedLoop.maxMotion.maxVelocity(1000, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.maxMotion.allowedClosedLoopError(elevatorPosTol, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
         config.closedLoop.pidf(.004, 0.0, 0.0, 0.0, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
 
         //// Up Velocity Values
         config.closedLoop.maxMotion.maxAcceleration(1, ELEVATOR_CLOSED_LOOP_SLOT_UP);
         config.closedLoop.maxMotion.maxVelocity(1000, ELEVATOR_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.maxMotion.allowedClosedLoopError(elevatorPosTol, ELEVATOR_CLOSED_LOOP_SLOT_UP);
         config.closedLoop.pidf(.004, 0.0, 0.0, 0.0, ELEVATOR_CLOSED_LOOP_SLOT_UP);
 
         config.smartCurrentLimit(50);
         config.smartCurrentLimit(50, 50);
-        
+
         elevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }
 
     private void configArmMotor() {
+
         SparkMaxConfig config = new SparkMaxConfig();
 
         config.softLimit.forwardSoftLimit(100);
@@ -195,19 +212,22 @@ public class ElevatorAndArm extends SubsystemBase {
         config.softLimit.reverseSoftLimit(0);
         config.softLimit.reverseSoftLimitEnabled(false);
         config.idleMode(IdleMode.kBrake);
+        config.inverted(false);
         //// Down Velocity Values
         config.closedLoop.maxMotion.maxAcceleration(1000, ARM_CLOSED_LOOP_SLOT_DOWN);
         config.closedLoop.maxMotion.maxVelocity(1500, ARM_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.maxMotion.allowedClosedLoopError(armPosTol, ARM_CLOSED_LOOP_SLOT_DOWN);
         config.closedLoop.pidf(.004, 0.0, 0.0, 0.0, ARM_CLOSED_LOOP_SLOT_DOWN);
 
         //// Up Velocity Values
         config.closedLoop.maxMotion.maxAcceleration(1000, ARM_CLOSED_LOOP_SLOT_UP);
         config.closedLoop.maxMotion.maxVelocity(1500, ARM_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.maxMotion.allowedClosedLoopError(armPosTol, ARM_CLOSED_LOOP_SLOT_UP);
         config.closedLoop.pidf(.004, 0.0, 0.0, 0.0, ARM_CLOSED_LOOP_SLOT_UP);
 
         config.smartCurrentLimit(50);
         config.smartCurrentLimit(50, 50);
-
+        
         AbsoluteEncoderConfig absEncConfig = new AbsoluteEncoderConfig();
         absEncConfig.zeroOffset(0.649);
         absEncConfig.inverted(false);
@@ -220,14 +240,14 @@ public class ElevatorAndArm extends SubsystemBase {
     }
 
     public enum ElevAndArmPos {
-        PICKUP(22,0), 
-        START(22,0),
-        SAFETYPOS(37,0),
-        LEVEL1(45,10), 
-        LEVEL2(50,20), 
-        LEVEL3(55,30), 
-        LEVEL4(60,40), 
-        OUTOFWAY(65,50);
+        PICKUP(22, 0),
+        START(22, 0),
+        SAFETYPOS(37, 0),
+        LEVEL1(45, 10),
+        LEVEL2(50, 20),
+        LEVEL3(55, 30),
+        LEVEL4(60, 40),
+        OUTOFWAY(65, 50);
 
         private final double armPos;
         private final double elevPos;
@@ -240,10 +260,12 @@ public class ElevatorAndArm extends SubsystemBase {
         public double getArmPos() {
             return armPos;
         }
+
         public double getElevPos() {
             return elevPos;
         }
     }
+
     public double getTargetArmPos() {
         return armCmdPos;
     }

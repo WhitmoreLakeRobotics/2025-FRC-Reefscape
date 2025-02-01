@@ -42,8 +42,8 @@ public class AlgaeIntake extends SubsystemBase {
     private ClosedLoopSlot PivotCurrentSlot = PIVOT_CLOSED_LOOP_SLOT_UP;
 
     public AlgaeIntake() {
-        configElevatorMotor();
-        configArmMotor();
+        configIntakeMotor();
+        configPivotMotor();
 
     }
  
@@ -113,7 +113,7 @@ public class AlgaeIntake extends SubsystemBase {
 
     
     // configure the elevator motor spark
-    private void configElevatorMotor() {
+    private void configIntakeMotor() {
         SparkMaxConfig config = new SparkMaxConfig();
 /*
         config.encoder.positionConversionFactor(Math.PI * elvator_gearDiameter / elevator_gearRatio);
@@ -139,7 +139,7 @@ public class AlgaeIntake extends SubsystemBase {
  */
     }
 
-    private void configArmMotor() {
+    private void configPivotMotor() {
         SparkMaxConfig config = new SparkMaxConfig();
 
         config.softLimit.forwardSoftLimit(0);
