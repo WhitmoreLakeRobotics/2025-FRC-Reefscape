@@ -31,7 +31,7 @@ public class ElevatorAndArm extends SubsystemBase {
     private SparkMax armMotor = new SparkMax(CanIds.ARM_MOTOR, MotorType.kBrushless);
 
     private double elevator_gearRatio = (5 / 1);
-    private double elvator_gearDiameter = 1.685; // 14 tooth
+    private double elevator_gearDiameter = 1.685; // 14 tooth
     // https://www.andymark.com/products/35-series-symmetrical-hub-sprockets?via=Z2lkOi8vYW5keW1hcmsvV29ya2FyZWE6Ok5hdmlnYXRpb246OlNlYXJjaFJlc3VsdHMvJTdCJTIycSUyMiUzQSUyMjE0K3Rvb3RoK3Nwcm9ja2V0JTIyJTdE&Tooth%20Count=14%20(am-4790)&quantity=1;
     private double elevatorCurPos = 0.0;
     private double elevatorCmdPos = ElevAndArmPos.START.elevPos;
@@ -177,7 +177,7 @@ public class ElevatorAndArm extends SubsystemBase {
     private void configElevatorMotor() {
         SparkMaxConfig config = new SparkMaxConfig();
 
-        config.encoder.positionConversionFactor(Math.PI * elvator_gearDiameter / elevator_gearRatio);
+        config.encoder.positionConversionFactor(Math.PI * elevator_gearDiameter / elevator_gearRatio);
         config.softLimit.forwardSoftLimit(100);
         config.softLimit.forwardSoftLimitEnabled(true);
         config.softLimit.reverseSoftLimit(0);
@@ -198,7 +198,7 @@ public class ElevatorAndArm extends SubsystemBase {
 
         config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
-        config.smartCurrentLimit(50);
+      //  config.smartCurrentLimit(50);
         config.smartCurrentLimit(50, 50);
 
         elevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -228,7 +228,7 @@ public class ElevatorAndArm extends SubsystemBase {
 
         config.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
 
-        config.smartCurrentLimit(50);
+      //  config.smartCurrentLimit(50);
         config.smartCurrentLimit(50, 50);
         
         AbsoluteEncoderConfig absEncConfig = new AbsoluteEncoderConfig();

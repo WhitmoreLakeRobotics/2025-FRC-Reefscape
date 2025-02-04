@@ -58,6 +58,7 @@ public class RobotContainer {
   public final Sensors m_sensors = new Sensors();
   public final DriveTrain m_driveTrain = new DriveTrain(new File(Filesystem.getDeployDirectory(), "swerve"));
   public final ElevatorAndArm m_elevatorAndArm = new ElevatorAndArm();
+  public final AlgaeIntake m_AlgaeIntake = new AlgaeIntake();
   // Joysticks
   private final XboxController Articulator = new XboxController(1);
   private final XboxController drive_Controller = new XboxController(0);
