@@ -125,6 +125,9 @@ public class ElevatorAndArm extends SubsystemBase {
     public double getElevatorCurPos() {
         return (elevatorCurPos);
     }
+    public double getElevatorTargPos() {
+        return (elevatorCmdPos);
+    }
 
     private void setElevatorCmdPos(double newPos) {
         elevatorCmdPos = newPos;
@@ -177,24 +180,25 @@ public class ElevatorAndArm extends SubsystemBase {
     private void configElevatorMotor() {
         SparkMaxConfig config = new SparkMaxConfig();
 
-        config.encoder.positionConversionFactor(Math.PI * elevator_gearDiameter / elevator_gearRatio);
+        //config.encoder.positionConversionFactor(Math.PI * elevator_gearDiameter / elevator_gearRatio);
+        config.encoder.positionConversionFactor(1);
+        config.inverted(true);
         config.softLimit.forwardSoftLimit(100);
         config.softLimit.forwardSoftLimitEnabled(true);
         config.softLimit.reverseSoftLimit(0);
         config.softLimit.reverseSoftLimitEnabled(true);
         config.idleMode(IdleMode.kBrake);
-        config.inverted(false);
         //// Down Velocity Values
-        config.closedLoop.maxMotion.maxAcceleration(1, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.maxMotion.maxAcceleration(2500, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
         config.closedLoop.maxMotion.maxVelocity(1000, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
         config.closedLoop.maxMotion.allowedClosedLoopError(elevatorPosTol, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
         config.closedLoop.pidf(.004, 0.0, 0.0, 0.0, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
 
         //// Up Velocity Values
-        config.closedLoop.maxMotion.maxAcceleration(1, ELEVATOR_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.maxMotion.maxAcceleration(2500, ELEVATOR_CLOSED_LOOP_SLOT_UP);
         config.closedLoop.maxMotion.maxVelocity(1000, ELEVATOR_CLOSED_LOOP_SLOT_UP);
         config.closedLoop.maxMotion.allowedClosedLoopError(elevatorPosTol, ELEVATOR_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.pidf(.004, 0.0, 0.0, 0.0, ELEVATOR_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.pidf(0.1, 0.0, 0.0, 0.0, ELEVATOR_CLOSED_LOOP_SLOT_UP);
 
         config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
@@ -246,10 +250,11 @@ public class ElevatorAndArm extends SubsystemBase {
         PICKUP(22, 0),
         START(22, 0),
         SAFETYPOS(40, 0),
-        LEVEL1(65, 0),
-        LEVEL2(85, 0),
-        LEVEL3(128, 0),
-        LEVEL4(170, 0),
+        LEVEL1(65, 5),
+        LEVEL2(85, 10),
+        LEVEL3(128, 15),
+        LEVEL4(170, 17),
+        ELVMAX(40, 20.5),
         OUTOFWAY(175, 0);
 
         private final double armPos;
@@ -272,5 +277,6 @@ public class ElevatorAndArm extends SubsystemBase {
     public double getTargetArmPos() {
         return armCmdPos;
     }
+    
 
 }

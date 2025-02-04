@@ -30,7 +30,8 @@ public class AlgaeIntake extends SubsystemBase {
     private SparkMax pivotMotor = new SparkMax(CanIds.ALGAE_PIVOT_MOTOR, MotorType.kBrushless);
     private SparkMax intakeMotor = new SparkMax(CanIds.ALGAE_INTAKE_MOTOR, MotorType.kBrushless);
 
-    private double pivot_gearRatio = 1.0;
+    private double pivot_gearRatio = (2.89 * 5.23 * 5.23);
+    private double pivotShaftDiameter = 0.75;
     private double pivotCurPos = 0.0;
     private double pivotCmdPos = PivotPos.START.pivotAngle;
     private final double pivotPosTol = 0.5;
@@ -47,20 +48,21 @@ public class AlgaeIntake extends SubsystemBase {
         configPivotMotor();
 
     }
- 
+
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
         pivotCurPos = pivotMotor.getEncoder().getPosition();
 
-        
-
         // Arm direction is positive when cmdPos is greater than curPos
-       /* armMotor.getClosedLoopController().setReference(armCmdPos,
-                ControlType.kMAXMotionPositionControl, ArmCurrentSlot, 
-                Math.abs(Math.sin(armCurPos)) * armDirection); */
+        /*
+         * armMotor.getClosedLoopController().setReference(armCmdPos,
+         * ControlType.kMAXMotionPositionControl, ArmCurrentSlot,
+         * Math.abs(Math.sin(armCurPos)) * armDirection);
+         */
         // Probably should add some safety logic here
-        // recommend storing new target position in a variable and then executing the safety logic here.
+        // recommend storing new target position in a variable and then executing the
+        // safety logic here.
     }
 
     @Override
@@ -70,7 +72,7 @@ public class AlgaeIntake extends SubsystemBase {
     }
 
     public void disablePeriodic() {
-        
+
         pivotMotor.getClosedLoopController().setIAccum(0);
         intakeMotor.getClosedLoopController().setIAccum(0);
     }
@@ -81,21 +83,20 @@ public class AlgaeIntake extends SubsystemBase {
     public void setNewPos(PivotPos tpos) {
         // Need to insert safety logic here
         targetPos = tpos;
-        if(tpos == PivotPos.STOP){
+        if (tpos == PivotPos.STOP) {
             setPivotCmdPos(getPivotCurPos());
         } else {
             setPivotCmdPos(tpos.getPivotPos());
         }
 
-        
     }
-    
-public void setIntakeStatus(Status status) {
-    intakeStatus = status;
 
-    intakeMotor.set(status.getIntakeSpeed());
+    public void setIntakeStatus(Status status) {
+        intakeStatus = status;
 
-}
+        intakeMotor.set(status.getIntakeSpeed());
+
+    }
 
     // expose the current position
     public double getPivotCurPos() {
@@ -111,22 +112,21 @@ public void setIntakeStatus(Status status) {
             PivotCurrentSlot = PIVOT_CLOSED_LOOP_SLOT_DOWN;
         }
         pivotMotor.getClosedLoopController().setReference(newPos,
-                ControlType.kMAXMotionPositionControl, PivotCurrentSlot); 
+                ControlType.kMAXMotionPositionControl, PivotCurrentSlot);
     }
 
     public boolean isPivotAtTarget(PivotPos tpos) {
-    
+
         return (CommonLogic.isInRange(getPivotCurPos(), tpos.getPivotPos(), pivotPosTol));
     }
 
-    
     // configure the elevator motor spark
     private void configIntakeMotor() {
         SparkMaxConfig config = new SparkMaxConfig();
 
-       // config.softLimit.forwardSoftLimit(100);
+        // config.softLimit.forwardSoftLimit(100);
         config.softLimit.forwardSoftLimitEnabled(false);
-      //  config.softLimit.reverseSoftLimit(0);
+        // config.softLimit.reverseSoftLimit(0);
         config.softLimit.reverseSoftLimitEnabled(false);
         config.idleMode(IdleMode.kBrake);
         //// Down Velocity Values
@@ -139,17 +139,18 @@ public void setIntakeStatus(Status status) {
         config.closedLoop.maxMotion.maxVelocity(1000);
         config.closedLoop.pidf(.004, 0.0, 0.0, 0.0);
 
-      //  config.smartCurrentLimit(50);
+        // config.smartCurrentLimit(50);
         config.smartCurrentLimit(50, 50);
-        
+
         intakeMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
- 
+
     }
 
     private void configPivotMotor() {
+        
         SparkMaxConfig config = new SparkMaxConfig();
-        config.encoder.positionConversionFactor(Math.PI * pivot_gearRatio);
-
+        config.encoder.positionConversionFactor(1);
+        config.inverted(false);
         config.softLimit.forwardSoftLimit(0);
         config.softLimit.forwardSoftLimitEnabled(false);
         config.softLimit.reverseSoftLimit(0);
@@ -165,26 +166,26 @@ public void setIntakeStatus(Status status) {
         config.closedLoop.maxMotion.maxVelocity(1500, PIVOT_CLOSED_LOOP_SLOT_UP);
         config.closedLoop.pidf(.004, 0.0, 0.0, 0.0, PIVOT_CLOSED_LOOP_SLOT_UP);
 
-      //  config.smartCurrentLimit(50);
+        // config.smartCurrentLimit(50);
         config.smartCurrentLimit(50, 50);
 
-      /* 
-        AbsoluteEncoderConfig absEncConfig = new AbsoluteEncoderConfig();
-        absEncConfig.zeroOffset(0.649);
-        absEncConfig.inverted(false);
-        absEncConfig.positionConversionFactor(360);
-
-        config.absoluteEncoder.apply(absEncConfig);
-*/
+        /*
+         * AbsoluteEncoderConfig absEncConfig = new AbsoluteEncoderConfig();
+         * absEncConfig.zeroOffset(0.649);
+         * absEncConfig.inverted(false);
+         * absEncConfig.positionConversionFactor(360);
+         * 
+         * config.absoluteEncoder.apply(absEncConfig);
+         */
         pivotMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }
 
     public enum Status {
-        IN (0.25),
-        OUT (-0.25),
-        HOLDING (0),
-        STOPPED (0);
+        IN(0.25),
+        OUT(-0.25),
+        HOLDING(0),
+        STOPPED(0);
 
         private final double IntakeSpeed;
 
@@ -197,26 +198,25 @@ public void setIntakeStatus(Status status) {
         }
     }
 
-
     public enum PivotPos {
         START(0),
-        PICKUP(0), 
-        SAFETYPOS(0),
-        OUTOFWAY(0),
+        PICKUP(270),
+        ALLTHEWAYOUT(380),
+        OUTOFWAY(70),
         STOP(0);
-        
 
         private final double pivotAngle;
 
         PivotPos(double pivotAngle) {
             this.pivotAngle = pivotAngle;
-                }
+        }
 
         public double getPivotPos() {
             return pivotAngle;
         }
 
     }
+
     public double getTargetArmPos() {
         return pivotCmdPos;
     }
