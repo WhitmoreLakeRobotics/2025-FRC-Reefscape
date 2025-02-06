@@ -35,7 +35,7 @@ public class ElevatorAndArm extends SubsystemBase {
     // https://www.andymark.com/products/35-series-symmetrical-hub-sprockets?via=Z2lkOi8vYW5keW1hcmsvV29ya2FyZWE6Ok5hdmlnYXRpb246OlNlYXJjaFJlc3VsdHMvJTdCJTIycSUyMiUzQSUyMjE0K3Rvb3RoK3Nwcm9ja2V0JTIyJTdE&Tooth%20Count=14%20(am-4790)&quantity=1;
     private double elevatorCurPos = 0.0;
     private double elevatorCmdPos = ElevAndArmPos.START.elevPos;
-    private final double elevatorPosTol = 0.5;
+    private final double elevatorPosTol = 0.25;
 
     private final double armPosTol = 0.75;
     private double arm_gearRatio = (2.89 * 3.61 * 74 / 14);
@@ -80,8 +80,8 @@ public class ElevatorAndArm extends SubsystemBase {
         // recommend storing new target position in a variable and then executing the
         // safety logic here.
        
-       
-       /*  if (!isElevatorAndArmAtTarget(targetPos)) {
+       /*
+         if (!isElevatorAndArmAtTarget(targetPos)) {
             if (targetPos.armPos > ElevAndArmPos.SAFETYPOS.armPos && armCurPos < ElevAndArmPos.SAFETYPOS.armPos) {
                 setArmCmdPos(ElevAndArmPos.SAFETYPOS.armPos);
             } else if (targetPos.armPos > ElevAndArmPos.SAFETYPOS.armPos
@@ -95,7 +95,7 @@ public class ElevatorAndArm extends SubsystemBase {
                     && isElevatorAtTarget(ElevAndArmPos.SAFETYPOS)) {
                 setElevatorAndArmPos(targetPos);
             }
-        }*/
+        } */
     }
 
     @Override
@@ -136,7 +136,7 @@ public class ElevatorAndArm extends SubsystemBase {
         } else {
             ElevatorCurrentSlot = ELEVATOR_CLOSED_LOOP_SLOT_DOWN;
         }
-        elevatorMotor.getClosedLoopController().setReference(newPos, ControlType.kPosition);
+        elevatorMotor.getClosedLoopController().setReference(newPos, ControlType.kPosition, ElevatorCurrentSlot);
     }
 
     private void setElevatorAndArmPos(ElevAndArmPos tpos) {
@@ -150,7 +150,7 @@ public class ElevatorAndArm extends SubsystemBase {
     }
 
     // Set the new ArmCommandPos
-    public void setArmCmdPos(double newPos) {
+    private void setArmCmdPos(double newPos) {
         this.armCmdPos = newPos;
         if (newPos > armCurPos) {
             ArmCurrentSlot = ARM_CLOSED_LOOP_SLOT_UP;
@@ -183,7 +183,7 @@ public class ElevatorAndArm extends SubsystemBase {
         //config.encoder.positionConversionFactor(Math.PI * elevator_gearDiameter / elevator_gearRatio);
         config.encoder.positionConversionFactor(1);
         config.inverted(true);
-        config.softLimit.forwardSoftLimit(100);
+        config.softLimit.forwardSoftLimit(65);
         config.softLimit.forwardSoftLimitEnabled(true);
         config.softLimit.reverseSoftLimit(0);
         config.softLimit.reverseSoftLimitEnabled(true);
@@ -192,18 +192,18 @@ public class ElevatorAndArm extends SubsystemBase {
         config.closedLoop.maxMotion.maxAcceleration(2500, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
         config.closedLoop.maxMotion.maxVelocity(1000, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
         config.closedLoop.maxMotion.allowedClosedLoopError(elevatorPosTol, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.pidf(.004, 0.0, 0.0, 0.0, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.pidf(.05, 0.0, 0.0, 0.0, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
 
         //// Up Velocity Values
-        config.closedLoop.maxMotion.maxAcceleration(2500, ELEVATOR_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.maxMotion.maxVelocity(1000, ELEVATOR_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.maxMotion.maxAcceleration(5000, ELEVATOR_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.maxMotion.maxVelocity(2000, ELEVATOR_CLOSED_LOOP_SLOT_UP);
         config.closedLoop.maxMotion.allowedClosedLoopError(elevatorPosTol, ELEVATOR_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.pidf(0.1, 0.0, 0.0, 0.0, ELEVATOR_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.pidf(0.4, 0.0, 0.0, 0.0, ELEVATOR_CLOSED_LOOP_SLOT_UP);
 
         config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
       //  config.smartCurrentLimit(50);
-        config.smartCurrentLimit(50, 50);
+        config.smartCurrentLimit(35, 50);
 
         elevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -250,10 +250,10 @@ public class ElevatorAndArm extends SubsystemBase {
         PICKUP(22, 0),
         START(22, 0),
         SAFETYPOS(40, 0),
-        LEVEL1(65, 5),
-        LEVEL2(85, 10),
-        LEVEL3(128, 15),
-        LEVEL4(170, 17),
+        LEVEL1(65, 10),
+        LEVEL2(85, 20),
+        LEVEL3(128, 40),
+        LEVEL4(170, 60),
         ELVMAX(40, 20.5),
         OUTOFWAY(175, 0);
 
