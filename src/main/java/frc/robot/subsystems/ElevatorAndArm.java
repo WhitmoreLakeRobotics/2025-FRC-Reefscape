@@ -29,6 +29,7 @@ public class ElevatorAndArm extends SubsystemBase {
     // Elevator Config Parameters
     private SparkMax elevatorMotor = new SparkMax(CanIds.ELEVATOR_MOTOR, MotorType.kBrushless);
     private SparkMax armMotor = new SparkMax(CanIds.ARM_MOTOR, MotorType.kBrushless);
+    private SparkMax coralMotor = new SparkMax(CanIds.CORAL_MOTOR, MotorType.kBrushless);
 
     private double elevator_gearRatio = (5 / 1);
     private double elevator_gearDiameter = 1.685; // 14 tooth
@@ -46,6 +47,11 @@ public class ElevatorAndArm extends SubsystemBase {
     private double armCmdPos = ElevAndArmPos.START.armPos;
     private double armDirection = 0;
 
+    private final double coralPosTol = 1.0;
+    private double CoralCurPos = 0.0;
+    private double CoralCmdPos = ElevAndArmPos.START.armPos;
+    private double CoralDirection = 0;
+
     private ElevAndArmPos targetPos = ElevAndArmPos.START;
 
     private final ClosedLoopSlot ELEVATOR_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
@@ -56,9 +62,16 @@ public class ElevatorAndArm extends SubsystemBase {
     private final ClosedLoopSlot ARM_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
     private ClosedLoopSlot ArmCurrentSlot = ARM_CLOSED_LOOP_SLOT_UP;
 
+    private final ClosedLoopSlot CORAL_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
+    private final ClosedLoopSlot CORAL_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
+    private ClosedLoopSlot CoralCurrentSlot = CORAL_CLOSED_LOOP_SLOT_UP;
+
+
+
     public ElevatorAndArm() {
         configElevatorMotor();
         configArmMotor();
+        configCoralMotor();
 
     }
 
@@ -66,7 +79,7 @@ public class ElevatorAndArm extends SubsystemBase {
     public void periodic() {
         // This method will be called once per scheduler run
         elevatorCurPos = elevatorMotor.getEncoder().getPosition();
-
+        CoralCurPos = coralMotor.getEncoder().getPosition();
         armCurPos = armMotor.getAbsoluteEncoder().getPosition();
 
         // Arm direction is positive when cmdPos is greater than curPos
@@ -80,10 +93,10 @@ public class ElevatorAndArm extends SubsystemBase {
         // recommend storing new target position in a variable and then executing the
         // safety logic here.
        
-       /*
+       
          if (!isElevatorAndArmAtTarget(targetPos)) {
             if (targetPos.armPos > ElevAndArmPos.SAFETYPOS.armPos && armCurPos < ElevAndArmPos.SAFETYPOS.armPos) {
-                setArmCmdPos(ElevAndArmPos.SAFETYPOS.armPos);
+                setElevatorAndArmPos(ElevAndArmPos.SAFETYPOS);
             } else if (targetPos.armPos > ElevAndArmPos.SAFETYPOS.armPos
                     && isArmAtTarget(ElevAndArmPos.SAFETYPOS)) {
                 setElevatorAndArmPos(targetPos);
@@ -95,7 +108,7 @@ public class ElevatorAndArm extends SubsystemBase {
                     && isElevatorAtTarget(ElevAndArmPos.SAFETYPOS)) {
                 setElevatorAndArmPos(targetPos);
             }
-        } */
+        } 
     }
 
     @Override
@@ -119,6 +132,7 @@ public class ElevatorAndArm extends SubsystemBase {
 
         setElevatorCmdPos(tpos.getElevPos());
         setArmCmdPos(tpos.getArmPos());
+        setCoralCmdPos(tpos.coralPos);
     }
 
     // expose the current position
@@ -128,6 +142,14 @@ public class ElevatorAndArm extends SubsystemBase {
     public double getElevatorTargPos() {
         return (elevatorCmdPos);
     }
+
+    public ElevAndArmPos getTargetPos() {
+        return targetPos;
+    }
+    public double getCoralCmdPos() {
+        return (CoralCmdPos);
+    }
+
 
     private void setElevatorCmdPos(double newPos) {
         elevatorCmdPos = newPos;
@@ -149,6 +171,10 @@ public class ElevatorAndArm extends SubsystemBase {
         return (armCurPos);
     }
 
+    public double getCoralCurPos() {
+        return (CoralCurPos);
+    }
+
     // Set the new ArmCommandPos
     private void setArmCmdPos(double newPos) {
         this.armCmdPos = newPos;
@@ -161,19 +187,39 @@ public class ElevatorAndArm extends SubsystemBase {
                 ControlType.kPosition, ArmCurrentSlot);
     }
 
+    private void setCoralCmdPos(double newPos) {
+        this.CoralCmdPos = newPos;
+        if (newPos > CoralCurPos) {
+            CoralCurrentSlot = CORAL_CLOSED_LOOP_SLOT_UP;
+        } else {
+            CoralCurrentSlot = CORAL_CLOSED_LOOP_SLOT_DOWN;
+        }
+        coralMotor.getClosedLoopController().setReference(newPos, 
+            ControlType.kPosition, CoralCurrentSlot);
+    }
+
+
     public boolean isElevatorAtTarget(ElevAndArmPos tpos) {
 
-        return (CommonLogic.isInRange(getElevatorCurPos(), tpos.elevPos, elevatorPosTol));
+        return (CommonLogic.isInRange(getElevatorCurPos(), tpos.elevPos, 2*elevatorPosTol));
     }
 
     public boolean isArmAtTarget(ElevAndArmPos tpos) {
 
-        return (CommonLogic.isInRange(getArmCurPos(), tpos.armPos, armPosTol));
+        return (CommonLogic.isInRange(getArmCurPos(), tpos.armPos,2*armPosTol));
+    }
+    public boolean isCoralAtTarget(ElevAndArmPos tpos) {
+
+        return (CommonLogic.isInRange(CoralCurPos, CoralCmdPos, 2*coralPosTol));
     }
 
     public boolean isElevatorAndArmAtTarget(ElevAndArmPos tpos) {
 
-        return (isElevatorAtTarget(tpos) && isArmAtTarget(tpos));
+        return (isElevatorAtTarget(tpos) && isArmAtTarget(tpos) && isCoralAtTarget(tpos));
+    }
+
+    public void resetCoralEncoder(){
+        coralMotor.getEncoder().setPosition(0);
     }
 
     // configure the elevator motor spark
@@ -245,24 +291,64 @@ public class ElevatorAndArm extends SubsystemBase {
         armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }
+    private void configCoralMotor() {
+        SparkMaxConfig config = new SparkMaxConfig();
 
+        //config.encoder.positionConversionFactor(Math.PI * elevator_gearDiameter / elevator_gearRatio);
+        config.encoder.positionConversionFactor(1);
+        config.inverted(false);
+        config.softLimit.forwardSoftLimit(65);
+        config.softLimit.forwardSoftLimitEnabled(false);
+        config.softLimit.reverseSoftLimit(0);
+        config.softLimit.reverseSoftLimitEnabled(false);
+        config.idleMode(IdleMode.kBrake);
+        //// Down Velocity Values
+        config.closedLoop.maxMotion.maxAcceleration(2500, CORAL_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.maxMotion.maxVelocity(1000, CORAL_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.maxMotion.allowedClosedLoopError(coralPosTol, CORAL_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.pidf(.005, 0.0, 0.0, 0.0, CORAL_CLOSED_LOOP_SLOT_DOWN);
+
+        //// Up Velocity Values
+        config.closedLoop.maxMotion.maxAcceleration(5000, CORAL_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.maxMotion.maxVelocity(2000, CORAL_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.maxMotion.allowedClosedLoopError(coralPosTol, CORAL_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.pidf(0.004, 0.0, 0.0, 0.0, CORAL_CLOSED_LOOP_SLOT_UP);
+
+        config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+
+      //  config.smartCurrentLimit(50);
+        config.smartCurrentLimit(35, 35);
+
+        coralMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    }
     public enum ElevAndArmPos {
-        PICKUP(22, 0),
-        START(22, 0),
-        SAFETYPOS(40, 0),
-        LEVEL1(65, 10),
-        LEVEL2(85, 20),
-        LEVEL3(128, 40),
-        LEVEL4(170, 60),
-        ELVMAX(40, 20.5),
-        OUTOFWAY(175, 0);
+        PICKUP(22, 0,0),
+        START(22, 0,0),
+        SAFETYPOS(40, 0,0),
+        LEVEL1(65, 10,0),
+        LEVEL1DEL(65,10,0),
+        LEVEL2(85, 20,0),
+        LEVEL2DEL(85,20,0),
+        LEVEL3(128, 40,0),
+        LEVEL3DEL(128,40,0),
+        LEVEL4(170, 60,0),
+        LEVEL4DEL(170,60,0),
+        ELVMAX(40, 20.5,0),
+        OUTOFWAY(175, 0,0),
+        CIntake(22,0,-10),
+        CHold(22,0,0),
+        CDeliver(22,0,-10),
+        CReturn(22,0,100);
 
         private final double armPos;
         private final double elevPos;
+        private final double coralPos;
 
-        ElevAndArmPos(double armPos, double elevPos) {
+        ElevAndArmPos(double armPos, double elevPos,double coralPos) {
             this.armPos = armPos;
             this.elevPos = elevPos;
+            this.coralPos = coralPos;
         }
 
         public double getArmPos() {
@@ -271,6 +357,9 @@ public class ElevatorAndArm extends SubsystemBase {
 
         public double getElevPos() {
             return elevPos;
+        }
+        public double getCoralPos(){
+            return coralPos;
         }
     }
 
