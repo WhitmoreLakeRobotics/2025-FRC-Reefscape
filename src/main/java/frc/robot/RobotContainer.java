@@ -178,8 +178,8 @@ public class RobotContainer {
                 Trigger RBumper_Drive = new Trigger(drive_Controller.rightBumper());
                 Trigger Rtrigger_Drive = new Trigger(drive_Controller.rightTrigger(0.8));
 
-                Trigger LJC_Drive = new Trigger(drive_Controller.leftStick());
-                Trigger RJC_Drive = new Trigger(drive_Controller.rightStick());
+               // Trigger LJC_Drive = new Trigger(drive_Controller.leftStick());
+               // Trigger RJC_Drive = new Trigger(drive_Controller.rightStick());
 
 
     Trigger DDown_Artic = new Trigger(Articulator.povDown());
