@@ -58,6 +58,7 @@ public class CmdCoralReset extends Command {
 
         if(m_elevator.getTargetPos() == ElevAndArmPos.CIntake){
          m_elevator.resetCoralEncoder();
+
         }
         
 

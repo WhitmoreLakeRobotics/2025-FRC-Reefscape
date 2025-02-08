@@ -27,14 +27,14 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 
 public class AlgaeIntake extends SubsystemBase {
     // Elevator Config Parameters
-    public SparkMax pivotMotor = new SparkMax(CanIds.ALGAE_PIVOT_MOTOR, MotorType.kBrushless);
+    private SparkMax pivotMotor = new SparkMax(CanIds.ALGAE_PIVOT_MOTOR, MotorType.kBrushless);
     private SparkMax intakeMotor = new SparkMax(CanIds.ALGAE_INTAKE_MOTOR, MotorType.kBrushless);
 
     private double pivot_gearRatio = (2.89 * 5.23 * 5.23);
     private double pivotShaftDiameter = 0.75;
     private double pivotCurPos = 0.0;
     private double pivotCmdPos = PivotPos.START.pivotAngle;
-    private final double pivotPosTol = 3;
+    private final double pivotPosTol = 5;
 
     private PivotPos targetPos = PivotPos.START;
     private Status intakeStatus = Status.STOPPED;
@@ -112,7 +112,7 @@ public class AlgaeIntake extends SubsystemBase {
             PivotCurrentSlot = PIVOT_CLOSED_LOOP_SLOT_DOWN;
         }
         pivotMotor.getClosedLoopController().setReference(newPos,
-                ControlType.kMAXMotionPositionControl, PivotCurrentSlot);
+                ControlType.kPosition, PivotCurrentSlot);
     }
 
     public boolean isPivotAtTarget(PivotPos tpos) {
@@ -151,23 +151,23 @@ public class AlgaeIntake extends SubsystemBase {
         SparkMaxConfig config = new SparkMaxConfig();
         config.encoder.positionConversionFactor(1);
         config.inverted(true);
-        config.softLimit.forwardSoftLimit(0);
-        config.softLimit.forwardSoftLimitEnabled(false);
-        config.softLimit.reverseSoftLimit(0);
-        config.softLimit.reverseSoftLimitEnabled(false);
+        config.softLimit.forwardSoftLimit(130);
+        config.softLimit.forwardSoftLimitEnabled(true);
+        config.softLimit.reverseSoftLimit(-1);
+        config.softLimit.reverseSoftLimitEnabled(true);
         config.idleMode(IdleMode.kBrake);
-        //// Down Velocity Values
-        config.closedLoop.maxMotion.maxAcceleration(20000, PIVOT_CLOSED_LOOP_SLOT_DOWN);
+        //// In Velocity Values
+        config.closedLoop.maxMotion.maxAcceleration(30000, PIVOT_CLOSED_LOOP_SLOT_DOWN);
         config.closedLoop.maxMotion.maxVelocity(6000, PIVOT_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.pidf(.17, 0.0, 0.0, 0.0, PIVOT_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.pidf(.04, 0.0, 0.0004, 0.0, PIVOT_CLOSED_LOOP_SLOT_DOWN);
 
-        //// Up Velocity Values
-        config.closedLoop.maxMotion.maxAcceleration(20000, PIVOT_CLOSED_LOOP_SLOT_UP);
+        //// Out Velocity Values
+        config.closedLoop.maxMotion.maxAcceleration(30000, PIVOT_CLOSED_LOOP_SLOT_UP);
         config.closedLoop.maxMotion.maxVelocity(6000, PIVOT_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.pidf(.17, 0.0, 0.0, 0.0, PIVOT_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.pidf(.08, 0.0, 0.0008, 0.0, PIVOT_CLOSED_LOOP_SLOT_UP);
 
         // config.smartCurrentLimit(50);
-        config.smartCurrentLimit(50, 50);
+        config.smartCurrentLimit(30, 30);
 
         /*
          * AbsoluteEncoderConfig absEncConfig = new AbsoluteEncoderConfig();
@@ -200,10 +200,10 @@ public class AlgaeIntake extends SubsystemBase {
 
     public enum PivotPos {
         START(0),
-        PICKUP(270),
+        PICKUP(123),
         HELD(100),
-        ALLTHEWAYOUT(380),
-        OUTOFWAY(70),
+        ALLTHEWAYOUT(28),
+        CORALPICKUP(35),
         STOP(0);
 
         private final double pivotAngle;
@@ -218,7 +218,7 @@ public class AlgaeIntake extends SubsystemBase {
 
     }
 
-    public double getTargetArmPos() {
+    public double getTargetPivPos() {
         return pivotCmdPos;
     }
 

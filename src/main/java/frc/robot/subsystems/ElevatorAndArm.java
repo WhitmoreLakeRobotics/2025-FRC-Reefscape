@@ -29,7 +29,7 @@ public class ElevatorAndArm extends SubsystemBase {
     // Elevator Config Parameters
     private SparkMax elevatorMotor = new SparkMax(CanIds.ELEVATOR_MOTOR, MotorType.kBrushless);
     private SparkMax armMotor = new SparkMax(CanIds.ARM_MOTOR, MotorType.kBrushless);
-    private SparkMax coralMotor = new SparkMax(CanIds.CORAL_MOTOR, MotorType.kBrushless);
+    public SparkMax coralMotor = new SparkMax(CanIds.CORAL_MOTOR, MotorType.kBrushless);
 
     private double elevator_gearRatio = (5 / 1);
     private double elevator_gearDiameter = 1.685; // 14 tooth
@@ -47,9 +47,9 @@ public class ElevatorAndArm extends SubsystemBase {
     private double armCmdPos = ElevAndArmPos.START.armPos;
     private double armDirection = 0;
 
-    private final double coralPosTol = 1.0;
+    private final double coralPosTol = .05;
     private double CoralCurPos = 0.0;
-    private double CoralCmdPos = ElevAndArmPos.START.armPos;
+    private double CoralCmdPos = ElevAndArmPos.START.coralPos;
     private double CoralDirection = 0;
 
     private ElevAndArmPos targetPos = ElevAndArmPos.START;
@@ -98,11 +98,11 @@ public class ElevatorAndArm extends SubsystemBase {
             if (targetPos.armPos > ElevAndArmPos.SAFETYPOS.armPos && armCurPos < ElevAndArmPos.SAFETYPOS.armPos) {
                 setElevatorAndArmPos(ElevAndArmPos.SAFETYPOS);
             } else if (targetPos.armPos > ElevAndArmPos.SAFETYPOS.armPos
-                    && isArmAtTarget(ElevAndArmPos.SAFETYPOS)) {
+                    && (isArmAtTarget(ElevAndArmPos.SAFETYPOS)) || (armCurPos > ElevAndArmPos.SAFETYPOS.armPos)) {
                 setElevatorAndArmPos(targetPos);
 
             } else if (targetPos.armPos < ElevAndArmPos.SAFETYPOS.armPos
-                    && elevatorCurPos > ElevAndArmPos.SAFETYPOS.elevPos) {
+                    && !isElevatorAtTarget(ElevAndArmPos.SAFETYPOS)) {
                 setElevatorAndArmPos(ElevAndArmPos.SAFETYPOS);
             } else if (targetPos.armPos < ElevAndArmPos.SAFETYPOS.armPos
                     && isElevatorAtTarget(ElevAndArmPos.SAFETYPOS)) {
@@ -132,7 +132,7 @@ public class ElevatorAndArm extends SubsystemBase {
 
         setElevatorCmdPos(tpos.getElevPos());
         setArmCmdPos(tpos.getArmPos());
-        setCoralCmdPos(tpos.coralPos);
+        setCoralCmdPos(tpos.getCoralPos());
     }
 
     // expose the current position
@@ -164,6 +164,7 @@ public class ElevatorAndArm extends SubsystemBase {
     private void setElevatorAndArmPos(ElevAndArmPos tpos) {
         setElevatorCmdPos(tpos.getElevPos());
         setArmCmdPos(tpos.getArmPos());
+        setCoralCmdPos(tpos.getCoralPos());
     }
 
     // expose the current position
@@ -206,7 +207,7 @@ public class ElevatorAndArm extends SubsystemBase {
 
     public boolean isArmAtTarget(ElevAndArmPos tpos) {
 
-        return (CommonLogic.isInRange(getArmCurPos(), tpos.armPos,2*armPosTol));
+        return (CommonLogic.isInRange(getArmCurPos(), tpos.armPos,3*armPosTol));
     }
     public boolean isCoralAtTarget(ElevAndArmPos tpos) {
 
@@ -219,7 +220,10 @@ public class ElevatorAndArm extends SubsystemBase {
     }
 
     public void resetCoralEncoder(){
+        coralMotor.getClosedLoopController().setReference(getCoralCurPos(),ControlType.kPosition,CoralCurrentSlot);
         coralMotor.getEncoder().setPosition(0);
+        coralMotor.getClosedLoopController().setReference(0,ControlType.kPosition,CoralCurrentSlot);
+        targetPos = ElevAndArmPos.CHold;
     }
 
     // configure the elevator motor spark
@@ -235,6 +239,8 @@ public class ElevatorAndArm extends SubsystemBase {
         config.softLimit.reverseSoftLimitEnabled(true);
         config.idleMode(IdleMode.kBrake);
         //// Down Velocity Values
+
+
         config.closedLoop.maxMotion.maxAcceleration(2500, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
         config.closedLoop.maxMotion.maxVelocity(1000, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
         config.closedLoop.maxMotion.allowedClosedLoopError(elevatorPosTol, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
@@ -296,23 +302,25 @@ public class ElevatorAndArm extends SubsystemBase {
 
         //config.encoder.positionConversionFactor(Math.PI * elevator_gearDiameter / elevator_gearRatio);
         config.encoder.positionConversionFactor(1);
-        config.inverted(false);
+        config.inverted(true);
         config.softLimit.forwardSoftLimit(65);
         config.softLimit.forwardSoftLimitEnabled(false);
         config.softLimit.reverseSoftLimit(0);
         config.softLimit.reverseSoftLimitEnabled(false);
         config.idleMode(IdleMode.kBrake);
-        //// Down Velocity Values
-        config.closedLoop.maxMotion.maxAcceleration(2500, CORAL_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.maxMotion.maxVelocity(1000, CORAL_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.maxOutput(0.4);
+        config.closedLoop.minOutput(-0.4);
+        //// Down / outVelocity Values
+        config.closedLoop.maxMotion.maxAcceleration(5000, CORAL_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.maxMotion.maxVelocity(2000, CORAL_CLOSED_LOOP_SLOT_DOWN);
         config.closedLoop.maxMotion.allowedClosedLoopError(coralPosTol, CORAL_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.pidf(.005, 0.0, 0.0, 0.0, CORAL_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.pidf(.4, 0.0, 0.0, 0.0, CORAL_CLOSED_LOOP_SLOT_DOWN);
 
-        //// Up Velocity Values
+        //// Up / in Velocity Values
         config.closedLoop.maxMotion.maxAcceleration(5000, CORAL_CLOSED_LOOP_SLOT_UP);
         config.closedLoop.maxMotion.maxVelocity(2000, CORAL_CLOSED_LOOP_SLOT_UP);
         config.closedLoop.maxMotion.allowedClosedLoopError(coralPosTol, CORAL_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.pidf(0.004, 0.0, 0.0, 0.0, CORAL_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.pidf(0.4, 0.0, 0.0, 0.0, CORAL_CLOSED_LOOP_SLOT_UP);
 
         config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
@@ -336,10 +344,11 @@ public class ElevatorAndArm extends SubsystemBase {
         LEVEL4DEL(170,60,0),
         ELVMAX(40, 20.5,0),
         OUTOFWAY(175, 0,0),
-        CIntake(22,0,-10),
+        CIntake(22,0,3),  //was 2.5
         CHold(22,0,0),
-        CDeliver(22,0,-10),
-        CReturn(22,0,100);
+    
+        CDeliver(22,0,-2),
+        CReturn(22,0,2);
 
         private final double armPos;
         private final double elevPos;
