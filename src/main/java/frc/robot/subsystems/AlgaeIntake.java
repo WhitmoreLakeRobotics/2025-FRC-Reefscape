@@ -103,6 +103,11 @@ public class AlgaeIntake extends SubsystemBase {
         return (pivotCurPos);
     }
 
+    public void StopIntake(){
+        setIntakeStatus(Status.STOPPED);
+        setPivotCmdPos(pivotCurPos);
+    }
+
     // Set the new ArmCommandPos
     private void setPivotCmdPos(double newPos) {
         this.pivotCmdPos = newPos;
@@ -182,8 +187,8 @@ public class AlgaeIntake extends SubsystemBase {
     }
 
     public enum Status {
-        IN(0.40),
-        OUT(-0.40),
+        IN(0.50),
+        OUT(-0.50),
         HOLDING(0),
         STOPPED(0);
 

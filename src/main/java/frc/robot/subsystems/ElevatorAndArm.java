@@ -65,6 +65,8 @@ public class ElevatorAndArm extends SubsystemBase {
     private final ClosedLoopSlot CORAL_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
     private final ClosedLoopSlot CORAL_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
     private ClosedLoopSlot CoralCurrentSlot = CORAL_CLOSED_LOOP_SLOT_UP;
+    
+    private boolean isBrake = true;
 
 
 
@@ -165,6 +167,24 @@ public class ElevatorAndArm extends SubsystemBase {
         setElevatorCmdPos(tpos.getElevPos());
         setArmCmdPos(tpos.getArmPos());
         setCoralCmdPos(tpos.getCoralPos());
+    }
+
+    public void stopCmd(){
+
+        setElevatorCmdPos(elevatorCurPos);
+        setArmCmdPos(armCurPos);
+        setCoralCmdPos(CoralCurPos);
+
+    }
+
+    public void coastCmd(){
+
+        if(isBrake){
+
+          //make all moters coast else make them brake.
+
+        }
+
     }
 
     // expose the current position
