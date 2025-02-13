@@ -66,7 +66,7 @@ public class EAGoToLevel extends Command {
         bDone = m_elevator.isElevatorAndArmAtTarget(targPos);
 
         if (bDone == true) {
-            end(true);
+            end(false);
         }
     }
 
