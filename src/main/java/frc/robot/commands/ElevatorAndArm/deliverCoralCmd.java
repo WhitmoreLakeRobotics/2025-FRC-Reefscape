@@ -30,8 +30,8 @@ public class deliverCoralCmd extends Command {
 
     private ElevatorAndArm m_elevator;
     private boolean bDone = false;
-    ElevAndArmPos curPos = m_elevator.getTargetPos();
-    ElevAndArmPos newPos = ElevAndArmPos.LEVEL1DEL;
+  //  ElevAndArmPos curPos = m_elevator.getTargetPos();
+  //  ElevAndArmPos newPos = ElevAndArmPos.LEVEL1DEL;
 
     
     public deliverCoralCmd() {
@@ -39,35 +39,36 @@ public class deliverCoralCmd extends Command {
     }
         private void deliverCoral() {
      
-             switch (curPos) {
-                 case LEVEL1:
-                    newPos = ElevAndArmPos.LEVEL1DEL;
-                     m_elevator.setNewPos(newPos);
-                     break;
-                     case LEVEL2:
-                    newPos = ElevAndArmPos.LEVEL2DEL;
-                     m_elevator.setNewPos(newPos);
-                     break;
-                     case LEVEL3:
-                     newPos = ElevAndArmPos.LEVEL3DEL;
-                     m_elevator.setNewPos(newPos);
-                     break;
-                     case LEVEL4:
-                     newPos = ElevAndArmPos.LEVEL4DEL;
-                     m_elevator.setNewPos(newPos);
-                     break;
-                     default: 
-                     //DO NOTHING
-                     break;
-             }
+
     }
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {
+    public void initialize() { /*
+        switch (curPos) {
+            case LEVEL1:
+               newPos = ElevAndArmPos.LEVEL1DEL;
+                m_elevator.setNewPos(newPos);
+                break;
+                case LEVEL2:
+               newPos = ElevAndArmPos.LEVEL2DEL;
+                m_elevator.setNewPos(newPos);
+                break;
+                case LEVEL3:
+                newPos = ElevAndArmPos.LEVEL3DEL;
+                m_elevator.setNewPos(newPos);
+                break;
+                case LEVEL4:
+                newPos = ElevAndArmPos.LEVEL4DEL;
+                m_elevator.setNewPos(newPos);
+                break;
+                default: 
+                //DO NOTHING
+                break;
+        } */
         m_elevator = RobotContainer.getInstance().m_elevatorAndArm;
         addRequirements(m_elevator);
-        deliverCoral();
+      //  deliverCoral();
 
 
     }
@@ -75,7 +76,7 @@ public class deliverCoralCmd extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        bDone = m_elevator.isElevatorAndArmAtTarget(newPos);
+      //  bDone = m_elevator.isElevatorAndArmAtTarget(newPos);
 
         if (bDone == true) {
             end(true);
