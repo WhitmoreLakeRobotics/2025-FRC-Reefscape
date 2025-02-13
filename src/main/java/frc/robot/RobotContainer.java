@@ -67,6 +67,7 @@ public class RobotContainer {
   public final DriveTrain m_driveTrain = new DriveTrain(new File(Filesystem.getDeployDirectory(), "swerve"));
   public final ElevatorAndArm m_elevatorAndArm = new ElevatorAndArm();
   public final AlgaeIntake m_AlgaeIntake = new AlgaeIntake();
+  public final Wipers m_Wipers = new Wipers();
   // Joysticks
   private final CommandXboxController Articulator = new CommandXboxController(1);
   private final CommandXboxController drive_Controller = new CommandXboxController(0);
