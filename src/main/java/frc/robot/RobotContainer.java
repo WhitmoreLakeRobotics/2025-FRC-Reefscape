@@ -15,10 +15,12 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.ElevatorAndArm.*;
+import frc.robot.commands.Wipers.WipersCmd;
 import frc.robot.commands.algae.AlgaeCmd;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.AlgaeIntake.PivotPos;
 import frc.robot.subsystems.ElevatorAndArm.ElevAndArmPos;
+import frc.robot.subsystems.Wipers.Wiper;
 import swervelib.SwerveInputStream;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -218,11 +220,13 @@ public class RobotContainer {
                 Trigger Start_Artic = new Trigger(Articulator.start()); //USE FOR ARTICULATION COAST.
 
                 Trigger LBumper_Artic = new Trigger(Articulator.leftBumper()); //USE FOR GUIDE RAIL.
+                LBumper_Artic.onTrue(new WipersCmd(Wiper.LEFT));
                 Trigger Ltrigger_Artic = new Trigger(Articulator.leftTrigger(0.8));
                 Ltrigger_Artic.onTrue(new AlgaeCmd(AlgaeIntake.PivotPos.HELD,AlgaeIntake.Status.OUT));
                 Ltrigger_Artic.onFalse(new AlgaeCmd(AlgaeIntake.PivotPos.CORALPICKUP,AlgaeIntake.Status.STOPPED));
 
                 Trigger RBumper_Artic = new Trigger(Articulator.rightBumper()); //USE FOR GUIDE RAIL.
+                RBumper_Artic.onTrue(new WipersCmd(Wiper.RIGHT));
                 Trigger Rtrigger_Artic = new Trigger(Articulator.rightTrigger(0.8)); //USE FOR CORAL DELIVERY.
 
                 Trigger LJC_Artic = new Trigger(Articulator.leftStick()); //USE FOR CLIMB ENABLE.

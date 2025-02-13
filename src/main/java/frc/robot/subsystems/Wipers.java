@@ -165,11 +165,7 @@ public class Wipers extends SubsystemBase {
 
     public enum GuidePos {
         START(0),
-        PICKUP(105),
-        HELD(82),
-        ALLTHEWAYOUT(123),
-        CORALPICKUP(35),
-        STOP(0);
+        OUT(105);
 
         private final double guideAngle;
 
