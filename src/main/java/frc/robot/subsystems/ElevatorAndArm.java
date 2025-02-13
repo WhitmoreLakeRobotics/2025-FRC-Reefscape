@@ -5,6 +5,7 @@ import frc.robot.commands.*;
 import frc.utils.CommonLogic;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import com.revrobotics.config.BaseConfig;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig;
@@ -127,6 +128,8 @@ public class ElevatorAndArm extends SubsystemBase {
 
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
+
+
 
     public void setNewPos(ElevAndArmPos tpos) {
         // Need to insert safety logic here
