@@ -98,7 +98,7 @@ public class ElevatorAndArm extends SubsystemBase {
        
        
          if (!isElevatorAndArmAtTarget(targetPos)) {
-            if (targetPos.armPos > ElevAndArmPos.SAFETYPOS.armPos && armCurPos < ElevAndArmPos.SAFETYPOS.armPos) {
+            if ((targetPos.armPos > ElevAndArmPos.SAFETYPOS.armPos) && (armCurPos < ElevAndArmPos.SAFETYPOS.armPos)) {
                 setElevatorAndArmPos(ElevAndArmPos.SAFETYPOS);
             } else if ((targetPos.armPos > ElevAndArmPos.SAFETYPOS.armPos)
                     && ((isArmAtTarget(ElevAndArmPos.SAFETYPOS)) || (armCurPos > ElevAndArmPos.SAFETYPOS.armPos))) {
@@ -359,13 +359,13 @@ public class ElevatorAndArm extends SubsystemBase {
         SAFETYPOS(40, 0,0),
         LEVEL1(51, 11,0),
         LEVEL1DEL(51,11,3.5),
-        LEVEL2(51, 38,0),
-        LEVEL2DEL(51,38,3.5),
+        LEVEL2(51, 37,0),
+        LEVEL2DEL(51,37,3.5),
         LEVEL3(166, 7,0),
         LEVEL3DEL(166,7,-3.5),
-        LEVEL4(166, 64,(((166-22)/360)*3.14*3.5)*-3),
-        LEVEL4DEL(166,64,-3.5),
-        ELVMAX(40, 65.9,0),
+        LEVEL4(162, 62,0),
+        LEVEL4DEL(162,62,-3.5),
+        ELVMAX(40, 20.5,0),
         OUTOFWAY(175, 0,0),
         CIntake(22,0,3),  //was 2.5
         CHold(22,0,0),
