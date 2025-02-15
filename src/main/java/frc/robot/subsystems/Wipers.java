@@ -115,12 +115,12 @@ public class Wipers extends SubsystemBase {
 
     public boolean isLeftAtTarget(GuidePos tpos) {
 
-        return (CommonLogic.isInRange(getLeftCurPos(), tpos.getGuidePos(), pivotPosTol));
+        return (CommonLogic.isInRange(getLeftCurPos(), tpos.getGuidePos(), 2*pivotPosTol));
     }
 
     public boolean isRightAtTarget(GuidePos tpos) {
 
-        return (CommonLogic.isInRange(getRightCurPos(), tpos.getGuidePos(), pivotPosTol));
+        return (CommonLogic.isInRange(getRightCurPos(), tpos.getGuidePos(), 2*pivotPosTol));
     }
 
     // configure the elevator motor spark
@@ -145,7 +145,7 @@ public class Wipers extends SubsystemBase {
     
 
         // config.smartCurrentLimit(50);
-        config.smartCurrentLimit(30, 30);
+        config.smartCurrentLimit(10, 20);
 
         /*
          * AbsoluteEncoderConfig absEncConfig = new AbsoluteEncoderConfig();

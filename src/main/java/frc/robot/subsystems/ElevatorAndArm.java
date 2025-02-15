@@ -6,6 +6,8 @@ import frc.utils.CommonLogic;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import java.util.EventListener;
+
 import com.revrobotics.config.BaseConfig;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig;
@@ -39,7 +41,7 @@ public class ElevatorAndArm extends SubsystemBase {
     private double elevatorCmdPos = ElevAndArmPos.START.elevPos;
     private final double elevatorPosTol = 0.25;
 
-    private final double armPosTol = 0.75;
+    private final double armPosTol = 0.25;
     private double arm_gearRatio = (2.89 * 3.61 * 74 / 14);
     private double arm_gearDiameter = 1.685; // 14 tooth
     // https://www.andymark.com/products/35-series-symmetrical-hub-sprockets?via=Z2lkOi8vYW5keW1hcmsvV29ya2FyZWE6Ok5hdmlnYXRpb246OlNlYXJjaFJlc3VsdHMvJTdCJTIycSUyMiUzQSUyMjE0K3Rvb3RoK3Nwcm9ja2V0JTIyJTdE&Tooth%20Count=14%20(am-4790)&quantity=1;
@@ -48,7 +50,7 @@ public class ElevatorAndArm extends SubsystemBase {
     private double armCmdPos = ElevAndArmPos.START.armPos;
     private double armDirection = 0;
 
-    private final double coralPosTol = .05;
+    private final double coralPosTol = 0.05;
     private double CoralCurPos = 0.0;
     private double CoralCmdPos = ElevAndArmPos.START.coralPos;
     private double CoralDirection = 0;
@@ -96,11 +98,15 @@ public class ElevatorAndArm extends SubsystemBase {
         // recommend storing new target position in a variable and then executing the
         // safety logic here.
        
-       
+       if(isArmAtTarget(ElevAndArmPos.SAFETYPOS)){
+       // System.err.print("Safety logic" + (targetPos.armPos > ElevAndArmPos.SAFETYPOS.armPos)+ " "+ isArmAtTarget(ElevAndArmPos.SAFETYPOS) + " "  + (armCurPos > ElevAndArmPos.SAFETYPOS.armPos)) ;
+       }
+
          if (!isElevatorAndArmAtTarget(targetPos)) {
             if ((targetPos.armPos > ElevAndArmPos.SAFETYPOS.armPos) && (armCurPos < ElevAndArmPos.SAFETYPOS.armPos)) {
                 setElevatorAndArmPos(ElevAndArmPos.SAFETYPOS);
             } else if ((targetPos.armPos > ElevAndArmPos.SAFETYPOS.armPos) && ((isArmAtTarget(ElevAndArmPos.SAFETYPOS)) || (armCurPos > ElevAndArmPos.SAFETYPOS.armPos))) {
+                
                 setElevatorAndArmPos(targetPos);
 
             } else if (targetPos.armPos < ElevAndArmPos.SAFETYPOS.armPos
@@ -229,7 +235,7 @@ public class ElevatorAndArm extends SubsystemBase {
 
     public boolean isArmAtTarget(ElevAndArmPos tpos) {
 
-        return (CommonLogic.isInRange(getArmCurPos(), tpos.armPos,3*armPosTol));
+        return (CommonLogic.isInRange(armCurPos, tpos.armPos,3));
     }
     public boolean isCoralAtTarget(ElevAndArmPos tpos) {
 
@@ -250,124 +256,129 @@ public class ElevatorAndArm extends SubsystemBase {
 
     // configure the elevator motor spark
     private void configElevatorMotor() {
-        SparkMaxConfig config = new SparkMaxConfig();
+        SparkMaxConfig Elevconfig = new SparkMaxConfig();
 
         //config.encoder.positionConversionFactor(Math.PI * elevator_gearDiameter / elevator_gearRatio);
-        config.encoder.positionConversionFactor(1);
-        config.inverted(true);
-        config.softLimit.forwardSoftLimit(65);
-        config.softLimit.forwardSoftLimitEnabled(true);
-        config.softLimit.reverseSoftLimit(0);
-        config.softLimit.reverseSoftLimitEnabled(true);
-        config.idleMode(IdleMode.kBrake);
+        Elevconfig.encoder.positionConversionFactor(1);
+        Elevconfig.inverted(true);
+        Elevconfig.softLimit.forwardSoftLimit(65);
+        Elevconfig.softLimit.forwardSoftLimitEnabled(true);
+        Elevconfig.softLimit.reverseSoftLimit(0);
+        Elevconfig.softLimit.reverseSoftLimitEnabled(true);
+        Elevconfig.idleMode(IdleMode.kBrake);
         //// Down Velocity Values
+        Elevconfig.closedLoop.maxMotion.allowedClosedLoopError(elevatorPosTol);
 
-
-        config.closedLoop.maxMotion.maxAcceleration(2500, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.maxMotion.maxVelocity(1000, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.maxMotion.allowedClosedLoopError(elevatorPosTol, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.pidf(.05, 0.0, 0.0, 0.0, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
+        Elevconfig.closedLoop.maxMotion.maxAcceleration(2500, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
+        Elevconfig.closedLoop.maxMotion.maxVelocity(1000, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
+        Elevconfig.closedLoop.maxMotion.allowedClosedLoopError(elevatorPosTol, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
+        Elevconfig.closedLoop.pidf(.08, 0.0, 0.0, 0.0, ELEVATOR_CLOSED_LOOP_SLOT_DOWN);
 
         //// Up Velocity Values
-        config.closedLoop.maxMotion.maxAcceleration(5000, ELEVATOR_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.maxMotion.maxVelocity(2000, ELEVATOR_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.maxMotion.allowedClosedLoopError(elevatorPosTol, ELEVATOR_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.pidf(0.4, 0.0, 0.0, 0.0, ELEVATOR_CLOSED_LOOP_SLOT_UP);
+        Elevconfig.closedLoop.maxMotion.maxAcceleration(5000, ELEVATOR_CLOSED_LOOP_SLOT_UP);
+        Elevconfig.closedLoop.maxMotion.maxVelocity(2000, ELEVATOR_CLOSED_LOOP_SLOT_UP);
+        Elevconfig.closedLoop.maxMotion.allowedClosedLoopError(elevatorPosTol, ELEVATOR_CLOSED_LOOP_SLOT_UP);
+        Elevconfig.closedLoop.pidf(0.5, 0.0, 0.0, 0.0, ELEVATOR_CLOSED_LOOP_SLOT_UP);
 
-        config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+        Elevconfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
       //  config.smartCurrentLimit(50);
-        config.smartCurrentLimit(35, 50);
+      Elevconfig.smartCurrentLimit(35, 50);
 
-        elevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        elevatorMotor.configure(Elevconfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }
 
     private void configArmMotor() {
 
-        SparkMaxConfig config = new SparkMaxConfig();
+        SparkMaxConfig armConfig = new SparkMaxConfig();
 
-        config.softLimit.forwardSoftLimit(ElevAndArmPos.OUTOFWAY.armPos);
-        config.softLimit.forwardSoftLimitEnabled(true);
-        config.softLimit.reverseSoftLimit(ElevAndArmPos.PICKUP.armPos);
-        config.softLimit.reverseSoftLimitEnabled(true);
-        config.idleMode(IdleMode.kBrake);
-        config.inverted(false);
+        armConfig.softLimit.forwardSoftLimit(ElevAndArmPos.OUTOFWAY.armPos);
+        armConfig.softLimit.forwardSoftLimitEnabled(true);
+        armConfig.softLimit.reverseSoftLimit(ElevAndArmPos.PICKUP.armPos);
+        armConfig.softLimit.reverseSoftLimitEnabled(true);
+        armConfig.closedLoop.maxMotion.allowedClosedLoopError(armPosTol);
+        armConfig.idleMode(IdleMode.kBrake);
+        armConfig.inverted(false);
         //// Down Velocity Values
-        config.closedLoop.maxMotion.maxAcceleration(25, ARM_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.maxMotion.maxVelocity(1000, ARM_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.maxMotion.allowedClosedLoopError(armPosTol, ARM_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.pidf(.008, 0.0, 0.0, 0.0, ARM_CLOSED_LOOP_SLOT_DOWN);
+        armConfig.closedLoop.maxMotion.maxAcceleration(25, ARM_CLOSED_LOOP_SLOT_DOWN);
+        armConfig.closedLoop.maxMotion.maxVelocity(1000, ARM_CLOSED_LOOP_SLOT_DOWN);
+        armConfig.closedLoop.maxMotion.allowedClosedLoopError(armPosTol, ARM_CLOSED_LOOP_SLOT_DOWN);
+        armConfig.closedLoop.pidf(.009, 0.0, 0.0, 0.0, ARM_CLOSED_LOOP_SLOT_DOWN);
         //// Up Velocity Values
-        config.closedLoop.maxMotion.maxAcceleration(25, ARM_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.maxMotion.maxVelocity(1000, ARM_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.maxMotion.allowedClosedLoopError(armPosTol, ARM_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.pidf(.02, 0.0, 0.0, 0.0, ARM_CLOSED_LOOP_SLOT_UP);
+        armConfig.closedLoop.maxMotion.maxAcceleration(25, ARM_CLOSED_LOOP_SLOT_UP);
+        armConfig.closedLoop.maxMotion.maxVelocity(1000, ARM_CLOSED_LOOP_SLOT_UP);
+        armConfig.closedLoop.maxMotion.allowedClosedLoopError(armPosTol, ARM_CLOSED_LOOP_SLOT_UP);
+        armConfig.closedLoop.pidf(.027, 0.0, 0.0, 0.0, ARM_CLOSED_LOOP_SLOT_UP);
 
-        config.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+        armConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
 
       //  config.smartCurrentLimit(50);
-        config.smartCurrentLimit(50, 50);
+      armConfig.smartCurrentLimit(50, 50);
         
         AbsoluteEncoderConfig absEncConfig = new AbsoluteEncoderConfig();
         absEncConfig.zeroOffset(0.649);
         absEncConfig.inverted(false);
         absEncConfig.positionConversionFactor(360);
         
-        config.absoluteEncoder.apply(absEncConfig);
+        armConfig.absoluteEncoder.apply(absEncConfig);
 
-        armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        armMotor.configure(armConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }
     private void configCoralMotor() {
-        SparkMaxConfig config = new SparkMaxConfig();
+        SparkMaxConfig CoralConfig = new SparkMaxConfig();
 
         //config.encoder.positionConversionFactor(Math.PI * elevator_gearDiameter / elevator_gearRatio);
-        config.encoder.positionConversionFactor(1);
-        config.inverted(true);
-        config.softLimit.forwardSoftLimit(65);
-        config.softLimit.forwardSoftLimitEnabled(false);
-        config.softLimit.reverseSoftLimit(0);
-        config.softLimit.reverseSoftLimitEnabled(false);
-        config.idleMode(IdleMode.kBrake);
-        config.closedLoop.maxOutput(0.4);
-        config.closedLoop.minOutput(-0.4);
+        CoralConfig.encoder.positionConversionFactor(1);
+        CoralConfig.inverted(true);
+        CoralConfig.softLimit.forwardSoftLimit(65);
+        CoralConfig.softLimit.forwardSoftLimitEnabled(false);
+        CoralConfig.softLimit.reverseSoftLimit(0);
+        CoralConfig.softLimit.reverseSoftLimitEnabled(false);
+        CoralConfig.idleMode(IdleMode.kBrake);
+        CoralConfig.closedLoop.maxOutput(0.4);
+        CoralConfig.closedLoop.minOutput(-0.4);
+        CoralConfig.closedLoopRampRate(0.025);
+        CoralConfig.voltageCompensation(9.0);
         //// Down / outVelocity Values
-        config.closedLoop.maxMotion.maxAcceleration(5000, CORAL_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.maxMotion.maxVelocity(2000, CORAL_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.maxMotion.allowedClosedLoopError(coralPosTol, CORAL_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.pidf(.4, 0.0, 0.0, 0.0, CORAL_CLOSED_LOOP_SLOT_DOWN);
+        CoralConfig.closedLoop.maxMotion.maxAcceleration(5000, CORAL_CLOSED_LOOP_SLOT_DOWN);
+        CoralConfig.closedLoop.maxMotion.maxVelocity(2000, CORAL_CLOSED_LOOP_SLOT_DOWN);
+        CoralConfig.closedLoop.maxMotion.allowedClosedLoopError(coralPosTol, CORAL_CLOSED_LOOP_SLOT_DOWN);
+        CoralConfig.closedLoop.pidf(0.4, 0.0, 0.0, 0.0, CORAL_CLOSED_LOOP_SLOT_DOWN);
 
         //// Up / in Velocity Values
-        config.closedLoop.maxMotion.maxAcceleration(5000, CORAL_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.maxMotion.maxVelocity(2000, CORAL_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.maxMotion.allowedClosedLoopError(coralPosTol, CORAL_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.pidf(0.4, 0.0, 0.0, 0.0, CORAL_CLOSED_LOOP_SLOT_UP);
+        CoralConfig.closedLoop.maxMotion.maxAcceleration(5000, CORAL_CLOSED_LOOP_SLOT_UP);
+        CoralConfig.closedLoop.maxMotion.maxVelocity(2000, CORAL_CLOSED_LOOP_SLOT_UP);
+        CoralConfig.closedLoop.maxMotion.allowedClosedLoopError(coralPosTol, CORAL_CLOSED_LOOP_SLOT_UP);
+        CoralConfig.closedLoop.pidf(0.4, 0.0, 0.0, 0.0, CORAL_CLOSED_LOOP_SLOT_UP);
 
-        config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+        CoralConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
       //  config.smartCurrentLimit(50);
-        config.smartCurrentLimit(35, 35);
+      CoralConfig.smartCurrentLimit(20, 20);
 
-        coralMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        coralMotor.configure(CoralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }
     public enum ElevAndArmPos {
         PICKUP(22, 0,0),
         START(22, 0,0),
         SAFETYPOS(40, 0,0),
-        LEVEL1(51, 11,0),
-        LEVEL1DEL(51,11,3.5),
-        LEVEL2(51, 37,0),
-        LEVEL2DEL(51,37,3.5),
-        LEVEL3(166, 7,0),
-        LEVEL3DEL(166,7,-3.5),
-        LEVEL4(164, 64,0),
-        LEVEL4DEL(164,64,-3.5),
-        ELVMAX(40, 65,0),
+        LEVEL1(55, 20,0),
+        LEVEL1DEL(55,20,25),
+        LEVEL2(51, 40,0),
+        LEVEL2DEL(51,40,5),
+        LEVEL3(166, 7,1.2), //was 2.3
+        LEVEL3DEL(166,7,-5),
+        LEVEL4(166, 65.4,1.7),
+        LEVEL4DEL(166,65.4,-4),
+        ELVMAX(40, 65.9,0),
+        ALGAEEXTRACTLOWER(70,20,1000),
+        ALGAEEXTRACTUPPER(66,58,1000),
         OUTOFWAY(175, 0,0),
         CIntake(22,0,3),  //was 2.5
-        CHold(22,0,0),
+        CHold(22,0,-0.5),
     
         CDeliver(22,0,-2),
         CReturn(22,0,2);

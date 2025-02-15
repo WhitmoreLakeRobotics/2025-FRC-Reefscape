@@ -196,7 +196,8 @@ public class RobotContainer {
                 Trigger X_Drive = new Trigger(drive_Controller.x()); // KL
                 Trigger Y_Drive = new Trigger(drive_Controller.y()); // IJ
 
-                Trigger Back_Drive = new Trigger(drive_Controller.back());
+                Trigger Back_Drive = new Trigger(drive_Controller.back()); // reset gyrp
+                Back_Drive.onTrue(new cmdResetGyro());
                 Trigger Start_Drive = new Trigger(drive_Controller.start());
 
                 Trigger LBumper_Drive = new Trigger(drive_Controller.leftBumper());
@@ -285,6 +286,7 @@ public class RobotContainer {
   public void updateSmartDashboard() {
     SmartDashboard.putNumber("Arm Targ", m_elevatorAndArm.getTargetArmPos());
     SmartDashboard.putNumber("Arm Cur", m_elevatorAndArm.getArmCurPos());
+    SmartDashboard.putBoolean("Arm in Pos",m_elevatorAndArm.isArmAtTarget(m_elevatorAndArm.getTargetPos()));
     SmartDashboard.putNumber("Elev Poc", m_elevatorAndArm.getElevatorCurPos());
     SmartDashboard.putNumber("Elev Targ", m_elevatorAndArm.getElevatorTargPos());
     //SmartDashboard.putNumber("ElevApplied" , m_AlgaeIntake.pivotMotor.getAppliedOutput());
@@ -296,6 +298,10 @@ SmartDashboard.putNumber("Coral output", m_elevatorAndArm.coralMotor.getAppliedO
 SmartDashboard.putNumber("Coral Velocity", m_elevatorAndArm.coralMotor.getEncoder().getVelocity());
 SmartDashboard.putNumber("LeftGuide Pos", m_Wipers.leftMotor.getEncoder().getPosition());
 SmartDashboard.putNumber("Left Guid Target", m_Wipers.getLeftTargetPos());
+SmartDashboard.putNumber("Right Guide Pos", m_Wipers.getRightCurPos());
+SmartDashboard.putNumber("Right Guid Target", m_Wipers.getRightTargetPos());
+SmartDashboard.putBoolean("Right Wiper",m_Wipers.isRightAtTarget(Wipers.GuidePos.OUT));
+SmartDashboard.putBoolean("Left Wiper", m_Wipers.isLeftAtTarget(Wipers.GuidePos.OUT));
 
     SmartDashboard.putNumber("Coral Cur Pos", m_elevatorAndArm.getCoralCurPos());
     SmartDashboard.putNumber("Coral Target Pos", m_elevatorAndArm.getCoralCmdPos());

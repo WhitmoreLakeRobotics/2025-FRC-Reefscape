@@ -187,7 +187,7 @@ public class AlgaeIntake extends SubsystemBase {
     }
 
     public enum Status {
-        IN(0.50),
+        IN(0.60),
         OUT(-0.50),
         HOLDING(0),
         STOPPED(0);
@@ -208,7 +208,7 @@ public class AlgaeIntake extends SubsystemBase {
         PICKUP(105),
         HELD(82),
         ALLTHEWAYOUT(123),
-        CORALPICKUP(35),
+        CORALPICKUP(25),
         STOP(0);
 
         private final double pivotAngle;
