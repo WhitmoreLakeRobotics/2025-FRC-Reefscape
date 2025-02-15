@@ -35,8 +35,7 @@ public class deliverCoralCmd extends Command {
 
     
     public deliverCoralCmd() {
-        m_elevator = RobotContainer.getInstance().m_elevatorAndArm;
-        curPos = m_elevator.getTargetPos();
+
     }
         private void deliverCoral() {
      
@@ -46,6 +45,9 @@ public class deliverCoralCmd extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() { 
+        m_elevator = RobotContainer.getInstance().m_elevatorAndArm;
+        curPos = m_elevator.getTargetPos();
+
         switch (curPos) {
             case LEVEL1:
                newPos = ElevAndArmPos.LEVEL1DEL;

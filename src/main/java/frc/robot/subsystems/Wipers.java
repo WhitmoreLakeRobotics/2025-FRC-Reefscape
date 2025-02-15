@@ -27,7 +27,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 
 public class Wipers extends SubsystemBase {
     // Elevator Config Parameters
-    private SparkMax leftMotor = new SparkMax(CanIds.RIGHT_GUIDE, MotorType.kBrushless);
+    public SparkMax leftMotor = new SparkMax(CanIds.RIGHT_GUIDE, MotorType.kBrushless);
     private SparkMax rightMotor = new SparkMax(CanIds.LEFT_GUIDE, MotorType.kBrushless);
 
     private double pivot_gearRatio = (2.89 * 5.23 * 5.23);
@@ -35,7 +35,7 @@ public class Wipers extends SubsystemBase {
     private double leftCurPos = 0.0;
     private double rightCurrPos = 0.0;
     private double pivotCmdPos = GuidePos.START.guideAngle;
-    private final double pivotPosTol = 5;
+    private final double pivotPosTol = 0.1;
 
     private GuidePos rightTargetPos = GuidePos.START;
     private GuidePos leftTargetPos = GuidePos.START;
@@ -85,6 +85,13 @@ public class Wipers extends SubsystemBase {
     public double getLeftCurPos() {
         return leftCurPos;
     }
+    public double getLeftTargetPos(){
+        return leftTargetPos.guideAngle;
+    }
+
+    public double getRightTargetPos(){
+        return rightTargetPos.guideAngle;
+    }
 
     public double getRightCurPos() {
         return rightCurrPos;
@@ -123,7 +130,7 @@ public class Wipers extends SubsystemBase {
         
         SparkMaxConfig config = new SparkMaxConfig();
         config.encoder.positionConversionFactor(1);
-        config.inverted(true);
+        config.inverted(false);
         config.softLimit.forwardSoftLimit(130);
         config.softLimit.forwardSoftLimitEnabled(true);
         config.softLimit.reverseSoftLimit(-1);
@@ -132,7 +139,7 @@ public class Wipers extends SubsystemBase {
         //// In Velocity Values
         config.closedLoop.maxMotion.maxAcceleration(30000, GUIDE_CLOSED_LOOP_SLOT);
         config.closedLoop.maxMotion.maxVelocity(6000, GUIDE_CLOSED_LOOP_SLOT);
-        config.closedLoop.pidf(.04, 0.0, 0.0004, 0.0,GUIDE_CLOSED_LOOP_SLOT);
+        config.closedLoop.pidf(0.12, 0.0, 0.0, 0.0,GUIDE_CLOSED_LOOP_SLOT);
 
         //// Out Velocity Values
     
@@ -150,7 +157,7 @@ public class Wipers extends SubsystemBase {
          */
         leftMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        config.inverted(false);
+        config.inverted(true);
         rightMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }
@@ -164,8 +171,8 @@ public class Wipers extends SubsystemBase {
 
 
     public enum GuidePos {
-        START(0),
-        OUT(105);
+        START(1.2),
+        OUT(6.7);
 
         private final double guideAngle;
 
