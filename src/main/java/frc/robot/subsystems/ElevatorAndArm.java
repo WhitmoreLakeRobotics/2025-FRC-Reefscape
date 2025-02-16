@@ -369,7 +369,7 @@ public class ElevatorAndArm extends SubsystemBase {
         // calcuate the new coral position based strictly on the arm angle
         // y = new coral position based on the extreeme values of coral and arm angle
         // x = incomming arm angle
-        return (Coral_m * (armPosDeg) + Coral_b);
+        return ((Coral_m * armPosDeg) + Coral_b);
     }
 
     private void configCoralCompensation() {
