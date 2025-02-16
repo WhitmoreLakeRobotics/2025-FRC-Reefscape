@@ -55,6 +55,9 @@ public class ElevatorAndArm extends SubsystemBase {
     private double CoralCmdPos = ElevAndArmPos.START.coralPos;
     private double CoralDirection = 0;
 
+    private double Coral_m = 0;
+    private double Coral_b = 0;
+
     private ElevAndArmPos targetPos = ElevAndArmPos.START;
 
     private final ClosedLoopSlot ELEVATOR_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
@@ -77,7 +80,7 @@ public class ElevatorAndArm extends SubsystemBase {
         configElevatorMotor();
         configArmMotor();
         configCoralMotor();
-
+        configCoralCompensation ();
     }
 
     @Override
@@ -361,6 +364,22 @@ public class ElevatorAndArm extends SubsystemBase {
         coralMotor.configure(CoralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }
+
+    public double  calcCoralCompensation(double armPosDeg) {
+        // calcuate the new coral position based strictly on the arm angle
+        // y = new coral position based on the extreeme values of coral and arm angle
+        // x = incomming arm angle
+        return (Coral_m * (armPosDeg) + Coral_b);
+    }
+
+    private void configCoralCompensation() {
+        // calculate m and b for y = mx + b linear formula
+
+        Coral_m = (ElevAndArmPos.LEVEL4.coralPos / ( ElevAndArmPos.LEVEL4.armPos - ElevAndArmPos.PICKUP.armPos));
+        Coral_b = -(Coral_m * ElevAndArmPos.START.armPos);
+
+    }
+
     public enum ElevAndArmPos {
         PICKUP(22, 0,0),
         START(22, 0,0),
