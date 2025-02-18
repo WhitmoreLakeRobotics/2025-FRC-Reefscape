@@ -55,6 +55,7 @@ public class ElevatorAndArm extends SubsystemBase {
     private double CoralCmdPos = ElevAndArmPos.START.coralPos;
     private double CoralDirection = 0;
 
+    public boolean holdCoral = true;
     private double Coral_m = 0;
     private double Coral_b = 0;
 
@@ -100,6 +101,11 @@ public class ElevatorAndArm extends SubsystemBase {
         // Probably should add some safety logic here
         // recommend storing new target position in a variable and then executing the
         // safety logic here.
+        if (holdCoral) {
+            setCoralCmdPos(calcCoralCompensation(getArmCurPos()));
+        } else if (!holdCoral) {
+
+        }
        
        if(isArmAtTarget(ElevAndArmPos.SAFETYPOS)){
        // System.err.print("Safety logic" + (targetPos.armPos > ElevAndArmPos.SAFETYPOS.armPos)+ " "+ isArmAtTarget(ElevAndArmPos.SAFETYPOS) + " "  + (armCurPos > ElevAndArmPos.SAFETYPOS.armPos)) ;
@@ -255,6 +261,11 @@ public class ElevatorAndArm extends SubsystemBase {
         coralMotor.getEncoder().setPosition(0);
         coralMotor.getClosedLoopController().setReference(0,ControlType.kPosition,CoralCurrentSlot);
         targetPos = ElevAndArmPos.CHold;
+        holdCoral = true;
+
+    }
+    public void REALresetCoralEncoder() {
+        coralMotor.getEncoder().setPosition(0);
     }
 
     // configure the elevator motor spark
@@ -264,7 +275,7 @@ public class ElevatorAndArm extends SubsystemBase {
         //config.encoder.positionConversionFactor(Math.PI * elevator_gearDiameter / elevator_gearRatio);
         Elevconfig.encoder.positionConversionFactor(1);
         Elevconfig.inverted(true);
-        Elevconfig.softLimit.forwardSoftLimit(65);
+        Elevconfig.softLimit.forwardSoftLimit(66);
         Elevconfig.softLimit.forwardSoftLimitEnabled(true);
         Elevconfig.softLimit.reverseSoftLimit(0);
         Elevconfig.softLimit.reverseSoftLimitEnabled(true);
@@ -342,7 +353,8 @@ public class ElevatorAndArm extends SubsystemBase {
         CoralConfig.idleMode(IdleMode.kBrake);
         CoralConfig.closedLoop.maxOutput(0.4);
         CoralConfig.closedLoop.minOutput(-0.4);
-        CoralConfig.closedLoopRampRate(0.025);
+        
+        CoralConfig.closedLoopRampRate(0.020);
         CoralConfig.voltageCompensation(9.0);
         //// Down / outVelocity Values
         CoralConfig.closedLoop.maxMotion.maxAcceleration(5000, CORAL_CLOSED_LOOP_SLOT_DOWN);
@@ -375,7 +387,8 @@ public class ElevatorAndArm extends SubsystemBase {
     private void configCoralCompensation() {
         // calculate m and b for y = mx + b linear formula
 
-        Coral_m = (ElevAndArmPos.LEVEL4.coralPos / ( ElevAndArmPos.LEVEL4.armPos - ElevAndArmPos.PICKUP.armPos));
+        Coral_m = ((/*ElevAndArmPos.LEVEL4.coralPos */ 1.7 / ( ElevAndArmPos.LEVEL4.armPos - ElevAndArmPos.PICKUP.armPos))
+          + ElevAndArmPos.CHold.coralPos );
         Coral_b = -(Coral_m * ElevAndArmPos.START.armPos);
 
     }
@@ -388,9 +401,9 @@ public class ElevatorAndArm extends SubsystemBase {
         LEVEL1DEL(55,20,25),
         LEVEL2(51, 40,0),
         LEVEL2DEL(51,40,5),
-        LEVEL3(166, 7,1.2), //was 2.3
+        LEVEL3(166, 7,1.2), //was 1.2
         LEVEL3DEL(166,7,-5),
-        LEVEL4(166, 65.4,1.7),
+        LEVEL4(166, 65.4,1.7), //1.7
         LEVEL4DEL(166,65.4,-4),
         ELVMAX(40, 65.9,0),
         ALGAEEXTRACTLOWER(70,20,1000),

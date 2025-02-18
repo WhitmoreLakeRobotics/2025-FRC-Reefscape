@@ -113,11 +113,16 @@ public class RobotContainer {
     /**** PATH PLANNER NAMED COMMANDS*****/
     NamedCommands.registerCommand("RESETGYRO", new cmdResetGyro());
 
+    NamedCommands.registerCommand("EA PICKUP", new EAGoToLevel(ElevAndArmPos.PICKUP));
+
+    NamedCommands.registerCommand("Algae START", new AlgaeCmd(AlgaeIntake.PivotPos.CORALPICKUP, AlgaeIntake.Status.STOPPED));
+
     NamedCommands.registerCommand("EA LEVEL1", new EAGoToLevel(ElevAndArmPos.LEVEL1));
     NamedCommands.registerCommand("EA LEVEL2", new EAGoToLevel(ElevAndArmPos.LEVEL2));
     NamedCommands.registerCommand("EA LEVEL3", new EAGoToLevel(ElevAndArmPos.LEVEL3));
     NamedCommands.registerCommand("EA LEVEL4", new EAGoToLevel(ElevAndArmPos.LEVEL4));
     NamedCommands.registerCommand("CORAL DELIVER", new deliverCoralCmd());
+    NamedCommands.registerCommand("CORAL INTAKE", new EAGoToLevel(ElevAndArmPos.CIntake));
   //  NamedCommands.registerCommand("EA LEVEL6", new EAGoToLevel(ElevAndArmPos));
 
     // SmartDashboard Buttons
@@ -302,11 +307,10 @@ SmartDashboard.putNumber("Right Guide Pos", m_Wipers.getRightCurPos());
 SmartDashboard.putNumber("Right Guid Target", m_Wipers.getRightTargetPos());
 SmartDashboard.putBoolean("Right Wiper",m_Wipers.isRightAtTarget(Wipers.GuidePos.OUT));
 SmartDashboard.putBoolean("Left Wiper", m_Wipers.isLeftAtTarget(Wipers.GuidePos.OUT));
-
+SmartDashboard.putBoolean("holdCoral", m_elevatorAndArm.holdCoral);
     SmartDashboard.putNumber("Coral Cur Pos", m_elevatorAndArm.getCoralCurPos());
     SmartDashboard.putNumber("Coral Target Pos", m_elevatorAndArm.getCoralCmdPos());
     SmartDashboard.putString("ElevAndArmPos Tar",m_elevatorAndArm.getTargetPos().toString());
-
     SmartDashboard.putBoolean("Coral Intake", m_sensors.CoralIntake.get());
     SmartDashboard.putBoolean("Coral Hopper", m_sensors.Coralhopper.get());
     SmartDashboard.putBoolean("Algae Intake", m_sensors.AlgIntake.get());

@@ -47,6 +47,7 @@ public class deliverCoralCmd extends Command {
     public void initialize() { 
         m_elevator = RobotContainer.getInstance().m_elevatorAndArm;
         curPos = m_elevator.getTargetPos();
+        m_elevator.holdCoral = false;
 
         switch (curPos) {
             case LEVEL1:

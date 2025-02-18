@@ -56,7 +56,9 @@ public class EAGoToLevel extends Command {
         m_elevator = RobotContainer.getInstance().m_elevatorAndArm;
         addRequirements(m_elevator);
         m_elevator.setNewPos(targPos);
-
+        if (targPos == ElevAndArmPos.PICKUP) {
+            m_elevator.REALresetCoralEncoder();
+        }
 
     }
 
