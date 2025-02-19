@@ -386,10 +386,23 @@ public class ElevatorAndArm extends SubsystemBase {
 
     private void configCoralCompensation() {
         // calculate m and b for y = mx + b linear formula
+        /*
+         * Position 1 is the CHold position
+         * Position 2 is the Level 4 position
+         *
+         *                 Y2 - Y1
+         * m = Coral_m = -------------
+         *                 X2 - X1
+         */
 
-        Coral_m = ((/*ElevAndArmPos.LEVEL4.coralPos */ 1.7 / ( ElevAndArmPos.LEVEL4.armPos - ElevAndArmPos.PICKUP.armPos))
-          + ElevAndArmPos.CHold.coralPos );
-        Coral_b = -(Coral_m * ElevAndArmPos.START.armPos);
+        Coral_m = (ElevAndArmPos.LEVEL4.coralPos - ElevAndArmPos.CHold.coralPos) /
+                (ElevAndArmPos.LEVEL4.armPos - ElevAndArmPos.CHold.armPos);
+
+        /*
+         * b = Coral_b = Y1 - (m * X1)
+         */
+
+        Coral_b = ElevAndArmPos.CHold.coralPos - (Coral_m * ElevAndArmPos.CHold.armPos);
 
     }
 
