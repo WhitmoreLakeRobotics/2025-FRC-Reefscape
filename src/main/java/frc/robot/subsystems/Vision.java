@@ -318,10 +318,10 @@ public class Vision {
      * Right Camera
      */
     RIGHT_CAM("right",
-        new Rotation3d(0, Math.toRadians(-24.094), Math.toRadians(-30)),
-        new Translation3d(Units.inchesToMeters(12.056),
-            Units.inchesToMeters(-10.981),
-            Units.inchesToMeters(8.44)),
+        new Rotation3d(0, Math.toRadians(0.0), Math.toRadians(194)),
+        new Translation3d(-0.095, //12.056 inches
+            0.115, //-10.981 inches
+            0.30), // 8.44 inches
         VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
     /**
      * Center Camera

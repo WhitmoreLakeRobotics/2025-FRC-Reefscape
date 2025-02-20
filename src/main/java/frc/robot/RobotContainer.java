@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import java.io.File;
 import java.io.ObjectInputFilter.Status;
+import java.util.jar.Attributes.Name;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -114,9 +115,11 @@ public class RobotContainer {
     NamedCommands.registerCommand("RESETGYRO", new cmdResetGyro());
 
     NamedCommands.registerCommand("EA PICKUP", new EAGoToLevel(ElevAndArmPos.PICKUP));
+    NamedCommands.registerCommand("Wiper Left", new WipersCmd(Wipers.Wiper.LEFT));
+    NamedCommands.registerCommand("Wiper Right", new WipersCmd(Wipers.Wiper.RIGHT));
 
     NamedCommands.registerCommand("Algae START", new AlgaeCmd(AlgaeIntake.PivotPos.CORALPICKUP, AlgaeIntake.Status.STOPPED));
-
+    NamedCommands.registerCommand("EA INTAKE", new EAGoToLevel(ElevAndArmPos.PICKUP));
     NamedCommands.registerCommand("EA LEVEL1", new EAGoToLevel(ElevAndArmPos.LEVEL1));
     NamedCommands.registerCommand("EA LEVEL2", new EAGoToLevel(ElevAndArmPos.LEVEL2));
     NamedCommands.registerCommand("EA LEVEL3", new EAGoToLevel(ElevAndArmPos.LEVEL3));
