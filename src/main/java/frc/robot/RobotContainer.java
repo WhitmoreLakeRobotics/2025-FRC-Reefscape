@@ -331,6 +331,7 @@ SmartDashboard.putBoolean("holdCoral", m_elevatorAndArm.holdCoral);
     SmartDashboard.putBoolean("Algae Intake", m_sensors.AlgIntake.get());
     SmartDashboard.putNumber("Deploy Motor Cur Pos", m_Climb.getDeployCurPos());
     SmartDashboard.putNumber("Climb Motor Cur Pos", m_Climb.getClimbCurPos());
+    //SmartDashboard.putBoolean("Hold Coral", m_elevatorAndArm.holdCoral);
   }
 
 }

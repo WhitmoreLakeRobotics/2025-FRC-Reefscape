@@ -163,7 +163,7 @@ public class ElevatorAndArm extends SubsystemBase {
                 break;
         
             default:
-            coralMotor.set(0.0);
+           // coralMotor.set(0.0);
             setCoralCmdPos(tpos.getCoralPos());
            // holdCoral = true;
                 break;
