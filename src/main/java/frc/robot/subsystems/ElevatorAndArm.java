@@ -421,7 +421,7 @@ public class ElevatorAndArm extends SubsystemBase {
         ELVMAX(40, 65.9,0),
         ALGAEEXTRACTLOWER(70,20,1000),
         ALGAEEXTRACTUPPER(66,58,1000),
-        OUTOFWAY(175, 0,0),
+        OUTOFWAY(250, 0,0),
         CIntake(22,0,3),  //was 2.5
         CHold(22,0,-0.5),
     

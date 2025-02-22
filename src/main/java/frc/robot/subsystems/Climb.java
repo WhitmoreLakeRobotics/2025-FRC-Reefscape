@@ -32,8 +32,8 @@ public class Climb extends SubsystemBase {
     private SparkMax deployMotor = new SparkMax(CanIds.BOTTOM_LIFT_MOTOR, MotorType.kBrushless);
 
     private double climbCurPos = 0.0;
-    private final double deployPosTol = 5;
-    private double deployCurPos = 0;
+    private final double deployPosTol = 0.1;
+    private double deployCurPos = 0.0;
 
 
     private final ClosedLoopSlot CLIMB_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
@@ -41,16 +41,17 @@ public class Climb extends SubsystemBase {
     private ClosedLoopSlot ClimbCurrentSlot = CLIMB_CLOSED_LOOP_SLOT_UP;
 
     private boolean bClimbEnabled = false;
-    private double climbPower = 0.7;
+    private double climbPower = 1.0;
     public Climb() {
         configClimbMotor();
-
+        configDeployMotor();
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
         climbCurPos = climbMotor.getEncoder().getPosition();
+        deployCurPos = deployMotor.getEncoder().getPosition();
         if (bClimbEnabled){
             updateClimbMotor();
         } 
@@ -89,6 +90,10 @@ public class Climb extends SubsystemBase {
         return (deployCurPos);
     }
 
+    public double getClimbCurPos() {
+        return (climbCurPos);
+    }
+
     private void updateClimbMotor() {
         climbMotor.set(climbPower * RobotContainer.getInstance().getArticulator().getLeftY());
     }
@@ -110,11 +115,11 @@ public class Climb extends SubsystemBase {
         
         SparkMaxConfig config = new SparkMaxConfig();
         config.encoder.positionConversionFactor(1);
-        config.inverted(true);
-        config.softLimit.forwardSoftLimit(130);
+        config.inverted(false);
+        config.softLimit.forwardSoftLimit(1);
         config.softLimit.forwardSoftLimitEnabled(true);
         config.softLimit.reverseSoftLimit(-1);
-        config.softLimit.reverseSoftLimitEnabled(true);
+        config.softLimit.reverseSoftLimitEnabled(false);
         config.idleMode(IdleMode.kBrake);
         //// In Velocity Values
         // config.smartCurrentLimit(50);
@@ -135,8 +140,8 @@ public class Climb extends SubsystemBase {
         
         SparkMaxConfig config = new SparkMaxConfig();
         config.encoder.positionConversionFactor(1);
-        config.inverted(true);
-        config.softLimit.forwardSoftLimit(130);
+        config.inverted(false);
+        config.softLimit.forwardSoftLimit(13);
         config.softLimit.forwardSoftLimitEnabled(true);
         config.softLimit.reverseSoftLimit(-1);
         config.softLimit.reverseSoftLimitEnabled(true);
@@ -144,12 +149,14 @@ public class Climb extends SubsystemBase {
         //// In Velocity Values
         config.closedLoop.maxMotion.maxAcceleration(30000, CLIMB_CLOSED_LOOP_SLOT_DOWN);
         config.closedLoop.maxMotion.maxVelocity(6000, CLIMB_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.pidf(.04, 0.0, 0.0004, 0.0, CLIMB_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.maxMotion.allowedClosedLoopError(deployPosTol, CLIMB_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.pidf(.04, 0.0, 0.0, 0.0, CLIMB_CLOSED_LOOP_SLOT_DOWN);
 
         //// Out Velocity Values
         config.closedLoop.maxMotion.maxAcceleration(30000, CLIMB_CLOSED_LOOP_SLOT_UP);
         config.closedLoop.maxMotion.maxVelocity(6000, CLIMB_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.pidf(.08, 0.0, 0.0008, 0.0, CLIMB_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.maxMotion.allowedClosedLoopError(deployPosTol, CLIMB_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.pidf(.09, 0.0, 0.0, 0.0, CLIMB_CLOSED_LOOP_SLOT_UP);
 
         // config.smartCurrentLimit(50);
         config.smartCurrentLimit(30, 40);
@@ -162,13 +169,13 @@ public class Climb extends SubsystemBase {
          * 
          * config.absoluteEncoder.apply(absEncConfig);
          */
-        climbMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        deployMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }
 
     public enum DeployPos {
         START(0),
-        DEPLOY(82),
+        DEPLOY(12.5),
         STOP(0);
 
         private final double deployAngle;
