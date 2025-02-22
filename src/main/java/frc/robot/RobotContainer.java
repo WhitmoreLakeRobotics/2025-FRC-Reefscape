@@ -263,7 +263,7 @@ public class RobotContainer {
                 Coralhopper.onFalse(new CmdCoralReset());
                 Trigger AlgIntake = new Trigger(m_sensors.AlgIntake::get);
                 Trigger CoralIntake = new Trigger(m_sensors.CoralIntake::get);
-                AlgIntake.onFalse(new AlgaeCmd(AlgaeIntake.PivotPos.HELD, AlgaeIntake.Status.STOPPED));
+                AlgIntake.onFalse(new AlgaeCmd(AlgaeIntake.PivotPos.HELD, AlgaeIntake.Status.STOPPED,0.3));
 
 
                 //RIGHT JOYSTICK TO CONTROL CLIMB.

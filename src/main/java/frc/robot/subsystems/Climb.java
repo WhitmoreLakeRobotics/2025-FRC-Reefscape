@@ -118,7 +118,7 @@ public class Climb extends SubsystemBase {
         config.idleMode(IdleMode.kBrake);
         //// In Velocity Values
         // config.smartCurrentLimit(50);
-        config.smartCurrentLimit(30, 30);
+        config.smartCurrentLimit(30, 40);
 
         /*
          * AbsoluteEncoderConfig absEncConfig = new AbsoluteEncoderConfig();
@@ -152,7 +152,7 @@ public class Climb extends SubsystemBase {
         config.closedLoop.pidf(.08, 0.0, 0.0008, 0.0, CLIMB_CLOSED_LOOP_SLOT_DOWN);
 
         // config.smartCurrentLimit(50);
-        config.smartCurrentLimit(30, 30);
+        config.smartCurrentLimit(30, 40);
 
         /*
          * AbsoluteEncoderConfig absEncConfig = new AbsoluteEncoderConfig();
