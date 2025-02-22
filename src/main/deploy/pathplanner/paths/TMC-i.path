@@ -33,17 +33,6 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Coral Reset",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Coral Reset"
-        }
-      }
-    },
-    {
       "name": "Wiper Left",
       "waypointRelativePos": 0.01,
       "endWaypointRelativePos": null,

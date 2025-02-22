@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import java.util.EventListener;
 
+import com.fasterxml.jackson.databind.deser.DataFormatReaders.Match;
 import com.revrobotics.config.BaseConfig;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig;
@@ -32,7 +33,7 @@ public class ElevatorAndArm extends SubsystemBase {
     // Elevator Config Parameters
     private SparkMax elevatorMotor = new SparkMax(CanIds.ELEVATOR_MOTOR, MotorType.kBrushless);
     private SparkMax armMotor = new SparkMax(CanIds.ARM_MOTOR, MotorType.kBrushless);
-    public SparkMax coralMotor = new SparkMax(CanIds.CORAL_MOTOR, MotorType.kBrushless);
+    private SparkMax coralMotor = new SparkMax(CanIds.CORAL_MOTOR, MotorType.kBrushless);
 
     private double elevator_gearRatio = (5 / 1);
     private double elevator_gearDiameter = 1.685; // 14 tooth
@@ -101,6 +102,8 @@ public class ElevatorAndArm extends SubsystemBase {
         // Probably should add some safety logic here
         // recommend storing new target position in a variable and then executing the
         // safety logic here.
+        
+
         if (holdCoral) {
             setCoralCmdPos(calcCoralCompensation(getArmCurPos()));
         } else if (!holdCoral) {
@@ -151,7 +154,27 @@ public class ElevatorAndArm extends SubsystemBase {
 
         setElevatorCmdPos(tpos.getElevPos());
         setArmCmdPos(tpos.getArmPos());
-        setCoralCmdPos(tpos.getCoralPos());
+        
+        switch (targetPos) {
+            case ALGAEEXTRACTLOWER:
+            case ALGAEEXTRACTUPPER:
+                coralMotor.set(0.5);
+                holdCoral = false;
+                break;
+        
+            default:
+            coralMotor.set(0.0);
+            setCoralCmdPos(tpos.getCoralPos());
+           // holdCoral = true;
+                break;
+        }
+    }
+    public void setAlgaeExtract(ElevAndArmPos tpos) {
+        // Need to insert safety logic here
+        targetPos = tpos;
+
+        setElevatorCmdPos(tpos.getElevPos());
+        setArmCmdPos(tpos.getArmPos());
     }
 
     // expose the current position
@@ -255,6 +278,9 @@ public class ElevatorAndArm extends SubsystemBase {
 
         return (isElevatorAtTarget(tpos) && isArmAtTarget(tpos) && isCoralAtTarget(tpos));
     }
+    public void coralMotorPower(double speed) {
+        coralMotor.set(speed);
+}
 
     public void resetCoralEncoder(){
         coralMotor.getClosedLoopController().setReference(getCoralCurPos(),ControlType.kPosition,CoralCurrentSlot);
@@ -264,8 +290,14 @@ public class ElevatorAndArm extends SubsystemBase {
         holdCoral = true;
 
     }
-    public void REALresetCoralEncoder() {
+    public void REALresetCoralEncoder(boolean MatchStart) {
+        boolean mStart = MatchStart;
+        if (mStart) {
+        coralMotor.getEncoder().setPosition(-0.5);
+        } else {
         coralMotor.getEncoder().setPosition(0);
+
+        }
     }
 
     // configure the elevator motor spark
@@ -453,6 +485,7 @@ public class ElevatorAndArm extends SubsystemBase {
     public double getTargetArmPos() {
         return armCmdPos;
     }
+
     
 
 }

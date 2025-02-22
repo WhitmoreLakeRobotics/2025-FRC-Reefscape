@@ -260,7 +260,7 @@ public class RobotContainer {
 
                 Trigger RBumper_Artic = new Trigger(Articulator.rightBumper()); //USE FOR GUIDE RAIL.
                // RBumper_Artic.onTrue(new WipersCmd(Wiper.RIGHT));
-               RBumper_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.ALGAEEXTRACTUPPER));
+                RBumper_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.ALGAEEXTRACTUPPER));
                 Trigger Rtrigger_Artic = new Trigger(Articulator.rightTrigger(0.8)); //USE FOR CORAL DELIVERY.
                 Rtrigger_Artic.onTrue(new deliverCoralCmd());
                 Trigger LJC_Artic = new Trigger(Articulator.leftStick()); //USE FOR CLIMB ENABLE.
@@ -313,9 +313,9 @@ public class RobotContainer {
     //SmartDashboard.putNumber("ElevOutput",m_AlgaeIntake.pivotMotor.getOutputCurrent() );
     SmartDashboard.putNumber("AlgaePivPos", m_AlgaeIntake.getPivotCurPos());
     SmartDashboard.putNumber("Alg Piv Target", m_AlgaeIntake.getTargetPivPos());
-SmartDashboard.putNumber("Coral Current", m_elevatorAndArm.coralMotor.getOutputCurrent());
-SmartDashboard.putNumber("Coral output", m_elevatorAndArm.coralMotor.getAppliedOutput());
-SmartDashboard.putNumber("Coral Velocity", m_elevatorAndArm.coralMotor.getEncoder().getVelocity());
+//SmartDashboard.putNumber("Coral Current", m_elevatorAndArm.coralMotor.getOutputCurrent());
+//SmartDashboard.putNumber("Coral output", m_elevatorAndArm.coralMotor.getAppliedOutput());
+//SmartDashboard.putNumber("Coral Velocity", m_elevatorAndArm.coralMotor.getEncoder().getVelocity());
 SmartDashboard.putNumber("LeftGuide Pos", m_Wipers.leftMotor.getEncoder().getPosition());
 SmartDashboard.putNumber("Left Guid Target", m_Wipers.getLeftTargetPos());
 SmartDashboard.putNumber("Right Guide Pos", m_Wipers.getRightCurPos());

@@ -117,7 +117,7 @@ public class Climb extends SubsystemBase {
         config.encoder.positionConversionFactor(1);
         config.inverted(false);
         config.softLimit.forwardSoftLimit(1);
-        config.softLimit.forwardSoftLimitEnabled(true);
+        config.softLimit.forwardSoftLimitEnabled(false);
         config.softLimit.reverseSoftLimit(-1);
         config.softLimit.reverseSoftLimitEnabled(false);
         config.idleMode(IdleMode.kBrake);
@@ -145,6 +145,7 @@ public class Climb extends SubsystemBase {
         config.softLimit.forwardSoftLimitEnabled(true);
         config.softLimit.reverseSoftLimit(-1);
         config.softLimit.reverseSoftLimitEnabled(true);
+        config.closedLoop.maxOutput(0.7);
         config.idleMode(IdleMode.kBrake);
         //// In Velocity Values
         config.closedLoop.maxMotion.maxAcceleration(30000, CLIMB_CLOSED_LOOP_SLOT_DOWN);

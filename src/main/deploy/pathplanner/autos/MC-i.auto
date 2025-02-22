@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Coral Reset"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
