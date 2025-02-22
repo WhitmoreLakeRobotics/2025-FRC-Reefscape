@@ -19,12 +19,6 @@
                 "data": {
                   "name": "EA LEVEL4"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Wiper Left"
-                }
               }
             ]
           }
@@ -39,6 +33,43 @@
           "type": "path",
           "data": {
             "pathName": "i-pickup1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CORAL INTAKE"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "EA LEVEL4"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "pickup1-L"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CORAL DELIVER"
           }
         }
       ]

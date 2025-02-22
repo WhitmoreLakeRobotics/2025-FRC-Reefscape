@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 5.0772017045454545,
-        "y": 5.063707386363635
+        "x": 5.168607954545455,
+        "y": 5.155113636363635
       },
       "prevControl": {
-        "x": 5.617329545454544,
-        "y": 5.686931818181818
+        "x": 5.708735795454545,
+        "y": 5.778338068181817
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,52 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Coral Reset",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Coral Reset"
+        }
+      }
+    },
+    {
+      "name": "Wiper Left",
+      "waypointRelativePos": 0.01,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Wiper Left"
+        }
+      }
+    },
+    {
+      "name": "Wiper Right",
+      "waypointRelativePos": 0.01,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Wiper Right"
+        }
+      }
+    },
+    {
+      "name": "Algae START",
+      "waypointRelativePos": 0.01,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Algae START"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 2.0,
     "maxAcceleration": 1.75,

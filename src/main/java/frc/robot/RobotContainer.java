@@ -40,6 +40,7 @@ import java.util.jar.Attributes.Name;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.events.EventTrigger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -114,14 +115,17 @@ public class RobotContainer {
     /////////////////////////////////////////
 
     /**** PATH PLANNER NAMED COMMANDS*****/
+  
     NamedCommands.registerCommand("RESETGYRO", new cmdResetGyro());
-
+    NamedCommands.registerCommand("Coral Reset", new coralReset());
     NamedCommands.registerCommand("EA PICKUP", new EAGoToLevel(ElevAndArmPos.PICKUP));
     NamedCommands.registerCommand("Wiper Left", new WipersCmd(Wipers.Wiper.LEFT));
     NamedCommands.registerCommand("Wiper Right", new WipersCmd(Wipers.Wiper.RIGHT));
 
     NamedCommands.registerCommand("Algae START", new AlgaeCmd(AlgaeIntake.PivotPos.CORALPICKUP, AlgaeIntake.Status.STOPPED));
     NamedCommands.registerCommand("EA INTAKE", new EAGoToLevel(ElevAndArmPos.PICKUP));
+    NamedCommands.registerCommand("EA INTAKE DELAYED", new EAGoToLevel(ElevAndArmPos.PICKUP, 1.3));
+    NamedCommands.registerCommand("INTAKE COMPLETE", new autoCoralCompleteCmd());
     NamedCommands.registerCommand("EA LEVEL1", new EAGoToLevel(ElevAndArmPos.LEVEL1));
     NamedCommands.registerCommand("EA LEVEL2", new EAGoToLevel(ElevAndArmPos.LEVEL2));
     NamedCommands.registerCommand("EA LEVEL3", new EAGoToLevel(ElevAndArmPos.LEVEL3));
@@ -131,7 +135,7 @@ public class RobotContainer {
   //  NamedCommands.registerCommand("EA LEVEL6", new EAGoToLevel(ElevAndArmPos));
 
     // SmartDashboard Buttons
-    SmartDashboard.putData("Autonomous Command", new AutonomousCommand());
+   // SmartDashboard.putData("Autonomous Command", new AutonomousCommand());
     SmartDashboard.putData("Arm Pos Start", new EAGoToLevel(ElevAndArmPos.START));
     SmartDashboard.putData("Arm Pos Saftey", new EAGoToLevel(ElevAndArmPos.SAFETYPOS));
     //SmartDashboard.putData("Arm Pos lvl1", new EAGoToLevel(ElevAndArmPos.LEVEL1));
@@ -213,11 +217,11 @@ public class RobotContainer {
                 Trigger LBumper_Drive = new Trigger(drive_Controller.leftBumper());
                 LBumper_Drive.onTrue(new WipersCmd(Wipers.Wiper.LEFT));
                 Trigger Ltrigger_Drive = new Trigger(drive_Controller.leftTrigger(0.8));
-                Ltrigger_Drive.onTrue(new AlgaeCmd(AlgaeIntake.PivotPos.HELD, AlgaeIntake.Status.STOPPED));
+                Ltrigger_Drive.onTrue(new AlgaeCmd(AlgaeIntake.PivotPos.HELD, AlgaeIntake.Status.OUT));
 
                 Trigger RBumper_Drive = new Trigger(drive_Controller.rightBumper());
                 RBumper_Drive.onTrue(new WipersCmd(Wipers.Wiper.RIGHT));
-                Trigger Rtrigger_Drive = new Trigger(drive_Controller.rightTrigger(0.8));
+                Trigger Rtrigger_Drive = new Trigger(drive_Controller.rightTrigger(0.5));
                 Rtrigger_Drive.onTrue(new deliverCoralCmd());
                // Trigger LJC_Drive = new Trigger(drive_Controller.leftStick());
                // Trigger RJC_Drive = new Trigger(drive_Controller.rightStick());
@@ -263,8 +267,10 @@ public class RobotContainer {
 
                 Trigger Coralhopper = new Trigger(m_sensors.Coralhopper::get);
                 Coralhopper.onFalse(new CmdCoralReset());
-                Trigger AlgIntake = new Trigger(m_sensors.AlgIntake::get);
                 Trigger CoralIntake = new Trigger(m_sensors.CoralIntake::get);
+                CoralIntake.onFalse(new CmdCoralIntake(0.25));
+
+                Trigger AlgIntake = new Trigger(m_sensors.AlgIntake::get);
                 AlgIntake.onFalse(new AlgaeCmd(AlgaeIntake.PivotPos.HELD, AlgaeIntake.Status.STOPPED,0.3));
 
 

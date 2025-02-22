@@ -206,7 +206,7 @@ public class AlgaeIntake extends SubsystemBase {
     public enum PivotPos {
         START(0),
         PICKUP(105),
-        HELD(82),
+        HELD(60),
         ALLTHEWAYOUT(123),
         CORALPICKUP(25),
         STOP(0);
