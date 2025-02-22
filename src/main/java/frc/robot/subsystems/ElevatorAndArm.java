@@ -276,7 +276,7 @@ public class ElevatorAndArm extends SubsystemBase {
 
     public boolean isElevatorAndArmAtTarget(ElevAndArmPos tpos) {
 
-        return (isElevatorAtTarget(tpos) && isArmAtTarget(tpos) && isCoralAtTarget(tpos));
+        return (isElevatorAtTarget(tpos) && isArmAtTarget(tpos));
     }
     public void coralMotorPower(double speed) {
         coralMotor.set(speed);

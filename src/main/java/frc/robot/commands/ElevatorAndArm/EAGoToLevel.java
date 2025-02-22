@@ -66,7 +66,6 @@ public class EAGoToLevel extends Command {
         }
        if (delay == 0){
         m_elevator.setNewPos(targPos);
-       
         bStarted = true;
        }  else{
         startTime = RobotMath.getTime();
@@ -83,7 +82,7 @@ public class EAGoToLevel extends Command {
 
         if ((RobotMath.getTime() >= endTime) && (delay > 0) && (!bStarted)){
             m_elevator.setNewPos(targPos);
-
+            bStarted = true;
         }
         if (bDone == true) {
             end(false);
