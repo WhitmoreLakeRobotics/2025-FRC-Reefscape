@@ -8,7 +8,7 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.908380681818182,
+        "x": 2.9083806818181817,
         "y": 5.9943892045454525
       },
       "isLocked": false,
@@ -31,7 +31,19 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "EA PICKUP",
+      "waypointRelativePos": 0.1926683716965045,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "EA PICKUP"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 2.0,
     "maxAcceleration": 1.75,

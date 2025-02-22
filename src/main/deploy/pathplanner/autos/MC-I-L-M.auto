@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "TC-i"
+                  "pathName": "TMC-i"
                 }
               },
               {
@@ -30,28 +30,15 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "i-pickup1"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "EA PICKUP"
-                }
-              }
-            ]
+            "pathName": "i-pickup1"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.5
           }
         },
         {
@@ -65,15 +52,15 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "pickup1-L"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "EA LEVEL4"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "pickup1-L"
                 }
               }
             ]
@@ -86,22 +73,15 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "L-pickup1"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "EA PICKUP"
-                }
-              }
-            ]
+            "pathName": "L-pickup1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         },
         {
@@ -127,12 +107,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
           }
         },
         {

@@ -12,7 +12,7 @@
         "y": 7.107883522727271
       },
       "isLocked": false,
-      "linkedName": "TC"
+      "linkedName": "TTC"
     },
     {
       "anchor": {
@@ -31,7 +31,52 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Coral Reset",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Coral Reset"
+        }
+      }
+    },
+    {
+      "name": "Wiper Left",
+      "waypointRelativePos": 0.01,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Wiper Left"
+        }
+      }
+    },
+    {
+      "name": "Wiper Right",
+      "waypointRelativePos": 0.01,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Wiper Right"
+        }
+      }
+    },
+    {
+      "name": "Algae START",
+      "waypointRelativePos": 0.01,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Algae START"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 2.0,
     "maxAcceleration": 1.75,

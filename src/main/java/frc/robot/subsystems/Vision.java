@@ -319,8 +319,8 @@ public class Vision {
      */
     RIGHT_CAM("right",
         new Rotation3d(0, Math.toRadians(0.0), Math.toRadians(194)),
-        new Translation3d(-0.095, //.095
-            0.1023, //.115
+        new Translation3d(-0.075, //.095
+            0.115, //.115
             0.30), // 8.44 inches
         VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
     /**

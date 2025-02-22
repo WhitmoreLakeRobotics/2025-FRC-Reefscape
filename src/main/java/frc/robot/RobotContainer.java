@@ -203,9 +203,9 @@ public class RobotContainer {
     Trigger DRight_Drive = new Trigger(drive_Controller.povRight());
                 
                 Trigger A_Drive = new Trigger (drive_Controller.a()); // CD
-                
+               // A_Drive.onTrue(new EAGoToLevel(ElevAndArmPos.ALGAEEXTRACTLOWER));
                 Trigger B_Drive = new Trigger(drive_Controller.b()); // EF
-                
+              //  B_Drive.onTrue(new EAGoToLevel(ElevAndArmPos.ALGAEEXTRACTUPPER));
 
                 Trigger X_Drive = new Trigger(drive_Controller.x()); // KL
                 Trigger Y_Drive = new Trigger(drive_Controller.y()); // IJ
@@ -251,13 +251,16 @@ public class RobotContainer {
                 Trigger Start_Artic = new Trigger(Articulator.start()); //USE FOR ARTICULATION COAST.
 
                 Trigger LBumper_Artic = new Trigger(Articulator.leftBumper()); //USE FOR GUIDE RAIL.
-                LBumper_Artic.onTrue(new WipersCmd(Wiper.LEFT));
+               // LBumper_Artic.onTrue(new WipersCmd(Wiper.LEFT));
+               LBumper_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.ALGAEEXTRACTLOWER));
+
                 Trigger Ltrigger_Artic = new Trigger(Articulator.leftTrigger(0.8));
                 Ltrigger_Artic.onTrue(new AlgaeCmd(AlgaeIntake.PivotPos.HELD,AlgaeIntake.Status.OUT));
                 Ltrigger_Artic.onFalse(new AlgaeCmd(AlgaeIntake.PivotPos.CORALPICKUP,AlgaeIntake.Status.STOPPED));
 
                 Trigger RBumper_Artic = new Trigger(Articulator.rightBumper()); //USE FOR GUIDE RAIL.
-                RBumper_Artic.onTrue(new WipersCmd(Wiper.RIGHT));
+               // RBumper_Artic.onTrue(new WipersCmd(Wiper.RIGHT));
+               RBumper_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.ALGAEEXTRACTUPPER));
                 Trigger Rtrigger_Artic = new Trigger(Articulator.rightTrigger(0.8)); //USE FOR CORAL DELIVERY.
                 Rtrigger_Artic.onTrue(new deliverCoralCmd());
                 Trigger LJC_Artic = new Trigger(Articulator.leftStick()); //USE FOR CLIMB ENABLE.
@@ -268,7 +271,7 @@ public class RobotContainer {
                 Trigger Coralhopper = new Trigger(m_sensors.Coralhopper::get);
                 Coralhopper.onFalse(new CmdCoralReset());
                 Trigger CoralIntake = new Trigger(m_sensors.CoralIntake::get);
-                CoralIntake.onFalse(new CmdCoralIntake(0.25));
+                //CoralIntake.onFalse(new CmdCoralIntake(0.25));
 
                 Trigger AlgIntake = new Trigger(m_sensors.AlgIntake::get);
                 AlgIntake.onFalse(new AlgaeCmd(AlgaeIntake.PivotPos.HELD, AlgaeIntake.Status.STOPPED,0.3));
