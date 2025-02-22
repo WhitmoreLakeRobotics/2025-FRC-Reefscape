@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import frc.robot.RobotContainer;
 import frc.robot.Constants.CanIds;
 import frc.robot.commands.*;
 import frc.utils.CommonLogic;
@@ -28,16 +29,19 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 public class Climb extends SubsystemBase {
     // Elevator Config Parameters
     private SparkMax climbMotor = new SparkMax(CanIds.CLIMB_MOTOR, MotorType.kBrushless);
+    private SparkMax deployMotor = new SparkMax(CanIds.BOTTOM_LIFT_MOTOR, MotorType.kBrushless);
 
-    private double pivotCurPos = 0.0;
-    private double pivotCmdPos = PivotPos.START.pivotAngle;
-    private final double pivotPosTol = 5;
+    private double climbCurPos = 0.0;
+    private final double deployPosTol = 5;
+    private double deployCurPos = 0;
 
 
-    private final ClosedLoopSlot PIVOT_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
-    private final ClosedLoopSlot PIVOT_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
-    private ClosedLoopSlot PivotCurrentSlot = PIVOT_CLOSED_LOOP_SLOT_UP;
+    private final ClosedLoopSlot CLIMB_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
+    private final ClosedLoopSlot CLIMB_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
+    private ClosedLoopSlot ClimbCurrentSlot = CLIMB_CLOSED_LOOP_SLOT_UP;
 
+    private boolean bClimbEnabled = false;
+    private double climbPower = 0.7;
     public Climb() {
         configClimbMotor();
 
@@ -46,8 +50,10 @@ public class Climb extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        pivotCurPos = climbMotor.getEncoder().getPosition();
-
+        climbCurPos = climbMotor.getEncoder().getPosition();
+        if (bClimbEnabled){
+            updateClimbMotor();
+        } 
         // Arm direction is positive when cmdPos is greater than curPos
         /*
          * armMotor.getClosedLoopController().setReference(armCmdPos,
@@ -73,44 +79,32 @@ public class Climb extends SubsystemBase {
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
-    public void setNewPos(PivotPos tpos) {
-        // Need to insert safety logic here
-      //  targetPos = tpos;
-        if (tpos == PivotPos.STOP) {
-            setPivotCmdPos(getPivotCurPos());
-        } else {
-            setPivotCmdPos(tpos.getPivotPos());
-        }
+    public void enableClimb() {
+        bClimbEnabled = true;
 
     }
 
     // expose the current position
-    public double getPivotCurPos() {
-        return (pivotCurPos);
+    public double getDeployCurPos() {
+        return (deployCurPos);
     }
 
-    
-    public void StopIntake(){
-        setPivotCmdPos(pivotCurPos);
+    private void updateClimbMotor() {
+        climbMotor.set(climbPower * RobotContainer.getInstance().getArticulator().getLeftY());
     }
 
     // Set the new ArmCommandPos
-    private void setPivotCmdPos(double newPos) {
-        this.pivotCmdPos = newPos;
-        if (newPos > pivotCurPos) {
-            PivotCurrentSlot = PIVOT_CLOSED_LOOP_SLOT_UP;
-        } else {
-            PivotCurrentSlot = PIVOT_CLOSED_LOOP_SLOT_DOWN;
-        }
-        climbMotor.getClosedLoopController().setReference(newPos,
-                ControlType.kPosition, PivotCurrentSlot);
+    
+    public boolean isDeployAtTarget(DeployPos tpos) {
+
+        return (CommonLogic.isInRange(getDeployCurPos(), tpos.getDeployPos(), deployPosTol));
     }
 
-    public boolean isPivotAtTarget(PivotPos tpos) {
 
-        return (CommonLogic.isInRange(getPivotCurPos(), tpos.getPivotPos(), pivotPosTol));
+    public void deployClimb(){
+        deployMotor.getClosedLoopController().setReference(DeployPos.DEPLOY.getDeployPos(),ControlType.kPosition,CLIMB_CLOSED_LOOP_SLOT_UP);
+
     }
-
 
     private void configClimbMotor() {
         
@@ -123,14 +117,39 @@ public class Climb extends SubsystemBase {
         config.softLimit.reverseSoftLimitEnabled(true);
         config.idleMode(IdleMode.kBrake);
         //// In Velocity Values
-        config.closedLoop.maxMotion.maxAcceleration(30000, PIVOT_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.maxMotion.maxVelocity(6000, PIVOT_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.pidf(.04, 0.0, 0.0004, 0.0, PIVOT_CLOSED_LOOP_SLOT_DOWN);
+        // config.smartCurrentLimit(50);
+        config.smartCurrentLimit(30, 30);
+
+        /*
+         * AbsoluteEncoderConfig absEncConfig = new AbsoluteEncoderConfig();
+         * absEncConfig.zeroOffset(0.649);
+         * absEncConfig.inverted(false);
+         * absEncConfig.positionConversionFactor(360);
+         * 
+         * config.absoluteEncoder.apply(absEncConfig);
+         */
+        climbMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    }
+    private void configDeployMotor() {
+        
+        SparkMaxConfig config = new SparkMaxConfig();
+        config.encoder.positionConversionFactor(1);
+        config.inverted(true);
+        config.softLimit.forwardSoftLimit(130);
+        config.softLimit.forwardSoftLimitEnabled(true);
+        config.softLimit.reverseSoftLimit(-1);
+        config.softLimit.reverseSoftLimitEnabled(true);
+        config.idleMode(IdleMode.kBrake);
+        //// In Velocity Values
+        config.closedLoop.maxMotion.maxAcceleration(30000, CLIMB_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.maxMotion.maxVelocity(6000, CLIMB_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.pidf(.04, 0.0, 0.0004, 0.0, CLIMB_CLOSED_LOOP_SLOT_DOWN);
 
         //// Out Velocity Values
-        config.closedLoop.maxMotion.maxAcceleration(30000, PIVOT_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.maxMotion.maxVelocity(6000, PIVOT_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.pidf(.08, 0.0, 0.0008, 0.0, PIVOT_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.maxMotion.maxAcceleration(30000, CLIMB_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.maxMotion.maxVelocity(6000, CLIMB_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.pidf(.08, 0.0, 0.0008, 0.0, CLIMB_CLOSED_LOOP_SLOT_DOWN);
 
         // config.smartCurrentLimit(50);
         config.smartCurrentLimit(30, 30);
@@ -147,29 +166,22 @@ public class Climb extends SubsystemBase {
 
     }
 
-
-    public enum PivotPos {
+    public enum DeployPos {
         START(0),
-        PICKUP(105),
-        HELD(82),
-        ALLTHEWAYOUT(123),
-        CORALPICKUP(25),
+        DEPLOY(82),
         STOP(0);
 
-        private final double pivotAngle;
+        private final double deployAngle;
 
-        PivotPos(double pivotAngle) {
-            this.pivotAngle = pivotAngle;
+        DeployPos(double deployAngle) {
+            this.deployAngle = deployAngle;
         }
 
-        public double getPivotPos() {
-            return pivotAngle;
+        public double getDeployPos() {
+            return deployAngle;
         }
 
     }
 
-    public double getTargetPivPos() {
-        return pivotCmdPos;
-    }
 
 }

@@ -72,6 +72,7 @@ public class RobotContainer {
   public final ElevatorAndArm m_elevatorAndArm = new ElevatorAndArm();
   public final AlgaeIntake m_AlgaeIntake = new AlgaeIntake();
   public final Wipers m_Wipers = new Wipers();
+  public final Climb m_Climb = new Climb();
   // Joysticks
   private final CommandXboxController Articulator = new CommandXboxController(1);
   private final CommandXboxController drive_Controller = new CommandXboxController(0);

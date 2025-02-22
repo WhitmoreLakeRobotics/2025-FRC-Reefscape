@@ -123,6 +123,12 @@ public class Wipers extends SubsystemBase {
         return (CommonLogic.isInRange(getRightCurPos(), tpos.getGuidePos(), 2*pivotPosTol));
     }
 
+    public void leftRightOut() {
+        setLeftCmdPos(GuidePos.OUT);
+        setRightCmdPos(GuidePos.OUT);
+
+
+    }
     // configure the elevator motor spark
    
 
