@@ -61,19 +61,25 @@ public class WipersCmd extends Command {
     public void initialize() {
         m_Wipers = RobotContainer.getInstance().m_Wipers;
         addRequirements(m_Wipers);
-        if (wiper == Wipers.Wiper.LEFT && m_Wipers.isLeftAtTarget(Wipers.GuidePos.START)){
+        if (wiper == Wipers.Wiper.LEFT && m_Wipers.leftTarget == Wipers.GuidePos.START){
             m_Wipers.setLeftCmdPos(Wipers.GuidePos.OUT);  
             newPos = Wipers.GuidePos.OUT;
-        } else if (wiper == Wipers.Wiper.LEFT){
+            m_Wipers.leftTarget = Wipers.GuidePos.OUT;
+        } else if (wiper == Wipers.Wiper.LEFT && m_Wipers.leftTarget == Wipers.GuidePos.OUT){
             m_Wipers.setLeftCmdPos(GuidePos.START);
             newPos = Wipers.GuidePos.START;
-        }
-        if (wiper == Wipers.Wiper.RIGHT && m_Wipers.isRightAtTarget(Wipers.GuidePos.START)){
+            m_Wipers.leftTarget = Wipers.GuidePos.START;
+
+        } 
+        if (wiper == Wipers.Wiper.RIGHT && m_Wipers.rightTarget == Wipers.GuidePos.START){
         m_Wipers.setRightCmdPos(GuidePos.OUT);
         newPos = Wipers.GuidePos.OUT;
-        } else if (wiper == Wipers.Wiper.RIGHT){
+        m_Wipers.rightTarget = Wipers.GuidePos.OUT;
+        } else if (wiper == Wipers.Wiper.RIGHT && m_Wipers.rightTarget == Wipers.GuidePos.OUT){
             m_Wipers.setRightCmdPos(GuidePos.START);
             newPos = Wipers.GuidePos.START;
+            m_Wipers.rightTarget = Wipers.GuidePos.START;
+
         }
 
 

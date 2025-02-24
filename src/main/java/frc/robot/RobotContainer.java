@@ -91,7 +91,7 @@ public class RobotContainer {
       .withControllerRotationAxis(this::getRightXInverted)
       .deadband(OperatorConstants.DEADBAND)
       .scaleTranslation(0.8)
-      .allianceRelativeControl(true);
+      .allianceRelativeControl(false);
 
   // Applies deadbands and inverts controls because joysticks
   // are back-right positive while robot

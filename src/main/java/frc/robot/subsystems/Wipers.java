@@ -37,12 +37,13 @@ public class Wipers extends SubsystemBase {
     private double pivotCmdPos = GuidePos.START.guideAngle;
     private final double pivotPosTol = 0.1;
 
-    private GuidePos rightTargetPos = GuidePos.START;
-    private GuidePos leftTargetPos = GuidePos.START;
+    private GuidePos rightTargetPos = GuidePos.ZERO;
+    private GuidePos leftTargetPos = GuidePos.ZERO;
 
     private final ClosedLoopSlot GUIDE_CLOSED_LOOP_SLOT = ClosedLoopSlot.kSlot0;
     private ClosedLoopSlot GuideCurrentSlot = GUIDE_CLOSED_LOOP_SLOT;
-
+    public GuidePos leftTarget = Wipers.GuidePos.START;
+    public GuidePos rightTarget = Wipers.GuidePos.START;
     public Wipers() {
         configMotors();
 
@@ -177,7 +178,8 @@ public class Wipers extends SubsystemBase {
 
 
     public enum GuidePos {
-        START(1.2),
+        ZERO(0.0),
+        START(1.1),
         OUT(6.7);
 
         private final double guideAngle;
