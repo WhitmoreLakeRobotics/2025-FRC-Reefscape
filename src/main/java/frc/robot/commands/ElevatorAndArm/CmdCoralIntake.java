@@ -82,7 +82,7 @@ public class CmdCoralIntake extends Command {
         bDone = m_elevator.isElevatorAndArmAtTarget(targPos);
         if ((RobotMath.getTime() >= endTime) && (delay > 0) && (!bStarted)){
             m_elevator.setNewPos(targPos);
-
+            bStarted = true;
         }
         if (bDone == true) {
             end(true);

@@ -58,7 +58,7 @@ public class CmdCoralReset extends Command {
 
         if(m_elevator.getTargetPos() == ElevAndArmPos.CIntake){
          m_elevator.resetCoralEncoder();
-         m_elevator.setNewPos(ElevAndArmPos.CHold);
+        // m_elevator.setNewPos(ElevAndArmPos.CHold);
 
         }
         
@@ -69,7 +69,11 @@ public class CmdCoralReset extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        bDone = m_elevator.isElevatorAndArmAtTarget(targPos);
+       
+        if(m_elevator.getTargetPos() == ElevAndArmPos.CHold && m_elevator.isCoralAtTarget(ElevAndArmPos.CHold)){
+            m_elevator.setNewPos(ElevAndArmPos.SAFETYPOS);
+            bDone = true;
+        }
 
         if (bDone == true) {
             end(true);

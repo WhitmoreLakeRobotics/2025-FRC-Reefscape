@@ -218,6 +218,7 @@ public class RobotContainer {
                 LBumper_Drive.onTrue(new WipersCmd(Wipers.Wiper.LEFT));
                 Trigger Ltrigger_Drive = new Trigger(drive_Controller.leftTrigger(0.8));
                 Ltrigger_Drive.onTrue(new AlgaeCmd(AlgaeIntake.PivotPos.HELD, AlgaeIntake.Status.OUT));
+                Ltrigger_Drive.onFalse(new AlgaeCmd(AlgaeIntake.PivotPos.CORALPICKUP,AlgaeIntake.Status.STOPPED));
 
                 Trigger RBumper_Drive = new Trigger(drive_Controller.rightBumper());
                 RBumper_Drive.onTrue(new WipersCmd(Wipers.Wiper.RIGHT));
