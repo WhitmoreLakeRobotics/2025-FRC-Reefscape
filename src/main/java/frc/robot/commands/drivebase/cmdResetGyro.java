@@ -18,7 +18,7 @@ public class cmdResetGyro extends Command {
     @Override
     public void initialize() {
         bDone = false;
-        RobotContainer.getInstance().m_driveTrain.zeroGyro();
+        RobotContainer.getInstance().m_driveTrain.zeroGyroWithAlliance();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
