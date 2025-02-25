@@ -27,7 +27,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 
 public class Wipers extends SubsystemBase {
     // Elevator Config Parameters
-    public SparkMax leftMotor = new SparkMax(CanIds.RIGHT_GUIDE, MotorType.kBrushless);
+  //  public SparkMax leftMotor = new SparkMax(CanIds.RIGHT_GUIDE, MotorType.kBrushless);
     private SparkMax rightMotor = new SparkMax(CanIds.LEFT_GUIDE, MotorType.kBrushless);
 
     private double pivot_gearRatio = (2.89 * 5.23 * 5.23);
@@ -52,7 +52,7 @@ public class Wipers extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        leftCurPos = leftMotor.getEncoder().getPosition();
+     //   leftCurPos = leftMotor.getEncoder().getPosition();
         rightCurrPos = rightMotor.getEncoder().getPosition();
 
         // Arm direction is positive when cmdPos is greater than curPos
@@ -75,7 +75,7 @@ public class Wipers extends SubsystemBase {
     public void disablePeriodic() {
 
         rightMotor.getClosedLoopController().setIAccum(0);
-        leftMotor.getClosedLoopController().setIAccum(0);
+      //  leftMotor.getClosedLoopController().setIAccum(0);
     }
 
     // Put methods for controlling this subsystem
@@ -102,8 +102,8 @@ public class Wipers extends SubsystemBase {
     public void setLeftCmdPos(GuidePos newPos) {
         leftTargetPos = newPos;
        
-        leftMotor.getClosedLoopController().setReference(newPos.guideAngle,
-                ControlType.kPosition, GuideCurrentSlot);
+     //   leftMotor.getClosedLoopController().setReference(newPos.guideAngle,
+     //           ControlType.kPosition, GuideCurrentSlot);
     }
 
     public void setRightCmdPos(GuidePos newPos) {
@@ -162,7 +162,7 @@ public class Wipers extends SubsystemBase {
          * 
          * config.absoluteEncoder.apply(absEncConfig);
          */
-        leftMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+      //  leftMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         config.inverted(true);
         rightMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

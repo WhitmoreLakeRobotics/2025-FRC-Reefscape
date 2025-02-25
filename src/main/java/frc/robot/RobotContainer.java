@@ -91,7 +91,7 @@ public class RobotContainer {
       .withControllerRotationAxis(this::getRightXInverted)
       .deadband(OperatorConstants.DEADBAND)
       .scaleTranslation(0.8)
-      .allianceRelativeControl(false);
+      .allianceRelativeControl(true);
 
   // Applies deadbands and inverts controls because joysticks
   // are back-right positive while robot
@@ -316,7 +316,7 @@ public class RobotContainer {
 //SmartDashboard.putNumber("Coral Current", m_elevatorAndArm.coralMotor.getOutputCurrent());
 //SmartDashboard.putNumber("Coral output", m_elevatorAndArm.coralMotor.getAppliedOutput());
 //SmartDashboard.putNumber("Coral Velocity", m_elevatorAndArm.coralMotor.getEncoder().getVelocity());
-SmartDashboard.putNumber("LeftGuide Pos", m_Wipers.leftMotor.getEncoder().getPosition());
+//SmartDashboard.putNumber("LeftGuide Pos", m_Wipers.leftMotor.getEncoder().getPosition());
 SmartDashboard.putNumber("Left Guid Target", m_Wipers.getLeftTargetPos());
 SmartDashboard.putNumber("Right Guide Pos", m_Wipers.getRightCurPos());
 SmartDashboard.putNumber("Right Guid Target", m_Wipers.getRightTargetPos());
