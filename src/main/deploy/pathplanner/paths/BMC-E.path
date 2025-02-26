@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.722727272727273,
-        "y": 5.080326704545453
+        "x": 7.179545454545455,
+        "y": 1.88609375
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8169744318181817,
-        "y": 5.919602272727271
+        "x": 5.783522727272728,
+        "y": 2.075553977272726
       },
       "isLocked": false,
-      "linkedName": "L"
+      "linkedName": "BMC"
     },
     {
       "anchor": {
-        "x": 1.3461647727272728,
-        "y": 7.21590909090909
+        "x": 5.045624999999999,
+        "y": 2.8034801136363625
       },
       "prevControl": {
-        "x": 2.1355823863636356,
-        "y": 6.634232954545453
+        "x": 5.604034090909091,
+        "y": 2.1553267045454536
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "PICKUP1"
+      "linkedName": "E"
     }
   ],
   "rotationTargets": [],
@@ -33,13 +33,24 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "EA PICKUP",
-      "waypointRelativePos": 0.1926683716965045,
+      "name": "Algae START",
+      "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "EA PICKUP"
+          "name": "Algae START"
+        }
+      }
+    },
+    {
+      "name": "Coral Reset",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Coral Reset"
         }
       }
     }
@@ -54,13 +65,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 125.88213724620422
+    "rotation": -59.99999999999999
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 119.99999999999999
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

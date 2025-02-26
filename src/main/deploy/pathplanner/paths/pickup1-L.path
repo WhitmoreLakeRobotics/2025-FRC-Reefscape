@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.0270738636363637,
-        "y": 6.951661931818181
+        "x": 1.3461647727272728,
+        "y": 7.21590909090909
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.090710227272728,
-        "y": 6.369985795454545
+        "x": 2.019247159090909,
+        "y": 6.584375
       },
       "isLocked": false,
       "linkedName": "PICKUP1"
     },
     {
       "anchor": {
-        "x": 3.789204545454545,
-        "y": 4.977286931818182
+        "x": 3.722727272727273,
+        "y": 5.080326704545453
       },
       "prevControl": {
-        "x": 2.8585227272727267,
-        "y": 5.808252840909092
+        "x": 3.2906250000000012,
+        "y": 5.462571022727271
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,19 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "EA LEVEL4",
+      "waypointRelativePos": 0.017050298380223327,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "EA LEVEL4"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 2.0,
     "maxAcceleration": 1.75,

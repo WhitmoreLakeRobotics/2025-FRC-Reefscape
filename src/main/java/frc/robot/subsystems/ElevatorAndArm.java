@@ -293,7 +293,7 @@ public class ElevatorAndArm extends SubsystemBase {
     public void REALresetCoralEncoder(boolean MatchStart) {
         boolean mStart = MatchStart;
         if (mStart) {
-        coralMotor.getEncoder().setPosition(-0.5);
+        coralMotor.getEncoder().setPosition(ElevAndArmPos.CHold.coralPos);
         } else {
         coralMotor.getEncoder().setPosition(0);
 
@@ -383,8 +383,8 @@ public class ElevatorAndArm extends SubsystemBase {
         CoralConfig.softLimit.reverseSoftLimit(0);
         CoralConfig.softLimit.reverseSoftLimitEnabled(false);
         CoralConfig.idleMode(IdleMode.kBrake);
-        CoralConfig.closedLoop.maxOutput(0.4);
-        CoralConfig.closedLoop.minOutput(-0.4);
+        CoralConfig.closedLoop.maxOutput(0.8);
+        CoralConfig.closedLoop.minOutput(-0.8);
         
         CoralConfig.closedLoopRampRate(0.020);
         CoralConfig.voltageCompensation(9.0);
@@ -439,7 +439,7 @@ public class ElevatorAndArm extends SubsystemBase {
     }
 
     public enum ElevAndArmPos {
-        PICKUP(22, 0,0),
+        PICKUP(21, 0,0),
         START(22, 0,0),
         SAFETYPOS(40, 0,0),
         LEVEL1(55, 20,0),
@@ -454,8 +454,8 @@ public class ElevatorAndArm extends SubsystemBase {
         ALGAEEXTRACTLOWER(70,20,1000),
         ALGAEEXTRACTUPPER(66,58,1000),
         OUTOFWAY(250, 0,0),
-        CIntake(22,0,3),  //was 2.5
-        CHold(22,0,-0.5),
+        CIntake(21,0,3),  //was 2.5
+        CHold(21,0,-0.35),
     
         CDeliver(22,0,-2),
         CReturn(22,0,2);

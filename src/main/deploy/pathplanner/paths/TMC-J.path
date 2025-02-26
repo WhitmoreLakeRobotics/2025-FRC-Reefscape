@@ -16,22 +16,33 @@
     },
     {
       "anchor": {
-        "x": 5.274971590909091,
-        "y": 4.9972301136363635
+        "x": 5.002414772727272,
+        "y": 5.246519886363636
       },
       "prevControl": {
-        "x": 5.815099431818181,
-        "y": 5.620454545454546
+        "x": 5.542542613636362,
+        "y": 5.8697443181818185
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "i4"
+      "linkedName": "J"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
+    {
+      "name": "EA LEVEL4",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "EA LEVEL4"
+        }
+      }
+    },
     {
       "name": "Wiper Left",
       "waypointRelativePos": 0.01,

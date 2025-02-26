@@ -73,10 +73,11 @@ public class CmdCoralReset extends Command {
         if(m_elevator.getTargetPos() == ElevAndArmPos.CHold && m_elevator.isCoralAtTarget(ElevAndArmPos.CHold)){
             m_elevator.setNewPos(ElevAndArmPos.SAFETYPOS);
             bDone = true;
+            end(false);
         }
 
         if (bDone == true) {
-            end(true);
+            end(false);
         }
     }
 

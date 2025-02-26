@@ -17,13 +17,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "TMC-i"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Wiper Right"
+                  "pathName": "TMC-J"
                 }
               }
             ]
@@ -38,13 +32,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "i-pickup1"
+            "pathName": "J-pickup1"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.5
+            "waitTime": 1.0
           }
         },
         {
@@ -60,28 +54,21 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "EA LEVEL4"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "pickup1-L"
-                }
-              }
-            ]
+            "pathName": "pickup1-L"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "CORAL DELIVER"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "L-pickup1"
           }
         }
       ]
