@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.002414772727272,
-        "y": 5.246519886363636
+        "x": 4.902698863636363,
+        "y": 5.20497159090909
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.154829545450436,
-        "y": 5.836505681813438
+        "x": 4.055113636359527,
+        "y": 5.794957386358893
       },
       "isLocked": false,
       "linkedName": "J"
@@ -32,12 +32,12 @@
     },
     {
       "anchor": {
-        "x": 1.3461647727272728,
-        "y": 7.21590909090909
+        "x": 1.3129261363636366,
+        "y": 7.299005681818182
       },
       "prevControl": {
-        "x": 2.044176136359527,
-        "y": 6.526207386358894
+        "x": 2.010937499995891,
+        "y": 6.609303977267985
       },
       "nextControl": null,
       "isLocked": false,
@@ -50,7 +50,7 @@
   "eventMarkers": [
     {
       "name": "EA PICKUP",
-      "waypointRelativePos": 0.17561807331627913,
+      "waypointRelativePos": 0.4637681159420521,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -61,8 +61,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 1.75,
+    "maxVelocity": 2.5,
+    "maxAcceleration": 1.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

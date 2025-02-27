@@ -243,7 +243,7 @@ public class RobotContainer {
                 B_Artic.onTrue(new AlgaeCmd(AlgaeIntake.PivotPos.CORALPICKUP,AlgaeIntake.Status.STOPPED)); 
 
                 Trigger X_Artic = new Trigger(Articulator.x());
-                X_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.CIntake));
+                X_Artic.onTrue(new CmdCoralIntake());
                 Trigger Y_Artic = new Trigger(Articulator.y());
                 Y_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.PICKUP));
 
@@ -305,6 +305,7 @@ public class RobotContainer {
   }
 
   public void updateSmartDashboard() {
+    SmartDashboard.putBoolean("is intaking", !m_elevatorAndArm.isIntaking);
     SmartDashboard.putNumber("Arm Targ", m_elevatorAndArm.getTargetArmPos());
     SmartDashboard.putNumber("Arm Cur", m_elevatorAndArm.getArmCurPos());
     SmartDashboard.putBoolean("Arm in Pos",m_elevatorAndArm.isArmAtTarget(m_elevatorAndArm.getTargetPos()));
