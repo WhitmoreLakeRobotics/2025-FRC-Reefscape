@@ -152,7 +152,7 @@ public class AlgaeIntake extends SubsystemBase {
     }
 
     private void configPivotMotor() {
-        
+
         SparkMaxConfig config = new SparkMaxConfig();
         config.encoder.positionConversionFactor(1);
         config.inverted(true);
@@ -179,7 +179,7 @@ public class AlgaeIntake extends SubsystemBase {
          * absEncConfig.zeroOffset(0.649);
          * absEncConfig.inverted(false);
          * absEncConfig.positionConversionFactor(360);
-         * 
+         *
          * config.absoluteEncoder.apply(absEncConfig);
          */
         pivotMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

@@ -31,17 +31,22 @@ import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkBase.PersistMode;
 
+import frc.robot.subsystems.Coral;
+import frc.robot.subsystems.Sensors;
+import frc.robot.subsystems.Coral.CoralPhase;
+
+
 public class ElevatorAndArm extends SubsystemBase {
     // Elevator Config Parameters
     private SparkMax elevatorMotor = new SparkMax(CanIds.ELEVATOR_MOTOR, MotorType.kBrushless);
     private SparkMax armMotor = new SparkMax(CanIds.ARM_MOTOR, MotorType.kBrushless);
-    private SparkMax coralMotor = new SparkMax(CanIds.CORAL_MOTOR, MotorType.kBrushless);
+    //private SparkMax coralMotor = new SparkMax(CanIds.CORAL_MOTOR, MotorType.kBrushless);
 
     private double elevator_gearRatio = (5 / 1);
     private double elevator_gearDiameter = 1.685; // 14 tooth
     // https://www.andymark.com/products/35-series-symmetrical-hub-sprockets?via=Z2lkOi8vYW5keW1hcmsvV29ya2FyZWE6Ok5hdmlnYXRpb246OlNlYXJjaFJlc3VsdHMvJTdCJTIycSUyMiUzQSUyMjE0K3Rvb3RoK3Nwcm9ja2V0JTIyJTdE&Tooth%20Count=14%20(am-4790)&quantity=1;
     private double elevatorCurPos = 0.0;
-    private double elevatorCmdPos = ElevAndArmPos.START.elevPos;
+    private double elevatorCmdPos = ElevAndArmPos.PICKUP.elevPos;
     private final double elevatorPosTol = 0.25;
 
     private final double armPosTol = 0.25;
@@ -50,19 +55,14 @@ public class ElevatorAndArm extends SubsystemBase {
     // https://www.andymark.com/products/35-series-symmetrical-hub-sprockets?via=Z2lkOi8vYW5keW1hcmsvV29ya2FyZWE6Ok5hdmlnYXRpb246OlNlYXJjaFJlc3VsdHMvJTdCJTIycSUyMiUzQSUyMjE0K3Rvb3RoK3Nwcm9ja2V0JTIyJTdE&Tooth%20Count=14%20(am-4790)&quantity=1;
 
     private double armCurPos = 0.0;
-    private double armCmdPos = ElevAndArmPos.START.armPos;
+    private double armCmdPos = ElevAndArmPos.PICKUP.armPos;
     private double armDirection = 0;
 
-    private final double coralPosTol = 0.1;
-    private double CoralCurPos = 0.0;
-    private double CoralCmdPos = ElevAndArmPos.START.coralPos;
-    private double CoralDirection = 0;
-
-    public boolean holdCoral = true;
     private double Coral_m = 0;
     private double Coral_b = 0;
+    private Coral m_coral = null;
 
-    private ElevAndArmPos targetPos = ElevAndArmPos.START;
+    private ElevAndArmPos targetPos = ElevAndArmPos.PICKUP;
 
     private final ClosedLoopSlot ELEVATOR_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
     private final ClosedLoopSlot ELEVATOR_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
@@ -72,10 +72,6 @@ public class ElevatorAndArm extends SubsystemBase {
     private final ClosedLoopSlot ARM_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
     private ClosedLoopSlot ArmCurrentSlot = ARM_CLOSED_LOOP_SLOT_UP;
 
-    private final ClosedLoopSlot CORAL_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
-    private final ClosedLoopSlot CORAL_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
-    private ClosedLoopSlot CoralCurrentSlot = CORAL_CLOSED_LOOP_SLOT_UP;
-
     private boolean isBrake = true;
 
     public boolean isIntaking = false;
@@ -83,33 +79,27 @@ public class ElevatorAndArm extends SubsystemBase {
     public ElevatorAndArm() {
         configElevatorMotor();
         configArmMotor();
-        configCoralMotor();
-        configCoralCompensation();
+
+    }
+
+    public void setCoralSystem (Coral newCoral){
+        m_coral = newCoral;
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
         elevatorCurPos = elevatorMotor.getEncoder().getPosition();
-        CoralCurPos = coralMotor.getEncoder().getPosition();
         armCurPos = armMotor.getAbsoluteEncoder().getPosition();
 
         // Arm direction is positive when cmdPos is greater than curPos
         armDirection = Math.signum(armCmdPos - armCurPos);
-        /*
-         * armMotor.getClosedLoopController().setReference(armCmdPos,
-         * ControlType.kMAXMotionPositionControl, ArmCurrentSlot,
-         * Math.abs(Math.sin(armCurPos)) * armDirection);
-         */
+
         // Probably should add some safety logic here
         // recommend storing new target position in a variable and then executing the
         // safety logic here.
 
-        if (holdCoral) {
-            setCoralCmdPos(calcCoralCompensation(getArmCurPos()));
-        } else if (!holdCoral) {
 
-        }
 
         if (isArmAtTarget(ElevAndArmPos.SAFETYPOS)) {
             // System.err.print("Safety logic" + (targetPos.armPos >
@@ -161,14 +151,14 @@ public class ElevatorAndArm extends SubsystemBase {
             switch (targetPos) {
                 case ALGAEEXTRACTLOWER:
                 case ALGAEEXTRACTUPPER:
-                    coralMotor.set(0.5);
-                    holdCoral = false;
+                    m_coral.setCoralPhase(CoralPhase.ALGE_EXTRACT);
                     break;
+                case PICKUP:
+                    m_coral.setCoralPhase(CoralPhase.PRECORAL);
+
+
 
                 default:
-                    // coralMotor.set(0.0);
-                    setCoralCmdPos(tpos.getCoralPos());
-                    // holdCoral = true;
                     break;
             }
       //  }
@@ -195,9 +185,6 @@ public class ElevatorAndArm extends SubsystemBase {
         return targetPos;
     }
 
-    public double getCoralCmdPos() {
-        return (CoralCmdPos);
-    }
 
     private void setElevatorCmdPos(double newPos) {
         elevatorCmdPos = newPos;
@@ -212,14 +199,13 @@ public class ElevatorAndArm extends SubsystemBase {
     private void setElevatorAndArmPos(ElevAndArmPos tpos) {
         setElevatorCmdPos(tpos.getElevPos());
         setArmCmdPos(tpos.getArmPos());
-        setCoralCmdPos(tpos.getCoralPos());
+
     }
 
     public void stopCmd() {
 
         setElevatorCmdPos(elevatorCurPos);
         setArmCmdPos(armCurPos);
-        setCoralCmdPos(CoralCurPos);
 
     }
 
@@ -238,9 +224,6 @@ public class ElevatorAndArm extends SubsystemBase {
         return (armCurPos);
     }
 
-    public double getCoralCurPos() {
-        return (CoralCurPos);
-    }
 
     // Set the new ArmCommandPos
     private void setArmCmdPos(double newPos) {
@@ -254,16 +237,6 @@ public class ElevatorAndArm extends SubsystemBase {
                 ControlType.kPosition, ArmCurrentSlot);
     }
 
-    public void setCoralCmdPos(double newPos) {
-        this.CoralCmdPos = newPos;
-        if (newPos > CoralCurPos) {
-            CoralCurrentSlot = CORAL_CLOSED_LOOP_SLOT_UP;
-        } else {
-            CoralCurrentSlot = CORAL_CLOSED_LOOP_SLOT_DOWN;
-        }
-        coralMotor.getClosedLoopController().setReference(newPos,
-                ControlType.kPosition, CoralCurrentSlot);
-    }
 
     public boolean isElevatorAtTarget(ElevAndArmPos tpos) {
 
@@ -275,40 +248,12 @@ public class ElevatorAndArm extends SubsystemBase {
         return (CommonLogic.isInRange(armCurPos, tpos.armPos, 3));
     }
 
-    public boolean isCoralAtTarget(ElevAndArmPos tpos) {
-
-        return (CommonLogic.isInRange(CoralCurPos, CoralCmdPos, 3.25 * coralPosTol));
-    }
 
     public boolean isElevatorAndArmAtTarget(ElevAndArmPos tpos) {
 
         return (isElevatorAtTarget(tpos) && isArmAtTarget(tpos));
     }
 
-    public void coralMotorPower(double speed) {
-        coralMotor.set(speed);
-    }
-
-    public void resetCoralEncoder() {
-       // coralMotor.getClosedLoopController().setReference(getCoralCurPos(), ControlType.kPosition, CoralCurrentSlot);
-        coralMotor.getEncoder().setPosition(0);
-       // coralMotor.getClosedLoopController().setReference(0, ControlType.kPosition, CoralCurrentSlot);
-      //  targetPos = ElevAndArmPos.CHold;
-        //setNewPos(ElevAndArmPos.CHold);
-        setNewPos(ElevAndArmPos.CHold);
-        holdCoral = true;
-
-    }
-
-    public void REALresetCoralEncoder(boolean MatchStart) {
-        boolean mStart = MatchStart;
-        if (mStart) {
-            coralMotor.getEncoder().setPosition(ElevAndArmPos.CHold.coralPos);
-        } else {
-            coralMotor.getEncoder().setPosition(0);
-
-        }
-    }
 
     // configure the elevator motor spark
     private void configElevatorMotor() {
@@ -384,103 +329,60 @@ public class ElevatorAndArm extends SubsystemBase {
 
     }
 
-    private void configCoralMotor() {
-        SparkMaxConfig CoralConfig = new SparkMaxConfig();
-
-        // config.encoder.positionConversionFactor(Math.PI * elevator_gearDiameter /
-        // elevator_gearRatio);
-        CoralConfig.encoder.positionConversionFactor(1);
-        CoralConfig.inverted(true);
-        CoralConfig.softLimit.forwardSoftLimit(65);
-        CoralConfig.softLimit.forwardSoftLimitEnabled(false);
-        CoralConfig.softLimit.reverseSoftLimit(0);
-        CoralConfig.softLimit.reverseSoftLimitEnabled(false);
-        CoralConfig.idleMode(IdleMode.kBrake);
-        CoralConfig.closedLoop.maxOutput(0.8);
-        CoralConfig.closedLoop.minOutput(-0.8);
-
-        CoralConfig.closedLoopRampRate(0.020);
-        CoralConfig.voltageCompensation(9.0);
-        //// Down / outVelocity Values
-        CoralConfig.closedLoop.maxMotion.maxAcceleration(5000, CORAL_CLOSED_LOOP_SLOT_DOWN);
-        CoralConfig.closedLoop.maxMotion.maxVelocity(2000, CORAL_CLOSED_LOOP_SLOT_DOWN);
-        CoralConfig.closedLoop.maxMotion.allowedClosedLoopError(coralPosTol, CORAL_CLOSED_LOOP_SLOT_DOWN);
-        CoralConfig.closedLoop.pidf(0.4, 0.0, 0.0, 0.0, CORAL_CLOSED_LOOP_SLOT_DOWN);
-
-        //// Up / in Velocity Values
-        CoralConfig.closedLoop.maxMotion.maxAcceleration(5000, CORAL_CLOSED_LOOP_SLOT_UP);
-        CoralConfig.closedLoop.maxMotion.maxVelocity(2000, CORAL_CLOSED_LOOP_SLOT_UP);
-        CoralConfig.closedLoop.maxMotion.allowedClosedLoopError(coralPosTol, CORAL_CLOSED_LOOP_SLOT_UP);
-        CoralConfig.closedLoop.pidf(0.4, 0.0, 0.0, 0.0, CORAL_CLOSED_LOOP_SLOT_UP);
-
-        CoralConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-
-        // config.smartCurrentLimit(50);
-        CoralConfig.smartCurrentLimit(20, 20);
-
-        coralMotor.configure(CoralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    }
-
-    public double calcCoralCompensation(double armPosDeg) {
-        // calcuate the new coral position based strictly on the arm angle
-        // y = new coral position based on the extreeme values of coral and arm angle
-        // x = incomming arm angle
-        return ((Coral_m * armPosDeg) + Coral_b);
-    }
-
-    private void configCoralCompensation() {
+    public void configCoralCompensation() {
         // calculate m and b for y = mx + b linear formula
         /*
          * Position 1 is the CHold position
          * Position 2 is the Level 4 position
          *
-         * Y2 - Y1
+         *                  Y2 - Y1
          * m = Coral_m = -------------
-         * X2 - X1
+         *                  X2 - X1
          */
 
-        Coral_m = (ElevAndArmPos.LEVEL4.coralPos - ElevAndArmPos.CHold.coralPos) /
-                (ElevAndArmPos.LEVEL4.armPos - ElevAndArmPos.CHold.armPos);
+        Coral_m = (m_coral.CORAL_LEVLE4_POS - (m_coral.CORAL_PICKUP_POS)) /
+                (ElevAndArmPos.LEVEL4.armPos - ElevAndArmPos.PICKUP.armPos);
 
         /*
          * b = Coral_b = Y1 - (m * X1)
          */
 
-        Coral_b = ElevAndArmPos.CHold.coralPos - (Coral_m * ElevAndArmPos.CHold.armPos);
+        Coral_b = (m_coral.CORAL_PICKUP_POS) - (Coral_m * ElevAndArmPos.PICKUP.armPos);
+
+        m_coral.setM(Coral_m);
+        m_coral.setB(Coral_b);
 
     }
 
     public enum ElevAndArmPos {
-        PICKUP(24, 0, 0),
-        START(24, 0, 0),
-        SAFETYPOS(40, 0, 0),
-        LEVEL1(62, 20, 0),
-        LEVEL1DEL(62, 20, 25),
-        LEVEL2(51, 40, 0),
-        LEVEL2DEL(51, 40, 5),
-        LEVEL3(166, 7, 1.2), // was 1.2
-        LEVEL3DEL(166, 7, -5),
-        LEVEL4(166, 65.4, 1.7), // 1.7
-        LEVEL4DEL(166, 65.4, -4),
-        ELVMAX(40, 65.9, 0),
-        ALGAEEXTRACTLOWER(70, 20, 1000),
-        ALGAEEXTRACTUPPER(66, 58, 1000),
-        OUTOFWAY(250, 0, 0),
-        CIntake(24, 0, 2.50), // was 2.5
-        CHold(24, 0, -0.35),
+        PICKUP(24, 0),
+        // START(24, 0),
+        SAFETYPOS(40, 0),
+        LEVEL1(62, 20),
+        //LEVEL1DEL(62, 20),
+        LEVEL2(51, 40),
+        //LEVEL2DEL(51, 40),
+        LEVEL3(166, 7), // was 1.2
+        //LEVEL3DEL(166, 7),
+        LEVEL4(166, 65.4), // 1.7
+        //LEVEL4DEL(166, 65.4),
+        ELVMAX(40, 65.9),
+        ALGAEEXTRACTLOWER(70, 20),
+        ALGAEEXTRACTUPPER(66, 58),
+        OUTOFWAY(250, 0);
+        //CIntake(24, 0), // was 2.5
+        //CHold(24, 0),
 
-        CDeliver(24, 0, -2),
-        CReturn(24, 0, 2);
+        //CDeliver(24, 0),
+        //CReturn(24, 0);
 
         private final double armPos;
         private final double elevPos;
-        private final double coralPos;
 
-        ElevAndArmPos(double armPos, double elevPos, double coralPos) {
+
+        ElevAndArmPos(double armPos, double elevPos) {
             this.armPos = armPos;
             this.elevPos = elevPos;
-            this.coralPos = coralPos;
         }
 
         public double getArmPos() {
@@ -491,9 +393,7 @@ public class ElevatorAndArm extends SubsystemBase {
             return elevPos;
         }
 
-        public double getCoralPos() {
-            return coralPos;
-        }
+
     }
 
     public double getTargetArmPos() {
