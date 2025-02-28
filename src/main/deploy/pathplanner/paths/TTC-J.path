@@ -33,35 +33,13 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Coral Reset",
-      "waypointRelativePos": 0,
+      "name": "EA LEVEL4",
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "Coral Reset"
-        }
-      }
-    },
-    {
-      "name": "Wiper Right",
-      "waypointRelativePos": 0.01,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Wiper Right"
-        }
-      }
-    },
-    {
-      "name": "Algae START",
-      "waypointRelativePos": 0.01,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Algae START"
+          "name": "EA LEVEL4"
         }
       }
     }

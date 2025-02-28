@@ -55,6 +55,7 @@ public class CmdCoralReset extends Command {
     public void initialize() {
         m_elevator = RobotContainer.getInstance().m_elevatorAndArm;
         addRequirements(m_elevator);
+        
 
         if(m_elevator.getTargetPos() == ElevAndArmPos.CIntake){
          m_elevator.resetCoralEncoder();

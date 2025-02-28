@@ -254,7 +254,7 @@ public class ElevatorAndArm extends SubsystemBase {
                 ControlType.kPosition, ArmCurrentSlot);
     }
 
-    private void setCoralCmdPos(double newPos) {
+    public void setCoralCmdPos(double newPos) {
         this.CoralCmdPos = newPos;
         if (newPos > CoralCurPos) {
             CoralCurrentSlot = CORAL_CLOSED_LOOP_SLOT_UP;
@@ -290,11 +290,12 @@ public class ElevatorAndArm extends SubsystemBase {
     }
 
     public void resetCoralEncoder() {
-        coralMotor.getClosedLoopController().setReference(getCoralCurPos(), ControlType.kPosition, CoralCurrentSlot);
+       // coralMotor.getClosedLoopController().setReference(getCoralCurPos(), ControlType.kPosition, CoralCurrentSlot);
         coralMotor.getEncoder().setPosition(0);
-        coralMotor.getClosedLoopController().setReference(0, ControlType.kPosition, CoralCurrentSlot);
-        targetPos = ElevAndArmPos.CHold;
-        setNewPos(targetPos);
+       // coralMotor.getClosedLoopController().setReference(0, ControlType.kPosition, CoralCurrentSlot);
+      //  targetPos = ElevAndArmPos.CHold;
+        //setNewPos(ElevAndArmPos.CHold);
+        setNewPos(ElevAndArmPos.CHold);
         holdCoral = true;
 
     }
@@ -451,11 +452,11 @@ public class ElevatorAndArm extends SubsystemBase {
     }
 
     public enum ElevAndArmPos {
-        PICKUP(21, 0, 0),
-        START(22, 0, 0),
+        PICKUP(24, 0, 0),
+        START(24, 0, 0),
         SAFETYPOS(40, 0, 0),
-        LEVEL1(55, 20, 0),
-        LEVEL1DEL(55, 20, 25),
+        LEVEL1(62, 20, 0),
+        LEVEL1DEL(62, 20, 25),
         LEVEL2(51, 40, 0),
         LEVEL2DEL(51, 40, 5),
         LEVEL3(166, 7, 1.2), // was 1.2
@@ -466,11 +467,11 @@ public class ElevatorAndArm extends SubsystemBase {
         ALGAEEXTRACTLOWER(70, 20, 1000),
         ALGAEEXTRACTUPPER(66, 58, 1000),
         OUTOFWAY(250, 0, 0),
-        CIntake(21, 0, 3), // was 2.5
-        CHold(21, 0, -0.35),
+        CIntake(24, 0, 2.50), // was 2.5
+        CHold(24, 0, -0.35),
 
-        CDeliver(22, 0, -2),
-        CReturn(22, 0, 2);
+        CDeliver(24, 0, -2),
+        CReturn(24, 0, 2);
 
         private final double armPos;
         private final double elevPos;

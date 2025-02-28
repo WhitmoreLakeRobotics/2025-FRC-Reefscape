@@ -68,7 +68,7 @@ public class ClimbEnableCmd extends Command {
     @Override
     public void execute() {
         if (m_RobotContainer.m_elevatorAndArm.isElevatorAndArmAtTarget(ElevAndArmPos.OUTOFWAY) && 
-        m_RobotContainer.m_Wipers.isLeftAtTarget(Wipers.GuidePos.OUT) && m_RobotContainer.m_Wipers.isRightAtTarget(Wipers.GuidePos.OUT)){
+       /* m_RobotContainer.m_Wipers.isLeftAtTarget(Wipers.GuidePos.OUT)&&*/  m_RobotContainer.m_Wipers.isRightAtTarget(Wipers.GuidePos.OUT)){
            m_RobotContainer.m_Climb.deployClimb();
             bDone = true;
             end(false);

@@ -208,7 +208,7 @@ public class AlgaeIntake extends SubsystemBase {
         PICKUP(105),
         HELD(60),
         ALLTHEWAYOUT(123),
-        CORALPICKUP(25),
+        CORALPICKUP(29),
         STOP(0);
 
         private final double pivotAngle;

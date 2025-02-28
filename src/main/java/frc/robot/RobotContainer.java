@@ -250,7 +250,7 @@ public class RobotContainer {
                 Trigger Back_Artic = new Trigger(Articulator.back()); //USE FOR ARTICULATION STOP.
                 Back_Artic.onTrue(new ArticStopCmd()); 
                 Trigger Start_Artic = new Trigger(Articulator.start()); //USE FOR ARTICULATION COAST.
-
+                Start_Artic.onTrue(new coralReset());
                 Trigger LBumper_Artic = new Trigger(Articulator.leftBumper()); //USE FOR GUIDE RAIL.
                // LBumper_Artic.onTrue(new WipersCmd(Wiper.LEFT));
                LBumper_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.ALGAEEXTRACTLOWER));
@@ -270,9 +270,9 @@ public class RobotContainer {
 
 
                 Trigger Coralhopper = new Trigger(m_sensors.Coralhopper::get);
-                Coralhopper.onFalse(new CmdCoralReset());
+              //  Coralhopper.onFalse(new CmdCoralReset());
                 Trigger CoralIntake = new Trigger(m_sensors.CoralIntake::get);
-                //CoralIntake.onFalse(new CmdCoralIntake(0.25));
+               // CoralIntake.onFalse(new CmdCoralIntake());
 
                 Trigger AlgIntake = new Trigger(m_sensors.AlgIntake::get);
                 AlgIntake.onFalse(new AlgaeCmd(AlgaeIntake.PivotPos.HELD, AlgaeIntake.Status.STOPPED,0.3));

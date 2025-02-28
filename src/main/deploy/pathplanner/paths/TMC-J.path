@@ -42,17 +42,6 @@
           "name": "EA LEVEL4"
         }
       }
-    },
-    {
-      "name": "Algae START",
-      "waypointRelativePos": 0.01,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Algae START"
-        }
-      }
     }
   ],
   "globalConstraints": {

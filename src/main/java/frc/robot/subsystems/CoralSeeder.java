@@ -96,15 +96,15 @@ public class CoralSeeder extends SubsystemBase {
         config.softLimit.reverseSoftLimitEnabled(true);
         config.idleMode(IdleMode.kBrake);
         //// Down Velocity Values
-        config.closedLoop.maxMotion.maxAcceleration(1, CORAL_CLOSED_LOOP_SLOT_IN);
+        config.closedLoop.maxMotion.maxAcceleration(0.1, CORAL_CLOSED_LOOP_SLOT_IN);
         config.closedLoop.maxMotion.maxVelocity(5000, CORAL_CLOSED_LOOP_SLOT_IN);
-        config.closedLoop.pidf(.006, 0.0, 0.0, 0.5, CORAL_CLOSED_LOOP_SLOT_IN);
+        config.closedLoop.pidf(.06, 0.0, 0.0, 0.0, CORAL_CLOSED_LOOP_SLOT_IN);
 
         //// Up Velocity Values
         config.closedLoop.maxMotion.maxAcceleration(1, CORAL_CLOSED_LOOP_SLOT_OUT);
         config.closedLoop.maxMotion.maxVelocity(5000, CORAL_CLOSED_LOOP_SLOT_OUT);
-        config.closedLoop.pidf(.006
-        , 0.0, 0.0, 0.5, CORAL_CLOSED_LOOP_SLOT_OUT);
+        config.closedLoop.pidf(.06
+        , 0.0, 0.0, 0.0, CORAL_CLOSED_LOOP_SLOT_OUT);
 
         config.smartCurrentLimit(50);
         config.smartCurrentLimit(50, 50);

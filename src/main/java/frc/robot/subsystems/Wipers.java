@@ -180,7 +180,7 @@ public class Wipers extends SubsystemBase {
     public enum GuidePos {
         ZERO(0.0),
         START(1.1),
-        OUT(6.7);
+        OUT(5.7);
 
         private final double guideAngle;
 

@@ -18,6 +18,9 @@ import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.ElevatorAndArm.coralReset;
+import frc.robot.subsystems.AlgaeIntake.PivotPos;
+import frc.robot.subsystems.Wipers.GuidePos;
 
 /**
  * The methods in this class are called automatically corresponding to each
@@ -86,7 +89,9 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
+        m_robotContainer.m_AlgaeIntake.setNewPos(PivotPos.START);
+        m_robotContainer.m_Wipers.setRightCmdPos(GuidePos.START);
+        new coralReset();
         // schedule the autonomous command (example)
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
@@ -109,6 +114,7 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
+    
     }
 
     /**
