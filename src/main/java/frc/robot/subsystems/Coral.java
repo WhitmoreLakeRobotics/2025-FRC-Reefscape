@@ -78,8 +78,7 @@ public class Coral extends SubsystemBase {
         m_ElevatorAndArm = newElevatorAndArm;
     }
 
-    private void
-    SetCoralIndex(double newPos) {
+    private void SetCoralIndex(double newPos) {
         coralMotor.set(0.0);
         coralMotor.getEncoder().setPosition(0);
         setCoralCmdPos(newPos);
@@ -107,12 +106,26 @@ public class Coral extends SubsystemBase {
 
         switch (currCoralPhase) {
 
+            case INIT:
+                try {
+                    if (getUpperSensor() && m_ElevatorAndArm.isElevatorAndArmAtTarget(ElevAndArmPos.PICKUP)) {
+                        currCoralPhase = CoralPhase.PRECORAL;
+                    }
+                } catch (NullPointerException e) {
+                    System.err.println("Caught a NullPointerException: " + e.getMessage());
+                    // Handle the exception, maybe log it or take alternative action
+                    System.err.println ("Coral Phase is in INIT and catching null pointer");
+                }
+
+                break;
+
             case PRECORAL:
                 // Looking for the upper sensor to trip
                 if (getUpperSensor()) {
                     // Sensor Tripped
                     currCoralPhase = CoralPhase.CORAL_INDEX_WAITING;
                     coralMotor.set(SPEED_INDEXING);
+                    m_ElevatorAndArm.setBlockMoves(true);
                 }
                 break;
 
@@ -120,7 +133,7 @@ public class Coral extends SubsystemBase {
                 // Coral Index is complete when 1 of 2 things happens
                 // We lost the upper sensor.
                 if (!getUpperSensor()) {
-                    //currCoralPhase = CoralPhase.CORAL_INDEX_COMPLETE;
+                    // currCoralPhase = CoralPhase.CORAL_INDEX_COMPLETE;
                     // Coral has indexed off the upper sensor
                     SetCoralIndex(UpperSensorIndexPos);
                     currCoralPhase = CoralPhase.FINAL_POSITIONING;
@@ -141,8 +154,9 @@ public class Coral extends SubsystemBase {
                 }
                 break;
             case HOLDING:
+                m_ElevatorAndArm.setBlockMoves(false);
                 setCoralCmdPos(calcCoralCompensation(m_ElevatorAndArm.getArmCurPos()));
-                m_ElevatorAndArm.setNewPos (ElevAndArmPos.SAFETYPOS);
+                m_ElevatorAndArm.setNewPos(ElevAndArmPos.SAFETYPOS);
                 break;
 
             default:
@@ -153,9 +167,14 @@ public class Coral extends SubsystemBase {
 
     }
 
+    public void enabledInit() {
+        coralMotor.getClosedLoopController().setReference(coralMotor.getEncoder().getPosition(), ControlType.kPosition);
+        coralMotor.set(0);
+    }
+
     public void SetElevatorAndArm(ElevatorAndArm sysElevatorAndArm) {
         m_ElevatorAndArm = sysElevatorAndArm;
-        currCoralPhase = CoralPhase.STOP;
+        currCoralPhase = CoralPhase.PRECORAL;
     }
 
     public String getCoralPhaseString() {
@@ -305,11 +324,11 @@ public class Coral extends SubsystemBase {
     }
 
     /*
-    public void setMandB(double new_m, double new_b) {
-        coral_m = new_m;
-        coral_b = new_b;
-    }
-    */
+     * public void setMandB(double new_m, double new_b) {
+     * coral_m = new_m;
+     * coral_b = new_b;
+     * }
+     */
 
     public Boolean getLowerSensor() {
         return !RobotContainer.getInstance().m_sensors.Coralhopper.get();
@@ -322,12 +341,12 @@ public class Coral extends SubsystemBase {
     public enum CoralPhase {
         INIT,
         PRECORAL,
-        //LOOKING_UPPER_SENSOR,
+        // LOOKING_UPPER_SENSOR,
         // TRIPPED_UPPER_SENSOR,
         // LOOKING_LOWER_SENSOR,
         // TRIPPED_LOWER_SENSOR,
         CORAL_INDEX_WAITING,
-        //CORAL_INDEX_COMPLETE,
+        // CORAL_INDEX_COMPLETE,
         FINAL_POSITIONING,
         HOLDING,
         LEVEL_1_DEPLOY,

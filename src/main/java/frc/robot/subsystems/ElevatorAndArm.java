@@ -1,8 +1,10 @@
 package frc.robot.subsystems;
 
+import frc.robot.Robot;
 import frc.robot.Constants.CanIds;
 import frc.robot.commands.*;
 import frc.utils.CommonLogic;
+import frc.utils.RobotMath;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -35,12 +37,12 @@ import frc.robot.subsystems.Coral;
 import frc.robot.subsystems.Sensors;
 import frc.robot.subsystems.Coral.CoralPhase;
 
-
 public class ElevatorAndArm extends SubsystemBase {
     // Elevator Config Parameters
     private SparkMax elevatorMotor = new SparkMax(CanIds.ELEVATOR_MOTOR, MotorType.kBrushless);
     private SparkMax armMotor = new SparkMax(CanIds.ARM_MOTOR, MotorType.kBrushless);
-    //private SparkMax coralMotor = new SparkMax(CanIds.CORAL_MOTOR, MotorType.kBrushless);
+    // private SparkMax coralMotor = new SparkMax(CanIds.CORAL_MOTOR,
+    // MotorType.kBrushless);
 
     private double elevator_gearRatio = (5 / 1);
     private double elevator_gearDiameter = 1.685; // 14 tooth
@@ -73,6 +75,7 @@ public class ElevatorAndArm extends SubsystemBase {
     private ClosedLoopSlot ArmCurrentSlot = ARM_CLOSED_LOOP_SLOT_UP;
 
     private boolean isBrake = true;
+    private double disableIntakingTime = 0;
 
     public boolean isIntaking = false;
 
@@ -82,7 +85,7 @@ public class ElevatorAndArm extends SubsystemBase {
 
     }
 
-    public void setCoralSystem (Coral newCoral){
+    public void setCoralSystem(Coral newCoral) {
         m_coral = newCoral;
     }
 
@@ -99,7 +102,9 @@ public class ElevatorAndArm extends SubsystemBase {
         // recommend storing new target position in a variable and then executing the
         // safety logic here.
 
-
+        if ((RobotMath.getTime() > disableIntakingTime) && (isIntaking == true)) {
+            isIntaking = false;
+        }
 
         if (isArmAtTarget(ElevAndArmPos.SAFETYPOS)) {
             // System.err.print("Safety logic" + (targetPos.armPos >
@@ -137,31 +142,43 @@ public class ElevatorAndArm extends SubsystemBase {
         armMotor.getClosedLoopController().setIAccum(0);
     }
 
+    public void setBlockMoves(boolean newBlockValue) {
+        isIntaking = newBlockValue;
+        if (isIntaking) {
+            // in 5 seconds re-enable movement of the arm
+            disableIntakingTime = RobotMath.getTime() + 5.00;
+        }
+
+    }
+
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
     public void setNewPos(ElevAndArmPos tpos) {
         // Need to insert safety logic here
-        //if (!isIntaking) {
-            targetPos = tpos;
+        if (isIntaking) {
+            return;
+        }
+        targetPos = tpos;
 
-            setElevatorCmdPos(tpos.getElevPos());
-            setArmCmdPos(tpos.getArmPos());
+        setElevatorCmdPos(tpos.getElevPos());
+        setArmCmdPos(tpos.getArmPos());
 
-            switch (targetPos) {
-                case ALGAEEXTRACTLOWER:
-                case ALGAEEXTRACTUPPER:
-                    m_coral.setCoralPhase(CoralPhase.ALGE_EXTRACT);
-                    break;
-                case PICKUP:
-                    m_coral.setCoralPhase(CoralPhase.PRECORAL);
+        switch (targetPos) {
+            case ALGAEEXTRACTLOWER:
+            case ALGAEEXTRACTUPPER:
+                m_coral.setCoralPhase(CoralPhase.ALGE_EXTRACT);
+                break;
 
+            case PICKUP:
+                m_coral.setCoralPhase(CoralPhase.PRECORAL);
 
+            default:
+                // I am not sure if we want to go to holding for all other positions
+                // m_coral.setCoralPhase(CoralPhase.HOLDING);
+                break;
+        }
 
-                default:
-                    break;
-            }
-      //  }
     }
 
     public void setAlgaeExtract(ElevAndArmPos tpos) {
@@ -184,7 +201,6 @@ public class ElevatorAndArm extends SubsystemBase {
     public ElevAndArmPos getTargetPos() {
         return targetPos;
     }
-
 
     private void setElevatorCmdPos(double newPos) {
         elevatorCmdPos = newPos;
@@ -224,7 +240,6 @@ public class ElevatorAndArm extends SubsystemBase {
         return (armCurPos);
     }
 
-
     // Set the new ArmCommandPos
     private void setArmCmdPos(double newPos) {
         this.armCmdPos = newPos;
@@ -237,7 +252,6 @@ public class ElevatorAndArm extends SubsystemBase {
                 ControlType.kPosition, ArmCurrentSlot);
     }
 
-
     public boolean isElevatorAtTarget(ElevAndArmPos tpos) {
 
         return (CommonLogic.isInRange(getElevatorCurPos(), tpos.elevPos, 2 * elevatorPosTol));
@@ -248,12 +262,10 @@ public class ElevatorAndArm extends SubsystemBase {
         return (CommonLogic.isInRange(armCurPos, tpos.armPos, 3));
     }
 
-
     public boolean isElevatorAndArmAtTarget(ElevAndArmPos tpos) {
 
         return (isElevatorAtTarget(tpos) && isArmAtTarget(tpos));
     }
-
 
     // configure the elevator motor spark
     private void configElevatorMotor() {
@@ -329,15 +341,24 @@ public class ElevatorAndArm extends SubsystemBase {
 
     }
 
+    public void enableInit() {
+        elevatorMotor.getClosedLoopController().setReference(elevatorMotor.getEncoder().getPosition(),
+                ControlType.kPosition);
+        elevatorMotor.set(0);
+
+        armMotor.getClosedLoopController().setReference(armMotor.getEncoder().getPosition(), ControlType.kPosition);
+        armMotor.set(0);
+    }
+
     public void configCoralCompensation() {
         // calculate m and b for y = mx + b linear formula
         /*
          * Position 1 is the CHold position
          * Position 2 is the Level 4 position
          *
-         *                  Y2 - Y1
+         * Y2 - Y1
          * m = Coral_m = -------------
-         *                  X2 - X1
+         * X2 - X1
          */
 
         Coral_m = (m_coral.CORAL_LEVLE4_POS - (m_coral.CORAL_PICKUP_POS)) /
@@ -359,26 +380,25 @@ public class ElevatorAndArm extends SubsystemBase {
         // START(24, 0),
         SAFETYPOS(40, 0),
         LEVEL1(62, 20),
-        //LEVEL1DEL(62, 20),
+        // LEVEL1DEL(62, 20),
         LEVEL2(51, 40),
-        //LEVEL2DEL(51, 40),
+        // LEVEL2DEL(51, 40),
         LEVEL3(166, 7), // was 1.2
-        //LEVEL3DEL(166, 7),
+        // LEVEL3DEL(166, 7),
         LEVEL4(166, 65.4), // 1.7
-        //LEVEL4DEL(166, 65.4),
+        // LEVEL4DEL(166, 65.4),
         ELVMAX(40, 65.9),
         ALGAEEXTRACTLOWER(70, 20),
         ALGAEEXTRACTUPPER(66, 58),
         OUTOFWAY(250, 0);
-        //CIntake(24, 0), // was 2.5
-        //CHold(24, 0),
+        // CIntake(24, 0), // was 2.5
+        // CHold(24, 0),
 
-        //CDeliver(24, 0),
-        //CReturn(24, 0);
+        // CDeliver(24, 0),
+        // CReturn(24, 0);
 
         private final double armPos;
         private final double elevPos;
-
 
         ElevAndArmPos(double armPos, double elevPos) {
             this.armPos = armPos;
@@ -392,7 +412,6 @@ public class ElevatorAndArm extends SubsystemBase {
         public double getElevPos() {
             return elevPos;
         }
-
 
     }
 

@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
         m_robotContainer.m_AlgaeIntake.setNewPos(PivotPos.START);
         m_robotContainer.m_Wipers.setRightCmdPos(GuidePos.START);
         m_robotContainer.m_Coral.setCoralPhase(CoralPhase.PRECORAL);
-        
+
         // schedule the autonomous command (example)
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
@@ -113,10 +113,13 @@ public class Robot extends TimedRobot {
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
         // this line or comment it out.
+
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
-    
+        //RobotContainer.getInstance().m_Coral.enabledInit();
+        //RobotContainer.getInstance().m_elevatorAndArm.enableInit();
+
     }
 
     /**
