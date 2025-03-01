@@ -56,13 +56,14 @@ public class autonInit extends Command {
         RobotContainer.getInstance().m_AlgaeIntake.setNewPos(PivotPos.CORALPICKUP);
         RobotContainer.getInstance().m_Wipers.setRightCmdPos(GuidePos.START);
         new coralReset();
-        bDone = true;
-        end(false);
+
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        bDone = true;
+        end(false);
     }
 
     // Called once the command ends or is interrupted.

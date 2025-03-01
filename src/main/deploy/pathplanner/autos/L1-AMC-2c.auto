@@ -19,6 +19,12 @@
                 "data": {
                   "pathName": "TMC-J"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "EA LEVEL1"
+                }
               }
             ]
           }
@@ -27,12 +33,6 @@
           "type": "named",
           "data": {
             "name": "CORAL DELIVER"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "EA OUTOFWAY"
           }
         },
         {
@@ -66,21 +66,41 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "pickup1-L"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "pickup1-L"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "EA LEVEL1"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
             "name": "CORAL DELIVER"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "EA OUTOFWAY"
           }
         },
         {
