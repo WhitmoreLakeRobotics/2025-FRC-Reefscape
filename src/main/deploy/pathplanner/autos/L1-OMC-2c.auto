@@ -5,19 +5,25 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "AUTONINIT"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "TTC-J"
+                  "pathName": "BMC-E"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "EA LEVEL4"
+                  "name": "EA LEVEL1"
                 }
               }
             ]
@@ -32,13 +38,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "J-pickup1"
+            "pathName": "E-pickup2"
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.5
+            "name": "CORAL INTAKE"
           }
         },
         {
@@ -52,15 +58,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "EA LEVEL4"
+                  "pathName": "PICKUP2-D"
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "pickup1-L"
+                  "name": "EA LEVEL1"
                 }
               }
             ]
@@ -70,6 +76,24 @@
           "type": "named",
           "data": {
             "name": "CORAL DELIVER"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "D-PICKUP2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CORAL INTAKE"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CORAL INTAKE"
           }
         }
       ]

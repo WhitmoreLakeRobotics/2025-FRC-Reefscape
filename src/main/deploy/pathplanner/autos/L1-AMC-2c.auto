@@ -7,7 +7,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Coral Reset"
+            "name": "AUTONINIT"
           }
         },
         {
@@ -30,6 +30,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "EA OUTOFWAY"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "J-pickup1"
@@ -39,6 +45,12 @@
           "type": "wait",
           "data": {
             "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CORAL INTAKE"
           }
         },
         {
@@ -63,6 +75,12 @@
           "type": "named",
           "data": {
             "name": "CORAL DELIVER"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "EA OUTOFWAY"
           }
         },
         {

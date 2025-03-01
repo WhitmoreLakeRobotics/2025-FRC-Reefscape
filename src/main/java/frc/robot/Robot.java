@@ -89,13 +89,12 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-        m_robotContainer.m_AlgaeIntake.setNewPos(PivotPos.START);
-        m_robotContainer.m_Wipers.setRightCmdPos(GuidePos.START);
-        new coralReset();
+
         // schedule the autonomous command (example)
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
         }
+       // m_robotContainer.m_Climb.climbInit();
     }
 
     /**
@@ -114,6 +113,7 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
+     //   m_robotContainer.m_Climb.climbInit();
     
     }
 

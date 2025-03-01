@@ -35,13 +35,13 @@ public class Climb extends SubsystemBase {
     private final double deployPosTol = 0.1;
     private double deployCurPos = 0.0;
 
-
     private final ClosedLoopSlot CLIMB_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
     private final ClosedLoopSlot CLIMB_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
     private ClosedLoopSlot ClimbCurrentSlot = CLIMB_CLOSED_LOOP_SLOT_UP;
-
+    private boolean MatchStart = false;
     private boolean bClimbEnabled = false;
     private double climbPower = 1.0;
+
     public Climb() {
         configClimbMotor();
         configDeployMotor();
@@ -52,9 +52,10 @@ public class Climb extends SubsystemBase {
         // This method will be called once per scheduler run
         climbCurPos = climbMotor.getEncoder().getPosition();
         deployCurPos = deployMotor.getEncoder().getPosition();
-        if (bClimbEnabled){
+        if (bClimbEnabled) {
             updateClimbMotor();
-        } 
+        }
+
         // Arm direction is positive when cmdPos is greater than curPos
         /*
          * armMotor.getClosedLoopController().setReference(armCmdPos,
@@ -99,20 +100,25 @@ public class Climb extends SubsystemBase {
     }
 
     // Set the new ArmCommandPos
-    
+
     public boolean isDeployAtTarget(DeployPos tpos) {
 
         return (CommonLogic.isInRange(getDeployCurPos(), tpos.getDeployPos(), deployPosTol));
     }
 
+    public void climbInit() {
+        climbMotor.getClosedLoopController().setReference(0, ControlType.kPosition);
 
-    public void deployClimb(){
-        deployMotor.getClosedLoopController().setReference(DeployPos.DEPLOY.getDeployPos(),ControlType.kPosition,CLIMB_CLOSED_LOOP_SLOT_UP);
+    }
+
+    public void deployClimb() {
+        deployMotor.getClosedLoopController().setReference(DeployPos.DEPLOY.getDeployPos(), ControlType.kPosition,
+                CLIMB_CLOSED_LOOP_SLOT_UP);
 
     }
 
     private void configClimbMotor() {
-        
+
         SparkMaxConfig config = new SparkMaxConfig();
         config.encoder.positionConversionFactor(1);
         config.inverted(false);
@@ -136,8 +142,9 @@ public class Climb extends SubsystemBase {
         climbMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }
+
     private void configDeployMotor() {
-        
+
         SparkMaxConfig config = new SparkMaxConfig();
         config.encoder.positionConversionFactor(1);
         config.inverted(false);
@@ -145,17 +152,17 @@ public class Climb extends SubsystemBase {
         config.softLimit.forwardSoftLimitEnabled(true);
         config.softLimit.reverseSoftLimit(-1);
         config.softLimit.reverseSoftLimitEnabled(true);
-        config.closedLoop.maxOutput(0.7);
+        config.closedLoop.maxOutput(0.20);
         config.idleMode(IdleMode.kBrake);
         //// In Velocity Values
-        config.closedLoop.maxMotion.maxAcceleration(30000, CLIMB_CLOSED_LOOP_SLOT_DOWN);
-        config.closedLoop.maxMotion.maxVelocity(6000, CLIMB_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.maxMotion.maxAcceleration(15000, CLIMB_CLOSED_LOOP_SLOT_DOWN);
+        config.closedLoop.maxMotion.maxVelocity(3000, CLIMB_CLOSED_LOOP_SLOT_DOWN);
         config.closedLoop.maxMotion.allowedClosedLoopError(deployPosTol, CLIMB_CLOSED_LOOP_SLOT_DOWN);
         config.closedLoop.pidf(.04, 0.0, 0.0, 0.0, CLIMB_CLOSED_LOOP_SLOT_DOWN);
 
         //// Out Velocity Values
-        config.closedLoop.maxMotion.maxAcceleration(30000, CLIMB_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.maxMotion.maxVelocity(6000, CLIMB_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.maxMotion.maxAcceleration(15000, CLIMB_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.maxMotion.maxVelocity(3000, CLIMB_CLOSED_LOOP_SLOT_UP);
         config.closedLoop.maxMotion.allowedClosedLoopError(deployPosTol, CLIMB_CLOSED_LOOP_SLOT_UP);
         config.closedLoop.pidf(.09, 0.0, 0.0, 0.0, CLIMB_CLOSED_LOOP_SLOT_UP);
 
@@ -176,7 +183,7 @@ public class Climb extends SubsystemBase {
 
     public enum DeployPos {
         START(0),
-        DEPLOY(12.5),
+        DEPLOY(11),
         STOP(0);
 
         private final double deployAngle;
@@ -190,6 +197,5 @@ public class Climb extends SubsystemBase {
         }
 
     }
-
 
 }

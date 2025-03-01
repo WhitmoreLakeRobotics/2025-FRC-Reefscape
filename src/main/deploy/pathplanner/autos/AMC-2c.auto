@@ -1,0 +1,104 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "AUTONINIT"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "TMC-J"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "EA LEVEL4"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CORAL DELIVER"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "EA OUTOFWAY"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "J-pickup1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CORAL INTAKE"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CORAL INTAKE"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "pickup1-L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CORAL DELIVER"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "EA OUTOFWAY"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "L-pickup1"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

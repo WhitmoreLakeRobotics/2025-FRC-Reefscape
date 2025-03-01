@@ -254,7 +254,7 @@ public class ElevatorAndArm extends SubsystemBase {
                 ControlType.kPosition, ArmCurrentSlot);
     }
 
-    public void setCoralCmdPos(double newPos) {
+    private void setCoralCmdPos(double newPos) {
         this.CoralCmdPos = newPos;
         if (newPos > CoralCurPos) {
             CoralCurrentSlot = CORAL_CLOSED_LOOP_SLOT_UP;
@@ -290,12 +290,13 @@ public class ElevatorAndArm extends SubsystemBase {
     }
 
     public void resetCoralEncoder() {
-       // coralMotor.getClosedLoopController().setReference(getCoralCurPos(), ControlType.kPosition, CoralCurrentSlot);
+      //  coralMotor.getClosedLoopController().setReference(getCoralCurPos(), ControlType.kPosition, CoralCurrentSlot);
         coralMotor.getEncoder().setPosition(0);
        // coralMotor.getClosedLoopController().setReference(0, ControlType.kPosition, CoralCurrentSlot);
-      //  targetPos = ElevAndArmPos.CHold;
-        //setNewPos(ElevAndArmPos.CHold);
+       // targetPos = ElevAndArmPos.CHold;
+       // setNewPos(targetPos);
         setNewPos(ElevAndArmPos.CHold);
+
         holdCoral = true;
 
     }
@@ -454,24 +455,25 @@ public class ElevatorAndArm extends SubsystemBase {
     public enum ElevAndArmPos {
         PICKUP(24, 0, 0),
         START(24, 0, 0),
-        SAFETYPOS(40, 0, 0),
-        LEVEL1(62, 20, 0),
-        LEVEL1DEL(62, 20, 25),
-        LEVEL2(51, 40, 0),
-        LEVEL2DEL(51, 40, 5),
-        LEVEL3(166, 7, 1.2), // was 1.2
-        LEVEL3DEL(166, 7, -5),
-        LEVEL4(166, 65.4, 1.7), // 1.7
-        LEVEL4DEL(166, 65.4, -4),
-        ELVMAX(40, 65.9, 0),
-        ALGAEEXTRACTLOWER(70, 20, 1000),
-        ALGAEEXTRACTUPPER(66, 58, 1000),
-        OUTOFWAY(250, 0, 0),
-        CIntake(24, 0, 2.50), // was 2.5
+        SAFETYPOS(43, 0, 0),
+        LEVEL1(58, 20, 0),
+        LEVEL1DEL(58, 20, 25),
+        LEVEL2(54, 40, 0),
+        LEVEL2DEL(54, 40, 15),
+        LEVEL3(169, 7, 1.2), // was 1.2
+        LEVEL3DEL(169, 7, -15),
+        LEVEL4(169, 65.4, 1.7), // 1.7
+        LEVEL4DEL(169, 65.4, -15),  
+        LEVEL4OUTOFWAY (183,65.4, -15),
+        ELVMAX(43, 65.9, 0),
+        ALGAEEXTRACTLOWER(73, 20, 1000),
+        ALGAEEXTRACTUPPER(69, 58, 1000),
+        OUTOFWAY(253, 0, 0),
+        CIntake(24, 0, 2.5), // was 2.5
         CHold(24, 0, -0.35),
 
-        CDeliver(24, 0, -2),
-        CReturn(24, 0, 2);
+        CDeliver(25, 0, -2),
+        CReturn(25, 0, 2);
 
         private final double armPos;
         private final double elevPos;

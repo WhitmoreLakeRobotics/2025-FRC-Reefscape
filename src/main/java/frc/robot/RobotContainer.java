@@ -21,6 +21,7 @@ import frc.robot.commands.algae.AlgaeCmd;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.AlgaeIntake.PivotPos;
 import frc.robot.subsystems.ElevatorAndArm.ElevAndArmPos;
+//import frc.robot.subsystems.Vision.Cameras;
 import frc.robot.subsystems.Wipers.Wiper;
 import swervelib.SwerveInputStream;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -121,8 +122,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("EA PICKUP", new EAGoToLevel(ElevAndArmPos.PICKUP));
     NamedCommands.registerCommand("Wiper Left", new WipersCmd(Wipers.Wiper.LEFT));
     NamedCommands.registerCommand("Wiper Right", new WipersCmd(Wipers.Wiper.RIGHT));
-
-    NamedCommands.registerCommand("Algae START", new AlgaeCmd(AlgaeIntake.PivotPos.CORALPICKUP, AlgaeIntake.Status.STOPPED));
+    NamedCommands.registerCommand("AUTONINIT", new autonInit());
+     NamedCommands.registerCommand("Algae START", new AlgaeCmd(AlgaeIntake.PivotPos.CORALPICKUP, AlgaeIntake.Status.STOPPED));
     NamedCommands.registerCommand("EA INTAKE", new EAGoToLevel(ElevAndArmPos.PICKUP));
     NamedCommands.registerCommand("EA INTAKE DELAYED", new EAGoToLevel(ElevAndArmPos.PICKUP, 1.3));
     NamedCommands.registerCommand("INTAKE COMPLETE", new autoCoralCompleteCmd());
@@ -130,6 +131,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("EA LEVEL2", new EAGoToLevel(ElevAndArmPos.LEVEL2));
     NamedCommands.registerCommand("EA LEVEL3", new EAGoToLevel(ElevAndArmPos.LEVEL3));
     NamedCommands.registerCommand("EA LEVEL4", new EAGoToLevel(ElevAndArmPos.LEVEL4));
+    NamedCommands.registerCommand("EA OUTOFWAY", new EAGoToLevel(ElevAndArmPos.LEVEL4OUTOFWAY));
     NamedCommands.registerCommand("CORAL DELIVER", new deliverCoralCmd());
     NamedCommands.registerCommand("CORAL INTAKE", new EAGoToLevel(ElevAndArmPos.CIntake));
   //  NamedCommands.registerCommand("EA LEVEL6", new EAGoToLevel(ElevAndArmPos));
@@ -215,7 +217,7 @@ public class RobotContainer {
                 Trigger Start_Drive = new Trigger(drive_Controller.start());
 
                 Trigger LBumper_Drive = new Trigger(drive_Controller.leftBumper());
-                LBumper_Drive.onTrue(new WipersCmd(Wipers.Wiper.LEFT));
+                LBumper_Drive.onTrue(new AlgaeCmd(AlgaeIntake.PivotPos.PICKUP,AlgaeIntake.Status.IN));
                 Trigger Ltrigger_Drive = new Trigger(drive_Controller.leftTrigger(0.8));
                 Ltrigger_Drive.onTrue(new AlgaeCmd(AlgaeIntake.PivotPos.HELD, AlgaeIntake.Status.OUT));
                 Ltrigger_Drive.onFalse(new AlgaeCmd(AlgaeIntake.PivotPos.CORALPICKUP,AlgaeIntake.Status.STOPPED));
@@ -305,6 +307,7 @@ public class RobotContainer {
   }
 
   public void updateSmartDashboard() {
+    //SmartDashboard.putString("Vision Pos", m_driveTrain.vision.getEstimatedGlobalPose(Cameras.RIGHT_CAM).toString());
     SmartDashboard.putBoolean("is intaking", !m_elevatorAndArm.isIntaking);
     SmartDashboard.putNumber("Arm Targ", m_elevatorAndArm.getTargetArmPos());
     SmartDashboard.putNumber("Arm Cur", m_elevatorAndArm.getArmCurPos());

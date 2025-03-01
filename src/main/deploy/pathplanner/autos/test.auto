@@ -5,9 +5,21 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "AUTONINIT"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "EA LEVEL4"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "BMC-E"
+            "pathName": "Cen-Middle"
           }
         },
         {
@@ -17,21 +29,15 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "E-pickup2"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "CORAL INTAKE"
+            "name": "EA OUTOFWAY"
           }
         }
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": null,
   "choreoAuto": false
 }
