@@ -157,6 +157,7 @@ public class ElevatorAndArm extends SubsystemBase {
     public void setNewPos(ElevAndArmPos tpos) {
         // Need to insert safety logic here
         if (isIntaking) {
+            System.err.println("E&A setNewPos is blocked by intaking");
             return;
         }
         targetPos = tpos;
@@ -183,10 +184,7 @@ public class ElevatorAndArm extends SubsystemBase {
 
     public void setAlgaeExtract(ElevAndArmPos tpos) {
         // Need to insert safety logic here
-        targetPos = tpos;
-
-        setElevatorCmdPos(tpos.getElevPos());
-        setArmCmdPos(tpos.getArmPos());
+        setNewPos (tpos);
     }
 
     // expose the current position

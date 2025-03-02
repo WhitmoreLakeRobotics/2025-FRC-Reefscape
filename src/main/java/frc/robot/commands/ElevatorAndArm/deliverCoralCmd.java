@@ -34,7 +34,7 @@ public class deliverCoralCmd extends Command {
     private Coral m_coral;
     private ElevatorAndArm m_elevator;
     private boolean bDone = false;
-    private ElevatorAndArm.ElevAndArmPos curElevAndArmPos = null;
+    private ElevatorAndArm.ElevAndArmPos targElevAndArmPos = null;
 
     public deliverCoralCmd() {
 
@@ -45,7 +45,7 @@ public class deliverCoralCmd extends Command {
     public void initialize() {
         m_coral = RobotContainer.getInstance().m_Coral;
         m_elevator = RobotContainer.getInstance().m_elevatorAndArm;
-        curElevAndArmPos = m_elevator.getTargetPos();
+        targElevAndArmPos = m_elevator.getTargetPos();
         addRequirements(RobotContainer.getInstance().m_Coral);
 
     }
@@ -53,8 +53,8 @@ public class deliverCoralCmd extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (m_elevator.isElevatorAndArmAtTarget(curElevAndArmPos)) {
-            switch (curElevAndArmPos) {
+        if (m_elevator.isElevatorAndArmAtTarget(targElevAndArmPos)) {
+            switch (targElevAndArmPos) {
 
                 case LEVEL1:
                     m_coral.setCoralPhase(CoralPhase.LEVEL_1_DEPLOY);
