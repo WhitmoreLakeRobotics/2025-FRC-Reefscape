@@ -35,13 +35,13 @@ public class Climb extends SubsystemBase {
     private final double deployPosTol = 0.1;
     private double deployCurPos = 0.0;
 
-
     private final ClosedLoopSlot CLIMB_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
     private final ClosedLoopSlot CLIMB_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
     private ClosedLoopSlot ClimbCurrentSlot = CLIMB_CLOSED_LOOP_SLOT_UP;
 
     private boolean bClimbEnabled = false;
     private double climbPower = 1.0;
+
     public Climb() {
         configClimbMotor();
         configDeployMotor();
@@ -52,9 +52,9 @@ public class Climb extends SubsystemBase {
         // This method will be called once per scheduler run
         climbCurPos = climbMotor.getEncoder().getPosition();
         deployCurPos = deployMotor.getEncoder().getPosition();
-        if (bClimbEnabled){
+        if (bClimbEnabled) {
             updateClimbMotor();
-        } 
+        }
         // Arm direction is positive when cmdPos is greater than curPos
         /*
          * armMotor.getClosedLoopController().setReference(armCmdPos,
@@ -99,20 +99,20 @@ public class Climb extends SubsystemBase {
     }
 
     // Set the new ArmCommandPos
-    
+
     public boolean isDeployAtTarget(DeployPos tpos) {
 
         return (CommonLogic.isInRange(getDeployCurPos(), tpos.getDeployPos(), deployPosTol));
     }
 
-
-    public void deployClimb(){
-        deployMotor.getClosedLoopController().setReference(DeployPos.DEPLOY.getDeployPos(),ControlType.kPosition,CLIMB_CLOSED_LOOP_SLOT_UP);
+    public void deployClimb() {
+        deployMotor.getClosedLoopController().setReference(DeployPos.DEPLOY.getDeployPos(), ControlType.kPosition,
+                CLIMB_CLOSED_LOOP_SLOT_UP);
 
     }
 
     private void configClimbMotor() {
-        
+
         SparkMaxConfig config = new SparkMaxConfig();
         config.encoder.positionConversionFactor(1);
         config.inverted(false);
@@ -136,8 +136,9 @@ public class Climb extends SubsystemBase {
         climbMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }
+
     private void configDeployMotor() {
-        
+
         SparkMaxConfig config = new SparkMaxConfig();
         config.encoder.positionConversionFactor(1);
         config.inverted(false);
@@ -190,6 +191,5 @@ public class Climb extends SubsystemBase {
         }
 
     }
-
 
 }

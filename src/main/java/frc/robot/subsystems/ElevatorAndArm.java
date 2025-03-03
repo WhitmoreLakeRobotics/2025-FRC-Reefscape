@@ -184,7 +184,7 @@ public class ElevatorAndArm extends SubsystemBase {
 
     public void setAlgaeExtract(ElevAndArmPos tpos) {
         // Need to insert safety logic here
-        setNewPos (tpos);
+        setNewPos(tpos);
     }
 
     // expose the current position
