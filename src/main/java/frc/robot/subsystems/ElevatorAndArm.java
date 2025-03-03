@@ -152,26 +152,26 @@ public class ElevatorAndArm extends SubsystemBase {
 
     public void setNewPos(ElevAndArmPos tpos) {
         // Need to insert safety logic here
-        //if (!isIntaking) {
-            targetPos = tpos;
+        // if (!isIntaking) {
+        targetPos = tpos;
 
-            setElevatorCmdPos(tpos.getElevPos());
-            setArmCmdPos(tpos.getArmPos());
+        setElevatorCmdPos(tpos.getElevPos());
+        setArmCmdPos(tpos.getArmPos());
 
-            switch (targetPos) {
-                case ALGAEEXTRACTLOWER:
-                case ALGAEEXTRACTUPPER:
-                    coralMotor.set(0.5);
-                    holdCoral = false;
-                    break;
+        switch (targetPos) {
+            case ALGAEEXTRACTLOWER:
+            case ALGAEEXTRACTUPPER:
+                coralMotor.set(0.5);
+                holdCoral = false;
+                break;
 
-                default:
-                    // coralMotor.set(0.0);
-                    setCoralCmdPos(tpos.getCoralPos());
-                    // holdCoral = true;
-                    break;
-            }
-      //  }
+            default:
+                // coralMotor.set(0.0);
+                setCoralCmdPos(tpos.getCoralPos());
+                // holdCoral = true;
+                break;
+        }
+        // }
     }
 
     public void setAlgaeExtract(ElevAndArmPos tpos) {
@@ -290,11 +290,13 @@ public class ElevatorAndArm extends SubsystemBase {
     }
 
     public void resetCoralEncoder() {
-      //  coralMotor.getClosedLoopController().setReference(getCoralCurPos(), ControlType.kPosition, CoralCurrentSlot);
+        // coralMotor.getClosedLoopController().setReference(getCoralCurPos(),
+        // ControlType.kPosition, CoralCurrentSlot);
         coralMotor.getEncoder().setPosition(0);
-       // coralMotor.getClosedLoopController().setReference(0, ControlType.kPosition, CoralCurrentSlot);
-       // targetPos = ElevAndArmPos.CHold;
-       // setNewPos(targetPos);
+        // coralMotor.getClosedLoopController().setReference(0, ControlType.kPosition,
+        // CoralCurrentSlot);
+        // targetPos = ElevAndArmPos.CHold;
+        // setNewPos(targetPos);
         setNewPos(ElevAndArmPos.CHold);
 
         holdCoral = true;
@@ -463,8 +465,8 @@ public class ElevatorAndArm extends SubsystemBase {
         LEVEL3(169, 7, 1.2), // was 1.2
         LEVEL3DEL(169, 7, -15),
         LEVEL4(169, 65.4, 1.7), // 1.7
-        LEVEL4DEL(169, 65.4, -15),  
-        LEVEL4OUTOFWAY (183,65.4, -15),
+        LEVEL4DEL(169, 65.4, -15),
+        LEVEL4OUTOFWAY(183, 65.4, -15),
         ELVMAX(43, 65.9, 0),
         ALGAEEXTRACTLOWER(73, 20, 1000),
         ALGAEEXTRACTUPPER(69, 58, 1000),

@@ -58,7 +58,7 @@ public class ArticStopCmd extends Command {
         RobotContainer.getInstance().m_AlgaeIntake.StopIntake();
         RobotContainer.getInstance().m_elevatorAndArm.stopCmd();
         end(false);
-        
+
     }
 
     // Called once the command ends or is interrupted.

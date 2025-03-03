@@ -28,10 +28,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 public class CoralSeeder extends SubsystemBase {
     // Elevator Config Parameters
     private SparkMax coralMotor = new SparkMax(CanIds.CORAL_MOTOR, MotorType.kBrushless);
-    
 
-   
-   
     private final ClosedLoopSlot CORAL_CLOSED_LOOP_SLOT_OUT = ClosedLoopSlot.kSlot0;
     private final ClosedLoopSlot CORAL_CLOSED_LOOP_SLOT_IN = ClosedLoopSlot.kSlot1;
     private ClosedLoopSlot CoralCurrentSlot = CORAL_CLOSED_LOOP_SLOT_OUT;
@@ -39,17 +36,15 @@ public class CoralSeeder extends SubsystemBase {
     public CoralSeeder() {
         configCoralMotor();
 
-
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-       
 
-      
         // Probably should add some safety logic here
-        // recommend storing new target position in a variable and then executing the safety logic here.
+        // recommend storing new target position in a variable and then executing the
+        // safety logic here.
     }
 
     @Override
@@ -64,27 +59,8 @@ public class CoralSeeder extends SubsystemBase {
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
-    
     // expose the current position
-    
 
-   
-   
-
-
-
-   
-
-   
-
-   
-
-
-   
-
-
-    
-   
     // configure the elevator motor spark
     private void configCoralMotor() {
         SparkMaxConfig config = new SparkMaxConfig();
@@ -103,17 +79,13 @@ public class CoralSeeder extends SubsystemBase {
         //// Up Velocity Values
         config.closedLoop.maxMotion.maxAcceleration(1, CORAL_CLOSED_LOOP_SLOT_OUT);
         config.closedLoop.maxMotion.maxVelocity(5000, CORAL_CLOSED_LOOP_SLOT_OUT);
-        config.closedLoop.pidf(.06
-        , 0.0, 0.0, 0.0, CORAL_CLOSED_LOOP_SLOT_OUT);
+        config.closedLoop.pidf(.06, 0.0, 0.0, 0.0, CORAL_CLOSED_LOOP_SLOT_OUT);
 
         config.smartCurrentLimit(50);
         config.smartCurrentLimit(50, 50);
-        
+
         coralMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }
 
-   
-
-    
 }

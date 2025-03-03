@@ -11,6 +11,7 @@
 // ROBOTBUILDER TYPE: Command.
 
 package frc.robot.commands.ElevatorAndArm;
+
 import edu.wpi.first.wpilibj2.command.Command;
 
 import java.lang.System.Logger.Level;
@@ -30,50 +31,48 @@ public class deliverCoralCmd extends Command {
 
     private ElevatorAndArm m_elevator;
     private boolean bDone = false;
-    ElevAndArmPos curPos; 
+    ElevAndArmPos curPos;
     ElevAndArmPos newPos = ElevAndArmPos.LEVEL1DEL;
 
-    
     public deliverCoralCmd() {
 
     }
-        private void deliverCoral() {
-     
+
+    private void deliverCoral() {
 
     }
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() { 
+    public void initialize() {
         m_elevator = RobotContainer.getInstance().m_elevatorAndArm;
         curPos = m_elevator.getTargetPos();
         m_elevator.holdCoral = false;
         m_elevator.isIntaking = false;
         switch (curPos) {
             case LEVEL1:
-               newPos = ElevAndArmPos.LEVEL1DEL;
+                newPos = ElevAndArmPos.LEVEL1DEL;
                 m_elevator.setNewPos(newPos);
                 break;
-                case LEVEL2:
-               newPos = ElevAndArmPos.LEVEL2DEL;
+            case LEVEL2:
+                newPos = ElevAndArmPos.LEVEL2DEL;
                 m_elevator.setNewPos(newPos);
                 break;
-                case LEVEL3:
+            case LEVEL3:
                 newPos = ElevAndArmPos.LEVEL3DEL;
                 m_elevator.setNewPos(newPos);
                 break;
-                case LEVEL4:
+            case LEVEL4:
                 newPos = ElevAndArmPos.LEVEL4DEL;
                 m_elevator.setNewPos(newPos);
                 break;
-                default: 
-                //DO NOTHING
+            default:
+                // DO NOTHING
                 break;
-        } 
+        }
         m_elevator = RobotContainer.getInstance().m_elevatorAndArm;
         addRequirements(m_elevator);
-      //  deliverCoral();
-
+        // deliverCoral();
 
     }
 

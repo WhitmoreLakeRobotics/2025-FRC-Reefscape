@@ -30,7 +30,6 @@ public class autoCoralCompleteCmd extends Command {
 
     public autoCoralCompleteCmd() {
 
-
     }
 
     // Called when the command is initially scheduled.
@@ -42,7 +41,7 @@ public class autoCoralCompleteCmd extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if(!m_rc.m_sensors.Coralhopper.get()) {
+        if (!m_rc.m_sensors.Coralhopper.get()) {
             bDone = true;
             end(false);
         }

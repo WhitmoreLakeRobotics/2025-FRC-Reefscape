@@ -103,7 +103,7 @@ public class AlgaeIntake extends SubsystemBase {
         return (pivotCurPos);
     }
 
-    public void StopIntake(){
+    public void StopIntake() {
         setIntakeStatus(Status.STOPPED);
         setPivotCmdPos(pivotCurPos);
     }
@@ -140,10 +140,11 @@ public class AlgaeIntake extends SubsystemBase {
         config.closedLoop.pidf(.004, 0.0, 0.0, 0.0);
 
         //// Up Velocity Values
-       /* config.closedLoop.maxMotion.maxAcceleration(1);
-        config.closedLoop.maxMotion.maxVelocity(1000);
-        config.closedLoop.pidf(.004, 0.0, 0.0, 0.0);
-*/
+        /*
+         * config.closedLoop.maxMotion.maxAcceleration(1);
+         * config.closedLoop.maxMotion.maxVelocity(1000);
+         * config.closedLoop.pidf(.004, 0.0, 0.0, 0.0);
+         */
         // config.smartCurrentLimit(50);
         config.smartCurrentLimit(50, 50);
 
@@ -152,7 +153,7 @@ public class AlgaeIntake extends SubsystemBase {
     }
 
     private void configPivotMotor() {
-        
+
         SparkMaxConfig config = new SparkMaxConfig();
         config.encoder.positionConversionFactor(1);
         config.inverted(true);

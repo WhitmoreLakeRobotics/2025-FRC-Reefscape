@@ -84,39 +84,40 @@ public class CmdCoralIntake extends Command {
     @Override
     public void execute() {
         // bDone = m_elevator.isElevatorAndArmAtTarget(targPos);
-/*
-        switch (currCoralPhase) {
-            case INIT:
-              RobotContainer.getInstance().m_Wipers.setRightCmdPos(GuidePos.START);
-                if (m_elevator.getTargetPos() != ElevAndArmPos.PICKUP
-                        && !m_elevator.isElevatorAndArmAtTarget(ElevAndArmPos.PICKUP)) {
-                    m_elevator.setNewPos(ElevAndArmPos.PICKUP);
-                }
-            m_elevator.setNewPos(ElevAndArmPos.CIntake);
-            currCoralPhase = currCoralPhase.INTAKING;
-            case INTAKING:
-                m_elevator.isIntaking = true;
-
-                if (!RobotContainer.getInstance().m_sensors.Coralhopper.get()) {
-                    currCoralPhase = currCoralPhase.RETRACTING;
-                }
-                break;
-            case RETRACTING:
-                m_elevator.resetCoralEncoder();
-                if (m_elevator.getTargetPos() == ElevAndArmPos.CHold
-                        && m_elevator.isCoralAtTarget(ElevAndArmPos.CHold)) {
-                    currCoralPhase = currCoralPhase.LOAD;
-                }
-
-                break;
-            case LOAD:
-                m_elevator.setNewPos(ElevAndArmPos.SAFETYPOS);
-                m_elevator.isIntaking = false;
-                bDone = true;
-                break;
-            default:
-                break;
-        } */
+        /*
+         * switch (currCoralPhase) {
+         * case INIT:
+         * RobotContainer.getInstance().m_Wipers.setRightCmdPos(GuidePos.START);
+         * if (m_elevator.getTargetPos() != ElevAndArmPos.PICKUP
+         * && !m_elevator.isElevatorAndArmAtTarget(ElevAndArmPos.PICKUP)) {
+         * m_elevator.setNewPos(ElevAndArmPos.PICKUP);
+         * }
+         * m_elevator.setNewPos(ElevAndArmPos.CIntake);
+         * currCoralPhase = currCoralPhase.INTAKING;
+         * case INTAKING:
+         * m_elevator.isIntaking = true;
+         * 
+         * if (!RobotContainer.getInstance().m_sensors.Coralhopper.get()) {
+         * currCoralPhase = currCoralPhase.RETRACTING;
+         * }
+         * break;
+         * case RETRACTING:
+         * m_elevator.resetCoralEncoder();
+         * if (m_elevator.getTargetPos() == ElevAndArmPos.CHold
+         * && m_elevator.isCoralAtTarget(ElevAndArmPos.CHold)) {
+         * currCoralPhase = currCoralPhase.LOAD;
+         * }
+         * 
+         * break;
+         * case LOAD:
+         * m_elevator.setNewPos(ElevAndArmPos.SAFETYPOS);
+         * m_elevator.isIntaking = false;
+         * bDone = true;
+         * break;
+         * default:
+         * break;
+         * }
+         */
 
         if (m_elevator.getTargetPos() == ElevAndArmPos.PICKUP
                 && m_elevator.isElevatorAndArmAtTarget(ElevAndArmPos.PICKUP)) {
@@ -136,9 +137,9 @@ public class CmdCoralIntake extends Command {
             m_elevator.isIntaking = false;
             bDone = true;
             end(false);
-        } 
-    
-                /*
+        }
+
+        /*
          * if ((RobotMath.getTime() >= endTime) && (delay > 0) && (!bStarted)){
          * m_elevator.setNewPos(targPos);
          * bStarted = true;

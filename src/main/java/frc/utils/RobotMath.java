@@ -193,6 +193,7 @@ public class RobotMath {
     public static double metersToInches(double meter) {
         return meter / 0.0254;
     }
+
     public static double inchesToMeters(double inches) {
         return inches * 0.0254;
     }

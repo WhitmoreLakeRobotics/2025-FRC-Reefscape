@@ -5,8 +5,9 @@ import frc.robot.RobotContainer;
 
 public class cmdResetGyro extends Command {
     private boolean bDone = false;
+
     public cmdResetGyro() {
-        
+
         // m_subsystem = subsystem;
         // addRequirements(m_subsystem);
 
