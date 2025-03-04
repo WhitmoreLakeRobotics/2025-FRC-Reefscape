@@ -17,6 +17,8 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 import frc.robot.subsystems.AlgaeIntake.PivotPos;
+import frc.robot.subsystems.Coral.CoralPhase;
+import frc.robot.subsystems.ElevatorAndArm.ElevAndArmPos;
 import frc.robot.subsystems.Wipers.GuidePos;
 
 import java.util.function.DoubleSupplier;
@@ -55,8 +57,8 @@ public class autonInit extends Command {
     public void initialize() {
         RobotContainer.getInstance().m_AlgaeIntake.setNewPos(PivotPos.CORALPICKUP);
         RobotContainer.getInstance().m_Wipers.setRightCmdPos(GuidePos.START);
-
-
+        RobotContainer.getInstance().m_elevatorAndArm.setNewPos(ElevAndArmPos.PICKUP);
+        RobotContainer.getInstance().m_Coral.setCoralPhase(CoralPhase.PRECORAL);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
