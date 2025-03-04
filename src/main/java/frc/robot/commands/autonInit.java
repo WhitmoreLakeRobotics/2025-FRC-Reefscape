@@ -15,7 +15,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
-import frc.robot.commands.ElevatorAndArm.coralReset;
+
 import frc.robot.subsystems.AlgaeIntake.PivotPos;
 import frc.robot.subsystems.Wipers.GuidePos;
 
@@ -55,7 +55,7 @@ public class autonInit extends Command {
     public void initialize() {
         RobotContainer.getInstance().m_AlgaeIntake.setNewPos(PivotPos.CORALPICKUP);
         RobotContainer.getInstance().m_Wipers.setRightCmdPos(GuidePos.START);
-        new coralReset();
+
 
     }
 
