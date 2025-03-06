@@ -329,7 +329,7 @@ public class ElevatorAndArm extends SubsystemBase {
         armConfig.smartCurrentLimit(50, 50);
 
         AbsoluteEncoderConfig absEncConfig = new AbsoluteEncoderConfig();
-        absEncConfig.zeroOffset(0.649);
+        //absEncConfig.zeroOffset(0.649);
         absEncConfig.inverted(false);
         absEncConfig.positionConversionFactor(360);
 
@@ -374,22 +374,22 @@ public class ElevatorAndArm extends SubsystemBase {
     }
 
     public enum ElevAndArmPos {
-        PICKUP(24, 0),
+        PICKUP(23, 0),
         // START(24, 0),
-        SAFETYPOS(43, 0),
-        LEVEL1(58, 20),
+        SAFETYPOS(42, 0),
+        LEVEL1(57, 20),
         // LEVEL1DEL(62, 20),
-        LEVEL2(54, 40),
+        LEVEL2(53, 40),
         // LEVEL2DEL(51, 40),
-        LEVEL3(169, 7), // was 1.2
+        LEVEL3(168, 7), // was 1.2
         // LEVEL3DEL(166, 7),
-        LEVEL4(169, 65.4), // 1.7
+        LEVEL4(160, 65.4), // 1.7
         LEVEL4OUTOFWAY(183,65.4),
         // LEVEL4DEL(166, 65.4),
         ELVMAX(40, 65.9),
-        ALGAEEXTRACTLOWER(73, 20),
-        ALGAEEXTRACTUPPER(69, 58),
-        OUTOFWAY(253, 0);
+        ALGAEEXTRACTLOWER(72, 20),
+        ALGAEEXTRACTUPPER(68, 58),
+        OUTOFWAY(252, 0);
         // CIntake(24, 0), // was 2.5
         // CHold(24, 0),
 

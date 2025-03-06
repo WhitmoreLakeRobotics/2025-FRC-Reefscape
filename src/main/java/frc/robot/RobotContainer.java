@@ -247,13 +247,13 @@ public class RobotContainer {
 
     Trigger DDown_Artic = new Trigger(Articulator.povDown());
     // Trigger test = new Trigger(Articulator.povDown(null));
-    DDown_Artic.onTrue(new ArmGoToLevel(ElevAndArmPos.LEVEL1));
+    DDown_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.LEVEL1));
     Trigger DLeft_Artic = new Trigger(Articulator.povLeft());
-    DLeft_Artic.onTrue(new ArmGoToLevel(ElevAndArmPos.LEVEL2));
+    DLeft_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.LEVEL2));
     Trigger DUp_Artic = new Trigger(Articulator.povUp());
-    DUp_Artic.onTrue(new ArmGoToLevel(ElevAndArmPos.LEVEL3));
+    DUp_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.LEVEL3));
     Trigger DRight_Artic = new Trigger(Articulator.povRight());
-    DRight_Artic.onTrue(new ArmGoToLevel(ElevAndArmPos.LEVEL4));
+    DRight_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.LEVEL4));
     Trigger A_Artic = new Trigger(Articulator.a());
     A_Artic.onTrue(new AlgaeCmd(AlgaeIntake.PivotPos.PICKUP, AlgaeIntake.Status.IN));
     Trigger B_Artic = new Trigger(Articulator.b());
@@ -357,6 +357,7 @@ public class RobotContainer {
     SmartDashboard.putBoolean("Algae Intake", m_sensors.AlgIntake.get());
     SmartDashboard.putNumber("Deploy Motor Cur Pos", m_Climb.getDeployCurPos());
     SmartDashboard.putNumber("Climb Motor Cur Pos", m_Climb.getClimbCurPos());
+   // SmartDashboard.putData("Vison Pose 3d", m_driveTrain.CurVisPose3d;
     // SmartDashboard.putBoolean("Hold Coral", m_elevatorAndArm.holdCoral);
   }
 

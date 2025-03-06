@@ -71,11 +71,12 @@ public class DriveTrain extends SubsystemBase {
   /**
    * Enable vision odometry updates while driving.
    */
-  private final boolean visionDriveTest = true;
+  private final boolean visionDriveTest = false;
   /**
    * PhotonVision class to keep an accurate odometry.
    */
   public Vision vision;
+  public Pose3d CurVisPose3d = new Pose3d();
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -149,6 +150,7 @@ public class DriveTrain extends SubsystemBase {
       swerveDrive.updateOdometry();
       vision.updatePoseEstimation(swerveDrive);
     }
+  //  CurVisPose3d = vision.getEstimatedGlobalPose(Cameras.RIGHT_CAM).get().estimatedPose;
   }
 
   @Override

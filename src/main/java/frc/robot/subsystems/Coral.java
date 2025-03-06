@@ -56,12 +56,12 @@ public class Coral extends SubsystemBase {
     private double coral_m = 0;
     private double coral_b = 0;
 
-    private final double SPEED_PRECORAL = 0.35;
+    private final double SPEED_PRECORAL = 0.40;
     private final double SPEED_INDEXING = 0.25;
     private final double SPEED_ALGE_EXTRACT = 0.5;
-    private final double SPEED_LEVEL1_DEPLOY = 0.3;
+    private final double SPEED_LEVEL1_DEPLOY = 0.5;
     private final double SPEED_LEVEL2_DEPLOY = SPEED_LEVEL1_DEPLOY;
-    private final double SPEED_LEVEL3_DEPLOY = -0.3;
+    private final double SPEED_LEVEL3_DEPLOY = -0.5;
     private final double SPEED_LEVEL4_DEPLOY = SPEED_LEVEL3_DEPLOY;
 
     private final ClosedLoopSlot CORAL_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
@@ -145,11 +145,11 @@ public class Coral extends SubsystemBase {
 
                 // Lower sensor is less reliable because the wiper can trip it
 
-                if (getLowerSensor()) {
+                //if (getLowerSensor()) {
                     // set power 0 and index to the perfect coral hold position
-                    SetCoralIndex(LowerSensorIndexPos);
-                    currCoralPhase = CoralPhase.FINAL_POSITIONING;
-                }
+                //    SetCoralIndex(LowerSensorIndexPos);
+                //    currCoralPhase = CoralPhase.FINAL_POSITIONING;
+                //}
                 break;
 
             case FINAL_POSITIONING:
