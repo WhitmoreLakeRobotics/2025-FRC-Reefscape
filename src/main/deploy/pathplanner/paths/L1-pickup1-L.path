@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.113068181818181,
-        "y": 7.290696022727272
+        "x": 1.3129261363636366,
+        "y": 7.299005681818182
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.049431818181818,
-        "y": 7.107883522727271
+        "x": 1.9860085227272728,
+        "y": 6.667471590909091
       },
       "isLocked": false,
-      "linkedName": "TTC"
+      "linkedName": "PICKUP1"
     },
     {
       "anchor": {
-        "x": 5.102130681818182,
-        "y": 5.047088068181818
+        "x": 3.8639914772727275,
+        "y": 5.155113636363635
       },
       "prevControl": {
-        "x": 5.609019886363637,
-        "y": 5.803267045454544
+        "x": 3.4318892045454557,
+        "y": 5.5373579545454525
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "J"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -33,13 +33,13 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "EA LEVEL4",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": null,
+      "name": "EA LEVEL1",
+      "waypointRelativePos": 0.3052003410059652,
+      "endWaypointRelativePos": 0.5967604433077814,
       "command": {
         "type": "named",
         "data": {
-          "name": "EA LEVEL4"
+          "name": "EA LEVEL1"
         }
       }
     }
@@ -54,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 59.58891873287474
+    "rotation": 119.99999999999999
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 125.88213724620422
   },
   "useDefaultConstraints": true
 }

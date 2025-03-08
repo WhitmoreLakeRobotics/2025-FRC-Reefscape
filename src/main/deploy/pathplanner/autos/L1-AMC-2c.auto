@@ -17,7 +17,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "TMC-J"
+                  "pathName": "LEVEL1-TMC-J"
                 }
               },
               {
@@ -36,6 +36,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "J-pickup1"
@@ -44,25 +50,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CORAL INTAKE"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CORAL INTAKE"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "waitTime": 1.5
           }
         },
         {
@@ -72,26 +60,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "pickup1-L"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "EA LEVEL1"
-                      }
-                    }
-                  ]
+                  "pathName": "L1-pickup1-L"
                 }
               }
             ]
@@ -101,6 +70,12 @@
           "type": "named",
           "data": {
             "name": "CORAL DELIVER"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
           }
         },
         {

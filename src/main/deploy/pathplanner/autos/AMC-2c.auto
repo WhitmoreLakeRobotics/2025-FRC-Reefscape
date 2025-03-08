@@ -19,6 +19,12 @@
                 "data": {
                   "pathName": "TMC-J"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "EA LEVEL4"
+                }
               }
             ]
           }
@@ -51,7 +57,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "J-pickup1"
+            "pathName": "JI-pickup1"
           }
         },
         {

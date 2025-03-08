@@ -16,34 +16,22 @@
     },
     {
       "anchor": {
-        "x": 4.911008522727273,
-        "y": 5.288068181818181
+        "x": 4.927627840909091,
+        "y": 5.155113636363635
       },
       "prevControl": {
-        "x": 5.451136363636363,
-        "y": 5.9112926136363635
+        "x": 5.467755681818181,
+        "y": 5.778338068181817
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "J"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "EA LEVEL4",
-      "waypointRelativePos": 0.0988917306052855,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "EA LEVEL4"
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 2.5,
     "maxAcceleration": 1.5,
