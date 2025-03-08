@@ -5,6 +5,7 @@ import frc.robot.Constants.CanIds;
 import frc.robot.commands.*;
 import frc.utils.CommonLogic;
 import frc.utils.RobotMath;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -34,12 +35,14 @@ import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import frc.robot.subsystems.ElevatorAndArm;
-import frc.robot.subsystems.Sensors;
 import frc.robot.subsystems.ElevatorAndArm.ElevAndArmPos;
 
 public class Coral extends SubsystemBase {
     // Elevator Config Parameters
     private SparkMax coralMotor = new SparkMax(CanIds.CORAL_MOTOR, MotorType.kBrushless);
+
+    public DigitalInput Coralhopper;
+    public DigitalInput CoralIntake;
 
     private final double coralPosTol = 0.2;
     private double CoralCurPos = 0.0;
@@ -60,8 +63,8 @@ public class Coral extends SubsystemBase {
     private final double SPEED_PRECORAL = 0.40;
     private final double SPEED_INDEXING = 0.25;
     private final double SPEED_ALGE_EXTRACT = 0.5;
-    private final double SPEED_LEVEL1_DEPLOY = 0.5;
-    private final double SPEED_LEVEL2_DEPLOY = SPEED_LEVEL1_DEPLOY;
+    private final double SPEED_LEVEL1_DEPLOY = 0.7;
+    private final double SPEED_LEVEL2_DEPLOY = 0.5;
     private final double SPEED_LEVEL3_DEPLOY = -0.5;
     private final double SPEED_LEVEL4_DEPLOY = -0.7;
 
@@ -79,6 +82,8 @@ public class Coral extends SubsystemBase {
 
     public Coral() {
         configCoralMotor();
+        Coralhopper = new DigitalInput(0);
+        CoralIntake = new DigitalInput(1);
     }
 
     public void setElevatorAndArmSystem(ElevatorAndArm newElevatorAndArm) {
@@ -115,8 +120,8 @@ public class Coral extends SubsystemBase {
 
             case INIT:
                 try {
-                    if (getUpperSensor() && m_ElevatorAndArm.isElevatorAndArmAtTarget(ElevAndArmPos.PICKUP)) {
-                        currCoralPhase = CoralPhase.PRECORAL;
+                    if (/*getUpperSensor() &&*/ m_ElevatorAndArm.isElevatorAndArmAtTarget(ElevAndArmPos.PICKUP)) {
+                        currCoralPhase = CoralPhase.HOLDING;
                     }
                 } catch (NullPointerException e) {
                     System.err.println("Caught a NullPointerException: " + e.getMessage());
@@ -187,7 +192,7 @@ public class Coral extends SubsystemBase {
 
     public void SetElevatorAndArm(ElevatorAndArm sysElevatorAndArm) {
         m_ElevatorAndArm = sysElevatorAndArm;
-        currCoralPhase = CoralPhase.PRECORAL;
+        currCoralPhase = CoralPhase.HOLDING;
     }
 
     public String getCoralPhaseString() {
@@ -246,6 +251,10 @@ public class Coral extends SubsystemBase {
                 ControlType.kPosition, CoralCurrentSlot);
     }
 
+    public double coralMotorPower() {
+        return coralMotor.getOutputCurrent();
+    }
+
     public void autonInit() {
         coralMotor.getEncoder().setPosition(CORAL_PICKUP_POS);
         currCoralPhase = CoralPhase.HOLDING;
@@ -300,7 +309,11 @@ public class Coral extends SubsystemBase {
     }
 
     public void setCoralPhase(CoralPhase newPhase) {
+        if (currCoralPhase == CoralPhase.CLIMBENABLED) {
+            return;
+        }
         currCoralPhase = newPhase;
+
 
         // These are places where motor power is set instead of positional reference
         switch (currCoralPhase) {
@@ -332,6 +345,10 @@ public class Coral extends SubsystemBase {
                 break;
             case STOP:
                 coralMotor.set(0);
+                break;
+            case CLIMBENABLED:
+                coralMotor.set(0);
+                break;
             default:
                 // These are where we set motor Power
         }
@@ -349,11 +366,11 @@ public class Coral extends SubsystemBase {
      */
 
     public Boolean getLowerSensor() {
-        return !RobotContainer.getInstance().m_sensors.Coralhopper.get();
+        return !Coralhopper.get();
     }
 
     public Boolean getUpperSensor() {
-        return !RobotContainer.getInstance().m_sensors.CoralIntake.get();
+        return !CoralIntake.get();
     }
 
     public enum CoralPhase {
@@ -372,7 +389,8 @@ public class Coral extends SubsystemBase {
         LEVEL_3_DEPLOY,
         LEVEL_4_DEPLOY,
         ALGE_EXTRACT,
-        STOP
+        STOP,
+        CLIMBENABLED
 
     }
 

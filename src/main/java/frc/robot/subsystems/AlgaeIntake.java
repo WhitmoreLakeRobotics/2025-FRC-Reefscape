@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import frc.robot.Constants.CanIds;
 import frc.robot.commands.*;
 import frc.utils.CommonLogic;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.config.BaseConfig;
@@ -30,6 +31,8 @@ public class AlgaeIntake extends SubsystemBase {
     private SparkMax pivotMotor = new SparkMax(CanIds.ALGAE_PIVOT_MOTOR, MotorType.kBrushless);
     private SparkMax intakeMotor = new SparkMax(CanIds.ALGAE_INTAKE_MOTOR, MotorType.kBrushless);
 
+    public DigitalInput AlgIntake;
+
     private double pivot_gearRatio = (2.89 * 5.23 * 5.23);
     private double pivotShaftDiameter = 0.75;
     private double pivotCurPos = 0.0;
@@ -46,6 +49,7 @@ public class AlgaeIntake extends SubsystemBase {
     public AlgaeIntake() {
         configIntakeMotor();
         configPivotMotor();
+        AlgIntake = new DigitalInput(2);
 
     }
 
@@ -89,6 +93,9 @@ public class AlgaeIntake extends SubsystemBase {
             setPivotCmdPos(tpos.getPivotPos());
         }
 
+    }
+    public void autonInit() {
+        setNewPos(PivotPos.CORALPICKUP);
     }
 
     public void setIntakeStatus(Status status) {

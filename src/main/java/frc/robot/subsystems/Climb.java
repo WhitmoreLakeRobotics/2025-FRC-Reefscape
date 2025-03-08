@@ -183,7 +183,7 @@ public class Climb extends SubsystemBase {
 
     public enum DeployPos {
         START(0),
-        DEPLOY(11),
+        DEPLOY(10.5),
         STOP(0);
 
         private final double deployAngle;

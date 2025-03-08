@@ -84,6 +84,11 @@ public class Wipers extends SubsystemBase {
     // here. Call these from Commands.
 
     // expose the current position
+    public void autonInit() {
+        setRightCmdPos(GuidePos.START);
+        //setLeftCmdPos(GuidePos.START); //left currently not on the robot.
+    }
+
     public double getLeftCurPos() {
         return leftCurPos;
     }

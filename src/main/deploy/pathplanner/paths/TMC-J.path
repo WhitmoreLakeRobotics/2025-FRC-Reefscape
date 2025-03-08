@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 5.010724431818182,
-        "y": 5.254829545454545
+        "x": 4.911008522727273,
+        "y": 5.288068181818181
       },
       "prevControl": {
-        "x": 5.550852272727272,
-        "y": 5.878053977272727
+        "x": 5.451136363636363,
+        "y": 5.9112926136363635
       },
       "nextControl": null,
       "isLocked": false,
@@ -36,7 +36,12 @@
       "name": "EA LEVEL4",
       "waypointRelativePos": 0.0988917306052855,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "EA LEVEL4"
+        }
+      }
     }
   ],
   "globalConstraints": {

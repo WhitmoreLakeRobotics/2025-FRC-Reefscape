@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.010724431818182,
-        "y": 5.254829545454545
+        "x": 4.911008522727273,
+        "y": 5.288068181818181
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.163139204541346,
-        "y": 5.844815340904347
+        "x": 4.063423295450437,
+        "y": 5.878053977267983
       },
       "isLocked": false,
       "linkedName": "J"
@@ -50,7 +50,7 @@
   "eventMarkers": [
     {
       "name": "EA PICKUP",
-      "waypointRelativePos": 0.4637681159420521,
+      "waypointRelativePos": 0.6035805626598633,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

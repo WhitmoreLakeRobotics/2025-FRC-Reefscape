@@ -30,9 +30,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "sequential",
           "data": {
-            "name": "EA OUTOFWAY"
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "EA OUTOFWAY"
+                }
+              }
+            ]
           }
         },
         {
@@ -56,12 +69,6 @@
                 "data": {
                   "pathName": "pickup1-L"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "EA LEVEL4"
-                }
               }
             ]
           }
@@ -73,9 +80,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "sequential",
           "data": {
-            "name": "EA OUTOFWAY"
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "EA OUTOFWAY"
+                }
+              }
+            ]
           }
         },
         {

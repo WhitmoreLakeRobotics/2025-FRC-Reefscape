@@ -41,7 +41,7 @@ public class autoCoralCompleteCmd extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (!m_rc.m_sensors.Coralhopper.get()) {
+        if (!m_rc.m_Coral.Coralhopper.get()) {
             bDone = true;
             end(false);
         }

@@ -34,7 +34,6 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkBase.PersistMode;
 
 import frc.robot.subsystems.Coral;
-import frc.robot.subsystems.Sensors;
 import frc.robot.subsystems.Coral.CoralPhase;
 
 public class ElevatorAndArm extends SubsystemBase {
@@ -113,18 +112,25 @@ public class ElevatorAndArm extends SubsystemBase {
         }
 
         if (!isElevatorAndArmAtTarget(targetPos)) {
-            if ((targetPos.armPos > ElevAndArmPos.SAFETYPOS.armPos) && (armCurPos < ElevAndArmPos.SAFETYPOS.armPos)) {
+            if (((targetPos.armPos > ElevAndArmPos.SAFETYPOS.armPos) && (armCurPos <= ElevAndArmPos.SAFETYPOS.armPos))
+            && (!isElevatorAndArmAtTarget(ElevAndArmPos.SAFETYPOS))) {
                 setElevatorAndArmPos(ElevAndArmPos.SAFETYPOS);
+                //System.err.println("First Saftey Check");
             } else if ((targetPos.armPos > ElevAndArmPos.SAFETYPOS.armPos)
-                    && ((isArmAtTarget(ElevAndArmPos.SAFETYPOS)) || (armCurPos > ElevAndArmPos.SAFETYPOS.armPos))) {
+                    && ((isArmAtTarget(ElevAndArmPos.SAFETYPOS)) || (armCurPos >= ElevAndArmPos.SAFETYPOS.armPos))) {
+                       // System.err.println("Second Saftey Check");
 
                 setElevatorAndArmPos(targetPos);
 
             } else if (targetPos.armPos < ElevAndArmPos.SAFETYPOS.armPos
                     && !isElevatorAtTarget(ElevAndArmPos.SAFETYPOS)) {
+                       // System.err.println("Third Saftey Check");
+
                 setElevatorAndArmPos(ElevAndArmPos.SAFETYPOS);
             } else if (targetPos.armPos < ElevAndArmPos.SAFETYPOS.armPos
                     && isElevatorAtTarget(ElevAndArmPos.SAFETYPOS)) {
+                        //System.err.println("Fourth Saftey Check");
+
                 setElevatorAndArmPos(targetPos);
             }
         }
@@ -180,6 +186,9 @@ public class ElevatorAndArm extends SubsystemBase {
                 break;
         }
 
+    }
+    public void autonInit() {
+        isIntaking = false;
     }
 
     public void setAlgaeExtract(ElevAndArmPos tpos) {
@@ -377,9 +386,9 @@ public class ElevatorAndArm extends SubsystemBase {
         PICKUP(23, 0),
         START(23, 0),
         SAFETYPOS(42, 0),
-        LEVEL1(57, 20),
+        LEVEL1(60, 20),
         // LEVEL1DEL(62, 20),
-        LEVEL2(53, 40),
+        LEVEL2(53, 37),
         // LEVEL2DEL(51, 40),
         LEVEL3(168, 7), // was 1.2
         // LEVEL3DEL(166, 7),
