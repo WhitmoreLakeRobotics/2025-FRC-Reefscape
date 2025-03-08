@@ -144,6 +144,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("EA LEVEL4", new EAGoToLevel(ElevAndArmPos.LEVEL4));
     NamedCommands.registerCommand("EA OUTOFWAY", new EAGoToLevel(ElevAndArmPos.LEVEL4OUTOFWAY));
     NamedCommands.registerCommand("CORAL DELIVER", new deliverCoralCmd());
+    
     // NamedCommands.registerCommand("CORAL INTAKE", new
     // EAGoToLevel(ElevAndArmPos.CIntake));
     // NamedCommands.registerCommand("EA LEVEL6", new EAGoToLevel(ElevAndArmPos));
@@ -242,6 +243,7 @@ public class RobotContainer {
     RBumper_Drive.onTrue(new WipersCmd(Wipers.Wiper.RIGHT));
     Trigger Rtrigger_Drive = new Trigger(drive_Controller.rightTrigger(0.5));
     Rtrigger_Drive.onTrue(new deliverCoralCmd());
+    Rtrigger_Drive.onFalse(new EAoutOfWay());
     // Trigger LJC_Drive = new Trigger(drive_Controller.leftStick());
     // Trigger RJC_Drive = new Trigger(drive_Controller.rightStick());
 
@@ -281,6 +283,7 @@ public class RobotContainer {
     RBumper_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.ALGAEEXTRACTUPPER));
     Trigger Rtrigger_Artic = new Trigger(Articulator.rightTrigger(0.8)); // USE FOR CORAL DELIVERY.
     Rtrigger_Artic.onTrue(new deliverCoralCmd());
+    Rtrigger_Artic.onFalse(new EAoutOfWay());
     Trigger LJC_Artic = new Trigger(Articulator.leftStick()); // USE FOR CLIMB ENABLE.
     LJC_Artic.onTrue(new ClimbEnableCmd());
     Trigger RJC_Artic = new Trigger(Articulator.rightStick());

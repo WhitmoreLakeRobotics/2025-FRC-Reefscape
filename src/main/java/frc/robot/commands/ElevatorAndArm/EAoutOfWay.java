@@ -29,14 +29,14 @@ import frc.robot.subsystems.ElevatorAndArm.ElevAndArmPos;
 /**
  *
  */
-public class deliverCoralCmd extends Command {
+public class EAoutOfWay extends Command {
 
     private Coral m_coral;
     private ElevatorAndArm m_elevator;
     private boolean bDone = false;
     private ElevatorAndArm.ElevAndArmPos targElevAndArmPos = null;
 
-    public deliverCoralCmd() {
+    public EAoutOfWay() {
 
     }
 
@@ -46,39 +46,18 @@ public class deliverCoralCmd extends Command {
         m_coral = RobotContainer.getInstance().m_Coral;
         m_elevator = RobotContainer.getInstance().m_elevatorAndArm;
         targElevAndArmPos = m_elevator.getTargetPos();
-        addRequirements(RobotContainer.getInstance().m_Coral);
+      //  addRequirements(RobotContainer.getInstance().m_Coral);
 
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (m_elevator.isElevatorAndArmAtTarget(targElevAndArmPos)) {
-            switch (targElevAndArmPos) {
-
-                case LEVEL1:
-                    m_coral.setCoralPhase(CoralPhase.LEVEL_1_DEPLOY);
-                    break;
-
-                case LEVEL2:
-                    m_coral.setCoralPhase(CoralPhase.LEVEL_2_DEPLOY);
-                    break;
-
-                case LEVEL3:
-                    m_coral.setCoralPhase(CoralPhase.LEVEL_3_DEPLOY);
-                    break;
-
-                case LEVEL4:
-                    m_coral.setCoralPhase(CoralPhase.LEVEL_4_DEPLOY);
-                 //   m_elevator.setNewPos(ElevAndArmPos.LEVEL4OUTOFWAY);
-                    break;
-
-                default:
-                    // DO NOTHING
-                    break;
+            if (m_elevator.getTargetPos() == ElevAndArmPos.LEVEL4) {
+                m_elevator.setNewPos(ElevAndArmPos.LEVEL4OUTOFWAY);
+                bDone = true;
+                end(false);
             }
-            bDone = true;
-        }
     }
 
     // Called once the command ends or is interrupted.

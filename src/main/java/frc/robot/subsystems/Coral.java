@@ -4,6 +4,7 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.CanIds;
 import frc.robot.commands.*;
 import frc.utils.CommonLogic;
+import frc.utils.RobotMath;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -62,7 +63,7 @@ public class Coral extends SubsystemBase {
     private final double SPEED_LEVEL1_DEPLOY = 0.5;
     private final double SPEED_LEVEL2_DEPLOY = SPEED_LEVEL1_DEPLOY;
     private final double SPEED_LEVEL3_DEPLOY = -0.5;
-    private final double SPEED_LEVEL4_DEPLOY = SPEED_LEVEL3_DEPLOY;
+    private final double SPEED_LEVEL4_DEPLOY = -0.7;
 
     private final ClosedLoopSlot CORAL_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
     private final ClosedLoopSlot CORAL_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
@@ -71,6 +72,8 @@ public class Coral extends SubsystemBase {
     private boolean isBrake = true;
     private CoralPhase currCoralPhase = CoralPhase.INIT;
     private ElevatorAndArm m_ElevatorAndArm = null;
+
+    private double SensorTime = 0.0;
 
     public boolean isIntaking = false;
 
@@ -127,10 +130,16 @@ public class Coral extends SubsystemBase {
                 // Looking for the upper sensor to trip
                 if (getUpperSensor()) {
                     // Sensor Tripped
+                if (RobotMath.getTime() >= SensorTime) {
                     currCoralPhase = CoralPhase.CORAL_INDEX_WAITING;
                     coralMotor.set(SPEED_INDEXING);
                     m_ElevatorAndArm.setBlockMoves(true);
+                } else {
+                    // Sensor Tripped
+                    SensorTime = RobotMath.getTime() + 0.0;
+                   
                 }
+            }
                 break;
 
             case CORAL_INDEX_WAITING:
@@ -153,7 +162,7 @@ public class Coral extends SubsystemBase {
                 break;
 
             case FINAL_POSITIONING:
-                if (isCoralMotorInPosiiton()) {
+                if (isCoralMotorInPosiiton() && getLowerSensor()) {
                     currCoralPhase = CoralPhase.HOLDING;
                     m_ElevatorAndArm.setBlockMoves(false);
                     m_ElevatorAndArm.setNewPos(ElevAndArmPos.SAFETYPOS);
@@ -237,6 +246,11 @@ public class Coral extends SubsystemBase {
                 ControlType.kPosition, CoralCurrentSlot);
     }
 
+    public void autonInit() {
+        coralMotor.getEncoder().setPosition(CORAL_PICKUP_POS);
+        currCoralPhase = CoralPhase.HOLDING;
+    }
+
     // configure the elevator motor spark
 
     private void configCoralMotor() {
@@ -250,12 +264,12 @@ public class Coral extends SubsystemBase {
         CoralConfig.softLimit.reverseSoftLimit(0);
         CoralConfig.softLimit.reverseSoftLimitEnabled(false);
         CoralConfig.idleMode(IdleMode.kBrake);
-        CoralConfig.openLoopRampRate(0.3);
+        CoralConfig.openLoopRampRate(0.15);
 
         CoralConfig.closedLoop.maxOutput(1.0);
         CoralConfig.closedLoop.minOutput(-1.0);
 
-        CoralConfig.closedLoopRampRate(0.2);
+        CoralConfig.closedLoopRampRate(0.15);
         CoralConfig.voltageCompensation(9.0);
         //// Down / outVelocity Values
         CoralConfig.closedLoop.maxMotion.maxAcceleration(5000, CORAL_CLOSED_LOOP_SLOT_DOWN);
@@ -291,7 +305,7 @@ public class Coral extends SubsystemBase {
         // These are places where motor power is set instead of positional reference
         switch (currCoralPhase) {
             case INIT:
-                // Not sure what to put here but I reserved it a a space
+                // Not sure what to put here but I reserved it a space
                 break;
 
             case PRECORAL:

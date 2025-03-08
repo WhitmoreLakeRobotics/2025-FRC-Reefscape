@@ -55,10 +55,11 @@ public class autonInit extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+        RobotContainer.getInstance().m_Coral.autonInit();
         RobotContainer.getInstance().m_AlgaeIntake.setNewPos(PivotPos.CORALPICKUP);
         RobotContainer.getInstance().m_Wipers.setRightCmdPos(GuidePos.START);
-        RobotContainer.getInstance().m_elevatorAndArm.setNewPos(ElevAndArmPos.PICKUP);
-        RobotContainer.getInstance().m_Coral.setCoralPhase(CoralPhase.PRECORAL);
+       // RobotContainer.getInstance().m_elevatorAndArm.setNewPos(ElevAndArmPos.PICKUP);
+       // RobotContainer.getInstance().m_Coral.setCoralPhase(CoralPhase.HOLDING);
     }
 
     // Called every time the scheduler runs while the command is scheduled.

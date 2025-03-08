@@ -96,7 +96,7 @@ public class Climb extends SubsystemBase {
     }
 
     private void updateClimbMotor() {
-        climbMotor.set(climbPower * RobotContainer.getInstance().getArticulator().getLeftY());
+        climbMotor.set(CommonLogic.joyDeadBand(climbPower * RobotContainer.getInstance().getArticulator().getLeftY(), 0.06));
     }
 
     // Set the new ArmCommandPos

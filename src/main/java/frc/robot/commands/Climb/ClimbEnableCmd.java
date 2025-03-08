@@ -15,6 +15,7 @@ package frc.robot.commands.Climb;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Wipers;
+import frc.robot.subsystems.Coral.CoralPhase;
 import frc.robot.subsystems.ElevatorAndArm.ElevAndArmPos;
 
 import java.util.function.DoubleSupplier;
@@ -55,6 +56,7 @@ public class ClimbEnableCmd extends Command {
         m_RobotContainer = RobotContainer.getInstance();
         if (m_RobotContainer.getArticulator().rightStick().getAsBoolean()) {
             m_RobotContainer.m_elevatorAndArm.setNewPos(ElevAndArmPos.OUTOFWAY);
+            m_RobotContainer.m_Coral.setCoralPhase(CoralPhase.STOP);
             m_RobotContainer.m_Wipers.leftRightOut();
             m_RobotContainer.m_Climb.enableClimb();
         } else {

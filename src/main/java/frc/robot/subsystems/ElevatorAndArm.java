@@ -48,7 +48,7 @@ public class ElevatorAndArm extends SubsystemBase {
     private double elevator_gearDiameter = 1.685; // 14 tooth
     // https://www.andymark.com/products/35-series-symmetrical-hub-sprockets?via=Z2lkOi8vYW5keW1hcmsvV29ya2FyZWE6Ok5hdmlnYXRpb246OlNlYXJjaFJlc3VsdHMvJTdCJTIycSUyMiUzQSUyMjE0K3Rvb3RoK3Nwcm9ja2V0JTIyJTdE&Tooth%20Count=14%20(am-4790)&quantity=1;
     private double elevatorCurPos = 0.0;
-    private double elevatorCmdPos = ElevAndArmPos.PICKUP.elevPos;
+    private double elevatorCmdPos = ElevAndArmPos.START.elevPos;
     private final double elevatorPosTol = 0.25;
 
     private final double armPosTol = 0.25;
@@ -57,14 +57,14 @@ public class ElevatorAndArm extends SubsystemBase {
     // https://www.andymark.com/products/35-series-symmetrical-hub-sprockets?via=Z2lkOi8vYW5keW1hcmsvV29ya2FyZWE6Ok5hdmlnYXRpb246OlNlYXJjaFJlc3VsdHMvJTdCJTIycSUyMiUzQSUyMjE0K3Rvb3RoK3Nwcm9ja2V0JTIyJTdE&Tooth%20Count=14%20(am-4790)&quantity=1;
 
     private double armCurPos = 0.0;
-    private double armCmdPos = ElevAndArmPos.PICKUP.armPos;
+    private double armCmdPos = ElevAndArmPos.START.armPos;
     private double armDirection = 0;
 
     private double Coral_m = 0;
     private double Coral_b = 0;
     private Coral m_coral = null;
 
-    private ElevAndArmPos targetPos = ElevAndArmPos.PICKUP;
+    private ElevAndArmPos targetPos = ElevAndArmPos.START;
 
     private final ClosedLoopSlot ELEVATOR_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
     private final ClosedLoopSlot ELEVATOR_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
@@ -146,7 +146,7 @@ public class ElevatorAndArm extends SubsystemBase {
         isIntaking = newBlockValue;
         if (isIntaking) {
             // in 5 seconds re-enable movement of the arm
-            disableIntakingTime = RobotMath.getTime() + 5.00;
+            disableIntakingTime = RobotMath.getTime() + 2.50;
         }
 
     }
@@ -375,7 +375,7 @@ public class ElevatorAndArm extends SubsystemBase {
 
     public enum ElevAndArmPos {
         PICKUP(23, 0),
-        // START(24, 0),
+        START(23, 0),
         SAFETYPOS(42, 0),
         LEVEL1(57, 20),
         // LEVEL1DEL(62, 20),
@@ -389,7 +389,7 @@ public class ElevatorAndArm extends SubsystemBase {
         ELVMAX(40, 65.9),
         ALGAEEXTRACTLOWER(72, 20),
         ALGAEEXTRACTUPPER(68, 58),
-        OUTOFWAY(252, 0);
+        OUTOFWAY(235, 0);
         // CIntake(24, 0), // was 2.5
         // CHold(24, 0),
 
