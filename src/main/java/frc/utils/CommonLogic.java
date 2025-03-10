@@ -99,4 +99,14 @@ public class CommonLogic {
 
   }
 
+  public static double AutoTurnPIDF(double P, double F_hold, double currentPos, double targetPos) {
+    double delta = targetPos - currentPos;
+    if(delta > 180){
+      delta = -delta;
+    }
+
+    return (delta * P) + F_hold;
+
+  }
+
 }

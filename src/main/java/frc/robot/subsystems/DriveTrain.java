@@ -33,7 +33,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Vision.Cameras;
+import frc.utils.CommonLogic;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -55,7 +58,12 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class DriveTrain extends SubsystemBase
 {
+  //************************3668 customizations */
+private double THeading = 0;
+private boolean bAdrive = false;
+private double autoP = 15.0;
 
+  //************************end 3668 customizations */
   /**
    * Swerve drive object.
    */
@@ -143,6 +151,10 @@ public class DriveTrain extends SubsystemBase
     {
       swerveDrive.updateOdometry();
       vision.updatePoseEstimation(swerveDrive);
+    }
+
+    if(bAdrive){
+      CheckAutoTurn();
     }
   }
 
@@ -730,4 +742,33 @@ public class DriveTrain extends SubsystemBase
   {
     return swerveDrive;
   }
+
+  //*************************************  3668 customizations   */
+  public double AutoTurn(){
+    double turn = CommonLogic.AutoTurnPIDF(autoP,0.0,getHeading().getDegrees(),THeading);
+  
+   // telemetry.addData(TAGChassis,"turn power " + turn);
+    return turn;
+  }  
+  public void setTurnHeading(double heading){
+    THeading = heading;
+  }
+
+  public void setAdutoTurn(){
+    bAdrive = true;
+  }
+  public boolean getbAutoDrive(){
+    return bAdrive;
+  }
+
+  //call this perofic if auto turn is true
+  private void CheckAutoTurn(){
+    if(Math.abs(RobotContainer.getInstance().getDrive_Controller().getRightX()) > 0.05){
+      bAdrive = false;
+    }
+  }
+
+
+  //***************************************end 3668 customizations   */
+
 }
