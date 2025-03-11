@@ -17,13 +17,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "BMC-E"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "EA LEVEL1"
+                  "pathName": "LEVEL1-TMC-J"
                 }
               }
             ]
@@ -44,7 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "E-pickup2"
+            "pathName": "J-pickup1"
           }
         },
         {
@@ -60,7 +54,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "PICKUP2-D"
+                  "pathName": "L1-pickup1-L"
                 }
               }
             ]
@@ -81,7 +75,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "D-PICKUP2"
+            "pathName": "L1-L-pickup1"
           }
         }
       ]

@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 3.5565340909090906,
-        "y": 4.864275568181817
+        "x": 3.6977982954545454,
+        "y": 5.055397727272727
       },
       "prevControl": {
-        "x": 3.1244318181818187,
-        "y": 5.246519886363635
+        "x": 3.2656960227272736,
+        "y": 5.437642045454544
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,13 +33,13 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "EA LEVEL1",
+      "name": "EA LEVEL4",
       "waypointRelativePos": 0.3052003410059652,
       "endWaypointRelativePos": 0.5967604433077814,
       "command": {
         "type": "named",
         "data": {
-          "name": "EA LEVEL1"
+          "name": "EA LEVEL4"
         }
       }
     }

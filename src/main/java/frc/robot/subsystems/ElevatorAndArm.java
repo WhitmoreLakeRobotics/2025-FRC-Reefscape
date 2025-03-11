@@ -129,7 +129,7 @@ public class ElevatorAndArm extends SubsystemBase {
                 setElevatorAndArmPos(ElevAndArmPos.SAFETYPOS);
             } else if (targetPos.armPos < ElevAndArmPos.SAFETYPOS.armPos
                     && isElevatorAtTarget(ElevAndArmPos.SAFETYPOS)) {
-                        System.err.println("Fourth Saftey Check");
+                        //System.err.println("Fourth Saftey Check");
 
                 setElevatorAndArmPos(targetPos);
             }

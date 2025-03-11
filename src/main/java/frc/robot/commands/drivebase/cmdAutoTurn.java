@@ -1,19 +1,23 @@
 package frc.robot.commands.drivebase;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 
 public class cmdAutoTurn extends Command {
     private boolean bDone = false;
-    private double tHeading;
+    private double bHeading;
+    private double rHeading;
 
     
-    public cmdAutoTurn(double nHeading) {
+    public cmdAutoTurn(double blueHeading, double redHeading) {
 
         // m_subsystem = subsystem;
         // addRequirements(m_subsystem);
 
-        tHeading = nHeading;
+        blueHeading = bHeading;
+        redHeading = rHeading;
 
     }
     // if fixedDist = false => stagPosition is suposed to recieve the percantage to
@@ -23,10 +27,15 @@ public class cmdAutoTurn extends Command {
     @Override
     public void initialize() {
         bDone = false;
-        RobotContainer.getInstance().m_driveTrain.setTurnHeading(tHeading);
+    var alliance = DriverStation.getAlliance();
+    if (alliance.get() == Alliance.Red){
+        RobotContainer.getInstance().m_driveTrain.setTurnHeading(rHeading);
+        RobotContainer.getInstance().m_driveTrain.setAdutoTurn();
+    } else {
+        RobotContainer.getInstance().m_driveTrain.setTurnHeading(bHeading);
         RobotContainer.getInstance().m_driveTrain.setAdutoTurn();
 
-
+    }
     }
 
     // Called every time the scheduler runs while the command is scheduled.

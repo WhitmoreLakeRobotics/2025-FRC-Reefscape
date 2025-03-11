@@ -17,6 +17,8 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
+
+import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -27,6 +29,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -59,9 +62,9 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 public class DriveTrain extends SubsystemBase
 {
   //************************3668 customizations */
-private double THeading = 0;
+public double THeading = 0;
 private boolean bAdrive = false;
-private double autoP = 15.0;
+private double autoP = 0.007;
 
   //************************end 3668 customizations */
   /**
@@ -751,8 +754,10 @@ private double autoP = 15.0;
     return turn;
   }  
   public void setTurnHeading(double heading){
-    THeading = heading;
-  }
+      THeading = heading;
+
+    }
+  
 
   public void setAdutoTurn(){
     bAdrive = true;
@@ -763,7 +768,7 @@ private double autoP = 15.0;
 
   //call this perofic if auto turn is true
   private void CheckAutoTurn(){
-    if(Math.abs(RobotContainer.getInstance().getDrive_Controller().getRightX()) > 0.05){
+    if(Math.abs(RobotContainer.getInstance().getDrive_Controller().getRightX()) > 0.05 || Math.abs(RobotContainer.getInstance().getDrive_Controller().getRightY()) > 0.05){
       bAdrive = false;
     }
   }

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.93046875,
-        "y": 2.9447443181818174
+        "x": 3.9886363636363638,
+        "y": 2.820099431818181
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0828835227272724,
-        "y": 2.3132102272727275
+        "x": 3.141051136363636,
+        "y": 2.1885653409090913
       },
       "isLocked": false,
       "linkedName": "D"
@@ -36,7 +36,12 @@
       "name": "EA PICKUP",
       "waypointRelativePos": 0.15345268542199708,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "EA PICKUP"
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -55,7 +60,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -115.14478563067901
+    "rotation": -120.65066795705286
   },
   "useDefaultConstraints": true
 }
