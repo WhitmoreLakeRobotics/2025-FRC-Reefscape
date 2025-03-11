@@ -64,7 +64,8 @@ public class DriveTrain extends SubsystemBase
   //************************3668 customizations */
 public double THeading = 0;
 private boolean bAdrive = false;
-private double autoP = 0.007;
+private double autoP = 0.05;
+private double maxTurnRate = 0.6;
 
   //************************end 3668 customizations */
   /**
@@ -748,7 +749,7 @@ private double autoP = 0.007;
 
   //*************************************  3668 customizations   */
   public double AutoTurn(){
-    double turn = CommonLogic.AutoTurnPIDF(autoP,0.0,getHeading().getDegrees(),THeading);
+    double turn =  CommonLogic.CapMotorPower(CommonLogic.AutoTurnPIDF(autoP,0.0,getHeading().getDegrees(),THeading), -maxTurnRate, maxTurnRate)  ;
   
    // telemetry.addData(TAGChassis,"turn power " + turn);
     return turn;

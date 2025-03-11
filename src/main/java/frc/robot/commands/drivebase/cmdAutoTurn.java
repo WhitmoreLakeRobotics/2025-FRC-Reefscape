@@ -16,8 +16,8 @@ public class cmdAutoTurn extends Command {
         // m_subsystem = subsystem;
         // addRequirements(m_subsystem);
 
-        blueHeading = bHeading;
-        redHeading = rHeading;
+        bHeading =  blueHeading;
+        rHeading = redHeading;
 
     }
     // if fixedDist = false => stagPosition is suposed to recieve the percantage to

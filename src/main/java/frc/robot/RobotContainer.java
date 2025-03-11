@@ -225,16 +225,16 @@ public class RobotContainer {
 
     Trigger A_Drive = new Trigger(drive_Controller.a()); // CD
     // A_Drive.onTrue(new EAGoToLevel(ElevAndArmPos.ALGAEEXTRACTLOWER));
-    A_Drive.onTrue(new cmdAutoTurn(60, -120 ));
+    A_Drive.onTrue(new cmdAutoTurn(-120, 60 ));
     Trigger B_Drive = new Trigger(drive_Controller.b()); // EF
     // B_Drive.onTrue(new EAGoToLevel(ElevAndArmPos.ALGAEEXTRACTUPPER));
-    B_Drive.onTrue(new cmdAutoTurn(120, -60));
+    B_Drive.onTrue(new cmdAutoTurn(-60, 120));
 
     Trigger X_Drive = new Trigger(drive_Controller.x()); // KL
-    X_Drive.onTrue(new cmdAutoTurn(-60, 120));
+    X_Drive.onTrue(new cmdAutoTurn(120, -60));
 
     Trigger Y_Drive = new Trigger(drive_Controller.y()); // IJ
-    Y_Drive.onTrue(new cmdAutoTurn(-120, -60));
+    Y_Drive.onTrue(new cmdAutoTurn(60,-120));
     Trigger Back_Drive = new Trigger(drive_Controller.back()); // reset gyrp
     Back_Drive.onTrue(new cmdResetGyro());
     Trigger Start_Drive = new Trigger(drive_Controller.start());
