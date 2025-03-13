@@ -39,6 +39,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Vision.Cameras;
 import frc.utils.CommonLogic;
+import frc.utils.PID;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,8 +66,8 @@ public class DriveTrain extends SubsystemBase
 public double THeading = 0;
 private boolean bAdrive = false;
 private double autoP = 0.05;
-private double maxTurnRate = 0.6;
-
+private double maxTurnRate = 0.55;
+private PID turnPID = new PID(0.02,0.0,0.0);
   //************************end 3668 customizations */
   /**
    * Swerve drive object.
@@ -749,8 +750,8 @@ private double maxTurnRate = 0.6;
 
   //*************************************  3668 customizations   */
   public double AutoTurn(){
-    double turn =  CommonLogic.CapMotorPower(CommonLogic.AutoTurnPIDF(autoP,0.0,getHeading().getDegrees(),THeading), -maxTurnRate, maxTurnRate)  ;
-  
+    //double turn =  CommonLogic.CapMotorPower(CommonLogic.AutoTurnPIDF(autoP,0.0,getHeading().getDegrees(),THeading), -maxTurnRate, maxTurnRate)  ;
+    double turn =  CommonLogic.CapMotorPower(turnPID.calcPIDF(THeading, getHeading().getDegrees()), -maxTurnRate, maxTurnRate)  ;
    // telemetry.addData(TAGChassis,"turn power " + turn);
     return turn;
   }  
@@ -761,6 +762,7 @@ private double maxTurnRate = 0.6;
   
 
   public void setAdutoTurn(){
+    turnPID.resetErrors();
     bAdrive = true;
   }
   public boolean getbAutoDrive(){

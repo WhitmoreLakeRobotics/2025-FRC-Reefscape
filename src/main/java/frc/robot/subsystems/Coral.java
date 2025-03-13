@@ -62,11 +62,11 @@ public class Coral extends SubsystemBase {
 
     private final double SPEED_PRECORAL = 0.40;
     private final double SPEED_INDEXING = 0.25;
-    private final double SPEED_ALGE_EXTRACT = 0.5;
-    private final double SPEED_LEVEL1_DEPLOY = 0.9;
-    private final double SPEED_LEVEL2_DEPLOY = 0.5;
-    private final double SPEED_LEVEL3_DEPLOY = -0.5;
-    private final double SPEED_LEVEL4_DEPLOY = -0.7;
+    private final double SPEED_ALGE_EXTRACT = 0.9; //.05
+    private final double SPEED_LEVEL1_DEPLOY = 0.75;
+    private final double SPEED_LEVEL2_DEPLOY = 0.9; //0.5
+    private final double SPEED_LEVEL3_DEPLOY = -0.9; //.05
+    private final double SPEED_LEVEL4_DEPLOY = -0.9; //.07
 
     private final ClosedLoopSlot CORAL_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
     private final ClosedLoopSlot CORAL_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
@@ -150,7 +150,7 @@ public class Coral extends SubsystemBase {
             case CORAL_INDEX_WAITING:
                 // Coral Index is complete when 1 of 2 things happens
                 // We lost the upper sensor.
-                if (!getUpperSensor()) {
+                if (!getUpperSensor() && getLowerSensor()) {
                     // currCoralPhase = CoralPhase.CORAL_INDEX_COMPLETE;
                     // Coral has indexed off the upper sensor
                     SetCoralIndex(UpperSensorIndexPos);
@@ -295,7 +295,7 @@ public class Coral extends SubsystemBase {
         CoralConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
         // config.smartCurrentLimit(50);
-        CoralConfig.smartCurrentLimit(20, 50);
+        CoralConfig.smartCurrentLimit(30, 50);
 
         coralMotor.configure(CoralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 

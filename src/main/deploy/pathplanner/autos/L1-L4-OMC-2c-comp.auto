@@ -79,6 +79,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "EA OUTOFWAY"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "D-PICKUP2"
