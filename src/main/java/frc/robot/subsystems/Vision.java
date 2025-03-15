@@ -321,7 +321,7 @@ public class Vision {
      * Right Camera
      */
     RIGHT_CAM("right",
-        new Rotation3d(0, Math.toRadians(0.0), Math.toRadians(194)),
+        new Rotation3d(0, Math.toRadians(0.0), Math.toRadians(191)),
         new Translation3d(-0.075, // .095
             0.115, // .115
             0.30), // 8.44 inches
