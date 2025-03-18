@@ -390,7 +390,7 @@ public class ElevatorAndArm extends SubsystemBase {
         // LEVEL1DEL(62, 20),
         LEVEL2(53, 37),
         // LEVEL2DEL(51, 40),
-        LEVEL3(168, 7), // was 1.2
+        LEVEL3(168, 4), // was 1.2
         // LEVEL3DEL(166, 7),
         LEVEL4(160, 65.4), // 1.7
         LEVEL4OUTOFWAY(183,65.4),

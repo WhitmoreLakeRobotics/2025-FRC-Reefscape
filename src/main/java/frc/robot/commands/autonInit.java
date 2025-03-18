@@ -59,6 +59,7 @@ public class autonInit extends Command {
         RobotContainer.getInstance().m_elevatorAndArm.autonInit();
         RobotContainer.getInstance().m_AlgaeIntake.autonInit();
         RobotContainer.getInstance().m_Wipers.autonInit();
+            
         bDone = true;
        // RobotContainer.getInstance().m_elevatorAndArm.setNewPos(ElevAndArmPos.PICKUP);
        // RobotContainer.getInstance().m_Coral.setCoralPhase(CoralPhase.HOLDING);

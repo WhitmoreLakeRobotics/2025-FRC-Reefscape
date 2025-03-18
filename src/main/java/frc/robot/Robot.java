@@ -98,7 +98,7 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
         }
-        // m_robotContainer.m_Climb.climbInit();
+
     }
 
     /**
@@ -119,7 +119,7 @@ public class Robot extends TimedRobot {
         }
         // m_robotContainer.m_Climb.climbInit();
         // RobotContainer.getInstance().m_Coral.enabledInit();
-        // RobotContainer.getInstance().m_elevatorAndArm.enableInit();
+         RobotContainer.getInstance().m_elevatorAndArm.enableInit();
 
     }
 

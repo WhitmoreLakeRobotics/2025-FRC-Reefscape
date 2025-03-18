@@ -154,6 +154,7 @@ public class RobotContainer {
     // SmartDashboard.putData("Autonomous Command", new AutonomousCommand());
     SmartDashboard.putData("Arm Pos PICKUP", new EAGoToLevel(ElevAndArmPos.PICKUP));
     SmartDashboard.putData("Arm Pos Saftey", new EAGoToLevel(ElevAndArmPos.SAFETYPOS));
+   // SmartDashboard.putData("auton init", new autonInit());
     // SmartDashboard.putData("Arm Pos lvl1", new
     // EAGoToLevel(ElevAndArmPos.LEVEL1));
     // SmartDashboard.putData("Arm Pos lvl2", new
