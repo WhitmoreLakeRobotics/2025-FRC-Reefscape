@@ -3,35 +3,47 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3544744318181818,
-        "y": 7.22421875
+        "x": 1.2132102272727274,
+        "y": 0.9836647727272714
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.484588068181816,
-        "y": 6.459730113636364
+        "x": 2.3865340909090924,
+        "y": 1.869474431818182
       },
       "isLocked": false,
-      "linkedName": "PICKUP1"
+      "linkedName": "PICKUP2"
     },
     {
       "anchor": {
-        "x": 3.6479403409090914,
-        "y": 5.21328125
+        "x": 3.7725852272727276,
+        "y": 2.9447443181818174
       },
       "prevControl": {
-        "x": 2.717258522727273,
-        "y": 6.04424715909091
+        "x": 2.5427556818181825,
+        "y": 2.0971590909090896
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "M"
+      "linkedName": "C"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "EA LEVEL4",
+      "waypointRelativePos": 0.12958226768968475,
+      "endWaypointRelativePos": 0.4040920716112532,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "EA LEVEL4"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.25,
     "maxAcceleration": 1.875,
@@ -42,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 117.33235949216773
+    "rotation": -120.65066795705286
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 125.88213724620422
+    "rotation": -126.02737338510372
   },
   "useDefaultConstraints": true
 }

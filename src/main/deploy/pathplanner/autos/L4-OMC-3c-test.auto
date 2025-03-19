@@ -1,0 +1,128 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "AUTONINIT"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BMC-E"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "EA LEVEL4"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CORAL DELIVER"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "EA OUTOFWAY"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "E-pickup2"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "PICKUP2-D"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CORAL DELIVER"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "EA OUTOFWAY"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "D-PICKUP2"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "PICKUP2-C"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CORAL DELIVER"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "EA OUTOFWAY"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
