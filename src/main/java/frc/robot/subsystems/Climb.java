@@ -111,6 +111,12 @@ public class Climb extends SubsystemBase {
     }
 
     public void deployClimb() {
+        deployMotor.getClosedLoopController().setReference(DeployPos.MIDDLE.getDeployPos(), ControlType.kPosition,
+                CLIMB_CLOSED_LOOP_SLOT_UP);
+
+    }
+
+    public void deployClimbP2() {
         deployMotor.getClosedLoopController().setReference(DeployPos.DEPLOY.getDeployPos(), ControlType.kPosition,
                 CLIMB_CLOSED_LOOP_SLOT_UP);
 
@@ -182,6 +188,7 @@ public class Climb extends SubsystemBase {
 
     public enum DeployPos {
         START(0),
+        MIDDLE(7.5),
         DEPLOY(10.5),
         STOP(0);
 
