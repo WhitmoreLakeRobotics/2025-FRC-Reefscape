@@ -1,16 +1,10 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants.CanIds;
-import frc.robot.commands.*;
+
 import frc.utils.CommonLogic;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import com.revrobotics.config.BaseConfig;
-import com.revrobotics.spark.config.AbsoluteEncoderConfig;
-import com.revrobotics.spark.config.ClosedLoopConfig;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
-import com.revrobotics.spark.config.MAXMotionConfig;
-import com.revrobotics.spark.config.MAXMotionConfig.MAXMotionPositionMode;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkMax;
@@ -18,24 +12,20 @@ import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLowLevel;
-import com.revrobotics.spark.config.AbsoluteEncoderConfig;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkBase.PersistMode;
 
-public class Wipers extends SubsystemBase {
+import com.revrobotics.spark.SparkBase.ResetMode;
+
+public class Fangs extends SubsystemBase {
     // Elevator Config Parameters
     // public SparkMax leftMotor = new SparkMax(CanIds.RIGHT_GUIDE,
     // MotorType.kBrushless);
     private SparkMax rightMotor = new SparkMax(CanIds.LEFT_GUIDE, MotorType.kBrushless);
 
-    private double pivot_gearRatio = (2.89 * 5.23 * 5.23);
-    private double pivotShaftDiameter = 0.75;
+   // private double pivot_gearRatio = (2.89 * 5.23 * 5.23);
+   // private double pivotShaftDiameter = 0.75;
     private double leftCurPos = 0.0;
     private double rightCurrPos = 0.0;
-    private double pivotCmdPos = GuidePos.START.guideAngle;
+   // private double pivotCmdPos = GuidePos.START.guideAngle;
     private final double pivotPosTol = 0.1;
 
     private GuidePos rightTargetPos = GuidePos.ZERO;
@@ -43,10 +33,10 @@ public class Wipers extends SubsystemBase {
 
     private final ClosedLoopSlot GUIDE_CLOSED_LOOP_SLOT = ClosedLoopSlot.kSlot0;
     private ClosedLoopSlot GuideCurrentSlot = GUIDE_CLOSED_LOOP_SLOT;
-    public GuidePos leftTarget = Wipers.GuidePos.START;
-    public GuidePos rightTarget = Wipers.GuidePos.START;
+    public GuidePos leftTarget = Fangs.GuidePos.START;
+    public GuidePos rightTarget = Fangs.GuidePos.START;
 
-    public Wipers() {
+    public Fangs() {
         configMotors();
 
     }
@@ -173,7 +163,7 @@ public class Wipers extends SubsystemBase {
 
     }
 
-    public enum Wiper {
+    public enum Fang {
         LEFT,
         RIGHT;
 

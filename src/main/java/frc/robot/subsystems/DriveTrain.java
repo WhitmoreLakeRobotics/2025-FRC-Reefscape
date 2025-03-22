@@ -18,7 +18,7 @@ import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 
-import edu.wpi.first.hal.AllianceStationID;
+
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -29,7 +29,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -65,7 +65,7 @@ public class DriveTrain extends SubsystemBase
   //************************3668 customizations */
 public double THeading = 0;
 private boolean bAdrive = false;
-private double autoP = 0.05;
+
 private double maxTurnRate = 0.55;
 private PID turnPID = new PID(0.02,0.0,0.0);
   //************************end 3668 customizations */
@@ -80,7 +80,7 @@ private PID turnPID = new PID(0.02,0.0,0.0);
   /**
    * PhotonVision class to keep an accurate odometry.
    */
-  private       Vision      vision;
+  public       Vision      vision;
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -161,6 +161,7 @@ private PID turnPID = new PID(0.02,0.0,0.0);
     if(bAdrive){
       CheckAutoTurn();
     }
+    vision.UpdateTargetList();
   }
 
   @Override
@@ -434,7 +435,7 @@ private PID turnPID = new PID(0.02,0.0,0.0);
                             translationX.getAsDouble() * swerveDrive.getMaximumChassisVelocity(),
                             translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity()), 0.8),
                         Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumChassisAngularVelocity(),
-                        true,
+                        false,// was true
                         false);
     });
   }
