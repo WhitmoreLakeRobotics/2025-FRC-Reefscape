@@ -257,13 +257,14 @@ public class RobotContainer {
     Ltrigger_Drive.onFalse(new AlgaeCmd(AlgaeIntake.PivotPos.CORALPICKUP, AlgaeIntake.Status.STOPPED));
 
     Trigger RBumper_Drive = new Trigger(drive_Controller.rightBumper());
+    RBumper_Drive.whileTrue(m_driveTrain.driveCommand(() -> (-getDrive_Controller().getLeftY() * .4), () -> (-getDrive_Controller().getLeftX() * .4), () -> getDrive_Controller().getRightX()));
    // RBumper_Drive.onTrue(new FangsCmd(Fangs.Fang.RIGHT));
     Trigger Rtrigger_Drive = new Trigger(drive_Controller.rightTrigger(0.5));
     Rtrigger_Drive.onTrue(new deliverCoralCmd());
     Rtrigger_Drive.onFalse(new EAoutOfWay());
     // Trigger LJC_Drive = new Trigger(drive_Controller.leftStick());
     Trigger RJC_Drive = new Trigger(drive_Controller.rightStick());
-    RJC_Drive.whileTrue(m_driveTrain.driveCommand(() -> -getDrive_Controller().getLeftY(), () -> -getDrive_Controller().getLeftX(), () -> getDrive_Controller().getRightX()));
+    //RJC_Drive.whileTrue(m_driveTrain.driveCommand(() -> -getDrive_Controller().getLeftY(), () -> -getDrive_Controller().getLeftX(), () -> getDrive_Controller().getRightX()));
     Trigger DDown_Artic = new Trigger(Articulator.povDown());
     // Trigger test = new Trigger(Articulator.povDown(null));
     DDown_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.LEVEL1));

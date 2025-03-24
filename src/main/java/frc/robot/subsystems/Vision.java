@@ -616,7 +616,7 @@ public int getLatestID() {
 
 public Optional<Pose2d> getRobotInTagSpace() {
     // Get the latest result from the camera
-    PhotonPipelineResult result = Cameras.RIGHT_CAM.resultsList.get(0);
+    PhotonPipelineResult result = Cameras.RIGHT_CAM.getLatestResult().get();
     
     // Check if any targets are detected
     if (result!=null && result.hasTargets()) {

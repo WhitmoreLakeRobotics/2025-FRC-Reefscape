@@ -28,6 +28,7 @@ import frc.robot.subsystems.ElevatorAndArm.ElevAndArmPos;
 public class Coral extends SubsystemBase {
     // Elevator Config Parameters
     private SparkMax coralMotor = new SparkMax(CanIds.CORAL_MOTOR, MotorType.kBrushless);
+    private SparkMax funnelMotor = new SparkMax(CanIds.FUNNEL_MOTOR, MotorType.kBrushless);
 
     public DigitalInput Coralhopper;
     public DigitalInput CoralIntake;
@@ -55,7 +56,7 @@ public class Coral extends SubsystemBase {
     private final double SPEED_LEVEL2_DEPLOY = 0.9; //0.5
     private final double SPEED_LEVEL3_DEPLOY = -0.55; //.05
     private final double SPEED_LEVEL4_DEPLOY = -0.9; //.07
-
+    private final double SPEED_FUNNEL_PRECORAL = SPEED_PRECORAL;
     private final ClosedLoopSlot CORAL_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
     private final ClosedLoopSlot CORAL_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
     private ClosedLoopSlot CoralCurrentSlot = CORAL_CLOSED_LOOP_SLOT_UP;
@@ -289,6 +290,44 @@ public class Coral extends SubsystemBase {
 
     }
 
+    private void configHopperMotor() {
+        SparkMaxConfig FunnelConfig = new SparkMaxConfig();
+
+        // config.encoder.positionConversionFactor(Math.PI * elevator_gearDiameter /
+        // elevator_gearRatio);
+        FunnelConfig.encoder.positionConversionFactor(1);
+        FunnelConfig.inverted(true);
+        FunnelConfig.softLimit.forwardSoftLimitEnabled(false);
+        FunnelConfig.softLimit.reverseSoftLimit(0);
+        FunnelConfig.softLimit.reverseSoftLimitEnabled(false);
+        FunnelConfig.idleMode(IdleMode.kBrake);
+        FunnelConfig.openLoopRampRate(0.15);
+
+        FunnelConfig.closedLoop.maxOutput(1.0);
+        FunnelConfig.closedLoop.minOutput(-1.0);
+
+        FunnelConfig.closedLoopRampRate(0.15);
+        FunnelConfig.voltageCompensation(9.0);
+        //// Down / outVelocity Values
+        FunnelConfig.closedLoop.maxMotion.maxAcceleration(5000, CORAL_CLOSED_LOOP_SLOT_DOWN);
+        FunnelConfig.closedLoop.maxMotion.maxVelocity(5000, CORAL_CLOSED_LOOP_SLOT_DOWN);
+        FunnelConfig.closedLoop.maxMotion.allowedClosedLoopError(coralPosTol, CORAL_CLOSED_LOOP_SLOT_DOWN);
+        FunnelConfig.closedLoop.pidf(0.4, 0.0, 0.0, 0.0, CORAL_CLOSED_LOOP_SLOT_DOWN);
+
+        //// Up / in Velocity Values
+        FunnelConfig.closedLoop.maxMotion.maxAcceleration(5000, CORAL_CLOSED_LOOP_SLOT_UP);
+        FunnelConfig.closedLoop.maxMotion.maxVelocity(2000, CORAL_CLOSED_LOOP_SLOT_UP);
+        FunnelConfig.closedLoop.maxMotion.allowedClosedLoopError(coralPosTol, CORAL_CLOSED_LOOP_SLOT_UP);
+        FunnelConfig.closedLoop.pidf(0.4, 0.0, 0.0, 0.0, CORAL_CLOSED_LOOP_SLOT_UP);
+
+        FunnelConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+
+        // config.smartCurrentLimit(50);
+        FunnelConfig.smartCurrentLimit(30, 50);
+
+        funnelMotor.configure(FunnelConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    }
     public double calcCoralCompensation(double armPosDeg) {
         // calcuate the new coral position based strictly on the arm angle
         // y = new coral position based on the extreeme values of coral and arm angle
@@ -311,33 +350,42 @@ public class Coral extends SubsystemBase {
 
             case PRECORAL:
                 coralMotor.set(SPEED_PRECORAL);
+                funnelMotor.set(SPEED_FUNNEL_PRECORAL);
                 break;
 
             case LEVEL_1_DEPLOY:
                 coralMotor.set(SPEED_LEVEL1_DEPLOY);
+                funnelMotor.set(0);
                 break;
 
             case LEVEL_2_DEPLOY:
                 coralMotor.set(SPEED_LEVEL2_DEPLOY);
+                funnelMotor.set(0);
                 break;
 
             case LEVEL_3_DEPLOY:
                 coralMotor.set(SPEED_LEVEL3_DEPLOY);
+                funnelMotor.set(0);
                 break;
             case LEVEL_4_DEPLOY:
                 coralMotor.set(SPEED_LEVEL4_DEPLOY);
+                funnelMotor.set(0);
                 break;
 
             case ALGE_EXTRACT:
                 coralMotor.set(SPEED_ALGE_EXTRACT);
+                funnelMotor.set(0);
                 break;
             case STOP:
                 coralMotor.set(0);
+                funnelMotor.set(0);
                 break;
             case CLIMBENABLED:
                 coralMotor.set(0);
+                funnelMotor.set(0);
                 break;
             default:
+                funnelMotor.set(0);
                 // These are where we set motor Power
         }
     }
