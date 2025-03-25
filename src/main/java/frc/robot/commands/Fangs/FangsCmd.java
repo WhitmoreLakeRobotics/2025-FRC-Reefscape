@@ -81,15 +81,13 @@ public class FangsCmd extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (m_Fangs.isLeftAtTarget(newPos) && m_Fangs.isRightAtTarget(newPos)) {
+         //(m_Fangs.isLeftAtTarget(newPos) && m_Fangs.isRightAtTarget(newPos)) {
             bDone = true;
             end(false);
-        }
+        
         
 
-        if (bDone == true) {
-            end(false);
-        }
+       
     }
 
     // Called once the command ends or is interrupted.

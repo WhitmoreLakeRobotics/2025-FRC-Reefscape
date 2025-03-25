@@ -80,10 +80,10 @@ public class Constants {
     public static final int ALGAE_PIVOT_MOTOR = 12;
     public static final int ALGAE_INTAKE_MOTOR = 13;
     public static final int BOTTOM_LIFT_MOTOR = 14;
-    public static final int RIGHT_GUIDE = 15;
+    public static final int RIGHT_GUIDE = 18;
     public static final int LEFT_GUIDE = 16;
     public static final int CLIMB_MOTOR = 17;
-    public static final int FUNNEL_MOTOR = 18;
+    public static final int FUNNEL_MOTOR = 15;
   }
 
    public static final class VisionConstants{

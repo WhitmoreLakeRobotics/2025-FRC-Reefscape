@@ -672,7 +672,7 @@ public Optional<Pose2d> getRobotInTagSpace() {
 }
 public void UpdateTargetList(){
   //var result = Cameras.RIGHT_CAM.getLatestResult();
-  PhotonPipelineResult result = Cameras.RIGHT_CAM.resultsList.get(0);
+  PhotonPipelineResult result = Cameras.RIGHT_CAM.getLatestResult().get();
   if(result!=null && result.hasTargets()) {
     latestID = result.getBestTarget().getFiducialId();
   }

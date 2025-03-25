@@ -279,7 +279,8 @@ public class RobotContainer {
     Trigger B_Artic = new Trigger(Articulator.b());
     B_Artic.onTrue(new AlgaeCmd(AlgaeIntake.PivotPos.CORALPICKUP, AlgaeIntake.Status.STOPPED));
 
-    // Trigger X_Artic = new Trigger(Articulator.x());
+     Trigger X_Artic = new Trigger(Articulator.x());
+     X_Artic.onTrue(new FangsCmd());
     // X_Artic.onTrue(new CmdCoralIntake());
     Trigger Y_Artic = new Trigger(Articulator.y());
     Y_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.PICKUP));
@@ -363,8 +364,7 @@ public class RobotContainer {
     // m_elevatorAndArm.coralMotor.getAppliedOutput());
     // SmartDashboard.putNumber("Coral Velocity",
     // m_elevatorAndArm.coralMotor.getEncoder().getVelocity());
-    // SmartDashboard.putNumber("LeftGuide Pos",
-    // m_Fangs.leftMotor.getEncoder().getPosition());
+     SmartDashboard.putNumber("Left Guide Pos", m_Fangs.getLeftCurPos());
     SmartDashboard.putNumber("Left Guid Target", m_Fangs.getLeftTargetPos());
     SmartDashboard.putNumber("Right Guide Pos", m_Fangs.getRightCurPos());
     SmartDashboard.putNumber("Right Guid Target", m_Fangs.getRightTargetPos());
@@ -384,7 +384,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("Curr Pose x", m_driveTrain.getPose().getX());
     SmartDashboard.putNumber("Curr Pose y", m_driveTrain.getPose().getY());
     SmartDashboard.putNumber("Curr Pose theta", m_driveTrain.getPose().getRotation().getDegrees()); 
-
+    SmartDashboard.putNumber("Curr Tag ID", m_driveTrain.vision.getLatestID());
     // SmartDashboard.putBoolean("Hold Coral", m_elevatorAndArm.holdCoral);
   }
 

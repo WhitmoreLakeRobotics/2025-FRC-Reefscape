@@ -17,8 +17,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 
 public class Fangs extends SubsystemBase {
     // Elevator Config Parameters
-    // public SparkMax leftMotor = new SparkMax(CanIds.RIGHT_GUIDE,
-    // MotorType.kBrushless);
+    private SparkMax leftMotor = new SparkMax(CanIds.RIGHT_GUIDE, MotorType.kBrushless);
     private SparkMax rightMotor = new SparkMax(CanIds.LEFT_GUIDE, MotorType.kBrushless);
 
    // private double pivot_gearRatio = (2.89 * 5.23 * 5.23);
@@ -132,11 +131,12 @@ public class Fangs extends SubsystemBase {
         SparkMaxConfig config = new SparkMaxConfig();
         config.encoder.positionConversionFactor(1);
         config.inverted(false);
-        config.softLimit.forwardSoftLimit(130);
+        config.softLimit.forwardSoftLimit(50);
         config.softLimit.forwardSoftLimitEnabled(true);
         config.softLimit.reverseSoftLimit(-1);
         config.softLimit.reverseSoftLimitEnabled(true);
         config.idleMode(IdleMode.kBrake);
+       // config.hardLimit.enableForward(false);
         //// In Velocity Values
         config.closedLoop.maxMotion.maxAcceleration(30000, GUIDE_CLOSED_LOOP_SLOT);
         config.closedLoop.maxMotion.maxVelocity(6000, GUIDE_CLOSED_LOOP_SLOT);
@@ -155,8 +155,7 @@ public class Fangs extends SubsystemBase {
          * 
          * config.absoluteEncoder.apply(absEncConfig);
          */
-        // leftMotor.configure(config, ResetMode.kResetSafeParameters,
-        // PersistMode.kPersistParameters);
+        leftMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         config.inverted(true);
         rightMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -172,7 +171,7 @@ public class Fangs extends SubsystemBase {
     public enum GuidePos {
         ZERO(0.0),
         START(1.1),
-        OUT(5.7);
+        OUT(41);
 
         private final double guideAngle;
 
