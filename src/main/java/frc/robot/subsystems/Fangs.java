@@ -43,7 +43,7 @@ public class Fangs extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        // leftCurPos = leftMotor.getEncoder().getPosition();
+        leftCurPos = leftMotor.getEncoder().getPosition();
         rightCurrPos = rightMotor.getEncoder().getPosition();
 
         // Arm direction is positive when cmdPos is greater than curPos
@@ -66,7 +66,7 @@ public class Fangs extends SubsystemBase {
     public void disablePeriodic() {
 
         rightMotor.getClosedLoopController().setIAccum(0);
-        // leftMotor.getClosedLoopController().setIAccum(0);
+        leftMotor.getClosedLoopController().setIAccum(0);
     }
 
     // Put methods for controlling this subsystem
@@ -75,7 +75,7 @@ public class Fangs extends SubsystemBase {
     // expose the current position
     public void autonInit() {
         setRightCmdPos(GuidePos.START);
-        //setLeftCmdPos(GuidePos.START); //left currently not on the robot.
+        setLeftCmdPos(GuidePos.START); //left currently not on the robot.
     }
 
     public double getLeftCurPos() {
@@ -98,8 +98,8 @@ public class Fangs extends SubsystemBase {
     public void setLeftCmdPos(GuidePos newPos) {
         leftTargetPos = newPos;
 
-        // leftMotor.getClosedLoopController().setReference(newPos.guideAngle,
-        // ControlType.kPosition, GuideCurrentSlot);
+        leftMotor.getClosedLoopController().setReference(newPos.guideAngle,
+        ControlType.kPosition, GuideCurrentSlot);
     }
 
     public void setRightCmdPos(GuidePos newPos) {
@@ -130,7 +130,7 @@ public class Fangs extends SubsystemBase {
 
         SparkMaxConfig config = new SparkMaxConfig();
         config.encoder.positionConversionFactor(1);
-        config.inverted(false);
+        config.inverted(true);
         config.softLimit.forwardSoftLimit(50);
         config.softLimit.forwardSoftLimitEnabled(true);
         config.softLimit.reverseSoftLimit(-1);
@@ -157,7 +157,7 @@ public class Fangs extends SubsystemBase {
          */
         leftMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        config.inverted(true);
+        config.inverted(false);
         rightMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }

@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants.CanIds;
+import frc.robot.RobotContainer;
 import frc.utils.CommonLogic;
 import frc.utils.RobotMath;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -72,6 +73,7 @@ public class Coral extends SubsystemBase {
 
     public Coral() {
         configCoralMotor();
+        configHopperMotor();
         Coralhopper = new DigitalInput(0);
         CoralIntake = new DigitalInput(1);
     }
@@ -122,6 +124,16 @@ public class Coral extends SubsystemBase {
                 break;
 
             case PRECORAL:
+            // check the funnel motor as we might not have it on if the alge intake is
+                // incorrect.  Or if we do not yet have the arm and elevator in position
+                if (RobotContainer.getInstance().m_AlgaeIntake.getTargetPivPos() >= AlgaeIntake.PivotPos.CORALPICKUP
+                        .getPivotPos() - RobotContainer.getInstance().m_AlgaeIntake.pivotPosTol) {
+                    if (m_ElevatorAndArm.isElevatorAndArmAtTarget(ElevAndArmPos.PICKUP)) {
+                        funnelMotor.set(SPEED_FUNNEL_PRECORAL);
+                    }
+                } else {
+                    funnelMotor.set(0);
+                }
                 // Looking for the upper sensor to trip
                 if (getUpperSensor()) {
                     // Sensor Tripped
