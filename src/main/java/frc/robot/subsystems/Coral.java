@@ -126,13 +126,13 @@ public class Coral extends SubsystemBase {
             case PRECORAL:
             // check the funnel motor as we might not have it on if the alge intake is
                 // incorrect.  Or if we do not yet have the arm and elevator in position
-                if (RobotContainer.getInstance().m_AlgaeIntake.getTargetPivPos() >= AlgaeIntake.PivotPos.CORALPICKUP
-                        .getPivotPos() - RobotContainer.getInstance().m_AlgaeIntake.pivotPosTol) {
-                    if (m_ElevatorAndArm.isElevatorAndArmAtTarget(ElevAndArmPos.PICKUP)) {
+                if ((RobotContainer.getInstance().m_AlgaeIntake.getTargetPivPos() >= AlgaeIntake.PivotPos.CORALPICKUP
+                        .getPivotPos() - RobotContainer.getInstance().m_AlgaeIntake.pivotPosTol) &&
+                     m_ElevatorAndArm.isElevatorAndArmAtTarget(ElevAndArmPos.PICKUP)) {
                         funnelMotor.set(SPEED_FUNNEL_PRECORAL);
-                    }
+                    
                 } else {
-                    funnelMotor.set(0);
+                    stopFunnel();
                 }
                 // Looking for the upper sensor to trip
                 if (getUpperSensor()) {
@@ -262,6 +262,9 @@ public class Coral extends SubsystemBase {
         coralMotor.getEncoder().setPosition(CORAL_PICKUP_POS);
         currCoralPhase = CoralPhase.HOLDING;
     }
+    public void stopFunnel() {
+        funnelMotor.set(0);
+    }
 
     // configure the elevator motor spark
 
@@ -277,6 +280,8 @@ public class Coral extends SubsystemBase {
         CoralConfig.softLimit.reverseSoftLimitEnabled(false);
         CoralConfig.idleMode(IdleMode.kBrake);
         CoralConfig.openLoopRampRate(0.15);
+        CoralConfig.limitSwitch.forwardLimitSwitchEnabled(false);
+        CoralConfig.limitSwitch.reverseLimitSwitchEnabled(false);
 
         CoralConfig.closedLoop.maxOutput(1.0);
         CoralConfig.closedLoop.minOutput(-1.0);
@@ -316,6 +321,8 @@ public class Coral extends SubsystemBase {
         FunnelConfig.softLimit.reverseSoftLimitEnabled(false);
         FunnelConfig.idleMode(IdleMode.kBrake);
         FunnelConfig.openLoopRampRate(0.15);
+        FunnelConfig.limitSwitch.forwardLimitSwitchEnabled(false);
+        FunnelConfig.limitSwitch.reverseLimitSwitchEnabled(false);
 
         FunnelConfig.closedLoop.maxOutput(1.0);
         FunnelConfig.closedLoop.minOutput(-1.0);

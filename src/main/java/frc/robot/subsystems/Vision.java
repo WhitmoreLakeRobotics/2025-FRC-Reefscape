@@ -151,6 +151,8 @@ private int latestID;
       Optional<EstimatedRobotPose> poseEst = getEstimatedGlobalPose(camera);
       if (poseEst.isPresent()) {
         var pose = poseEst.get();
+        latestID = pose.targetsUsed.get(0).getFiducialId();
+        lastCalculatedDist.of(poseEst.get().estimatedPose.toPose2d());
         swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
             pose.timestampSeconds,
             camera.curStdDevs);

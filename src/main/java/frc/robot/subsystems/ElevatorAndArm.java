@@ -175,6 +175,7 @@ public class ElevatorAndArm extends SubsystemBase {
             case ALGAEEXTRACTLOWER:
             case ALGAEEXTRACTUPPER:
                 m_coral.setCoralPhase(CoralPhase.ALGE_EXTRACT);
+                m_coral.stopFunnel();
                 break;
 
             case PICKUP:
@@ -183,6 +184,7 @@ public class ElevatorAndArm extends SubsystemBase {
             default:
                 // I am not sure if we want to go to holding for all other positions
                 // m_coral.setCoralPhase(CoralPhase.HOLDING);
+                m_coral.stopFunnel();
                 break;
         }
 

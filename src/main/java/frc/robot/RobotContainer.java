@@ -314,7 +314,7 @@ public class RobotContainer {
     // CoralIntake.onFalse(new CmdCoralIntake());
 
     Trigger AlgIntake = new Trigger(m_AlgaeIntake.AlgIntake::get);
-    AlgIntake.onFalse(new AlgaeCmd(AlgaeIntake.PivotPos.HELD, AlgaeIntake.Status.STOPPED, 0.3));
+    AlgIntake.onFalse(new AlgaeCmd(AlgaeIntake.PivotPos.HELD, AlgaeIntake.Status.STOPPED, 0.5));
 
     // RIGHT JOYSTICK TO CONTROL CLIMB.
     // LEFT JOYSTICK TO CONTROL CORAL DROPPER.
