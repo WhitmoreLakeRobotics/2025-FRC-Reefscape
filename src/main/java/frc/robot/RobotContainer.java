@@ -305,7 +305,7 @@ public class RobotContainer {
     Rtrigger_Artic.onTrue(new deliverCoralCmd());
     Rtrigger_Artic.onFalse(new EAoutOfWay());
     Trigger LJC_Artic = new Trigger(Articulator.leftStick()); // USE FOR CLIMB ENABLE.
-    LJC_Artic.onTrue(new ClimbEnableCmd());
+    LJC_Artic.onTrue(new ClimbEnableCmdPart2());
     Trigger RJC_Artic = new Trigger(Articulator.rightStick());
 
     // Trigger Coralhopper = new Trigger(m_Coral.Coralhopper::get);

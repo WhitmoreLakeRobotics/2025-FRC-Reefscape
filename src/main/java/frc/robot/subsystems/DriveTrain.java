@@ -161,7 +161,7 @@ private PID turnPID = new PID(0.02,0.0,0.0);
     if(bAdrive){
       CheckAutoTurn();
     }
-    vision.UpdateTargetList();
+  //  vision.UpdateTargetList();
   }
 
   @Override
