@@ -72,6 +72,7 @@ public class ElevatorAndArm extends SubsystemBase {
     private final ClosedLoopSlot ARM_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
     private final ClosedLoopSlot ARM_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
     private ClosedLoopSlot ArmCurrentSlot = ARM_CLOSED_LOOP_SLOT_UP;
+    public ALGAE_THROWING_STAGE currAlgaeThrowingStage = ALGAE_THROWING_STAGE.OTHER_ACTIONS;
 
     private boolean isBrake = true;
     private double disableIntakingTime = 0;
@@ -96,6 +97,58 @@ public class ElevatorAndArm extends SubsystemBase {
 
         // Arm direction is positive when cmdPos is greater than curPos
         armDirection = Math.signum(armCmdPos - armCurPos);
+
+
+        switch (currAlgaeThrowingStage) {
+
+            case HOLDING_ALGAE:
+                break;
+
+
+            case ALGAE_THROWING_PREP:
+                // optimize by getting into throwing pos before we move to the barge.
+                break;
+
+            case ALGAE_THROWING_START:
+                // Set this to start the throwing  squence
+                // use external command to throw the ALGAE and enter this
+                if (isElevatorAndArmAtTarget(ElevAndArmPos.ALGAE_THROWING_STARTPOS)){
+                    currAlgaeThrowingStage = ALGAE_THROWING_STAGE.ALGAE_THROWING_RELEASE;
+                    setNewPos(ElevAndArmPos.ALGAE_THROWING_FINISHPOS);
+                }
+
+                break;
+
+            case ALGAE_THROWING_RELEASE:
+                if (armCurPos >= ElevAndArmPos.ALGAE_THROWING_RELEASE_POS.armPos) {
+                    m_coral.setCoralPhase(CoralPhase.ALGAE_DEPLOY_BARGE);
+                    currAlgaeThrowingStage = ALGAE_THROWING_STAGE.ALGAE_THROWING_FINISH;
+                }
+                break;
+
+            case ALGAE_THROWING_FINISH:
+                if (isElevatorAndArmAtTarget(ElevAndArmPos.ALGAE_THROWING_FINISHPOS)){
+                    currAlgaeThrowingStage = ALGAE_THROWING_STAGE.OTHER_ACTIONS;
+                    m_coral.setCoralPhase(CoralPhase.STOP);
+                }
+
+                break;
+
+
+            case OTHER_ACTIONS:
+                periodic_other_actions ();
+                break;
+
+            default:
+                break;
+
+        }
+    }
+
+    public void setAlgaeThrowingPhase (ALGAE_THROWING_STAGE newStage){
+        currAlgaeThrowingStage = newStage;
+    }
+    private void periodic_other_actions () {
 
         // Probably should add some safety logic here
         // recommend storing new target position in a variable and then executing the
@@ -134,7 +187,9 @@ public class ElevatorAndArm extends SubsystemBase {
                 setElevatorAndArmPos(targetPos);
             }
         }
+
     }
+
 
     @Override
     public void simulationPeriodic() {
@@ -174,12 +229,17 @@ public class ElevatorAndArm extends SubsystemBase {
         switch (targetPos) {
             case ALGAEEXTRACTLOWER:
             case ALGAEEXTRACTUPPER:
-                m_coral.setCoralPhase(CoralPhase.ALGE_EXTRACT);
+                m_coral.setCoralPhase(CoralPhase.ALGAE_EXTRACT);
                 m_coral.stopFunnel();
                 break;
 
             case PICKUP:
-                m_coral.setCoralPhase(CoralPhase.PRECORAL);
+                m_coral.setCoralPhase(CoralPhase.WAITING_4_PICKUP);
+                break;
+
+            case ALGAE_THROWING_STARTPOS:
+                currAlgaeThrowingStage =ALGAE_THROWING_STAGE.ALGAE_THROWING_PREP;
+                break;
 
             default:
                 // I am not sure if we want to go to holding for all other positions
@@ -384,6 +444,17 @@ public class ElevatorAndArm extends SubsystemBase {
 
     }
 
+    public enum ALGAE_THROWING_STAGE{
+        HOLDING_ALGAE,
+        ALGAE_THROWING_PREP,
+        ALGAE_THROWING_START,
+        ALGAE_THROWING_RELEASE,
+        ALGAE_THROWING_FINISH,
+        OTHER_ACTIONS
+    }
+
+
+
     public enum ElevAndArmPos {
         PICKUP(23, 0),
         START(23, 0),
@@ -400,7 +471,13 @@ public class ElevatorAndArm extends SubsystemBase {
         ELVMAX(40, 39.54),// was 65.9
         ALGAEEXTRACTLOWER(72, 12),// was 20
         ALGAEEXTRACTUPPER(68, 34.8),// was 58
+        // The ALGAE Throwing are meant for the Barge
+        ALGAE_THROWING_STARTPOS (42,20),
+        ALGAE_THROWING_RELEASE_POS (130,30),
+        ALGAE_THROWING_FINISHPOS (183,35),
+
         OUTOFWAY(235, 0);
+
         // CIntake(24, 0), // was 2.5
         // CHold(24, 0),
 

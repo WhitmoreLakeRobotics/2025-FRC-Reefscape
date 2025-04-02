@@ -612,19 +612,19 @@ private int latestID;
 
   }
 /*****Inserted Custom Code */
-public int getLatestID() { 
+public int getLatestID() {
   return latestID;
 }
 
 public Optional<Pose2d> getRobotInTagSpace() {
     // Get the latest result from the camera
     PhotonPipelineResult result = Cameras.RIGHT_CAM.getLatestResult().get();
-    
+
     // Check if any targets are detected
     if (result!=null && result.hasTargets()) {
         // Get the current timestamp
-       
-        
+
+
         // Update the pose estimator with the latest result
         Optional<EstimatedRobotPose> estimatedPoseOptional = Cameras.RIGHT_CAM.poseEstimator.update(result);
 
@@ -636,7 +636,7 @@ public Optional<Pose2d> getRobotInTagSpace() {
 
             // Get the ID of the first detected tag
             //int bestId = getClosestReefSide(estimatedPose.estimatedPose.toPose2d());
-            
+
             estimatedCaemraPose.set(estimatedPose.estimatedPose.toPose2d());
             int bestId=0;
             double bestDistance = Double.MAX_VALUE;

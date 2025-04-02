@@ -48,12 +48,22 @@ public class Coral extends SubsystemBase {
     private final double UpperSensorIndexPos = CORAL_PICKUP_POS;
     //private final double LowerSensorIndexPos = CORAL_PICKUP_POS;
 
+    private int normalStallCurrentLimit = 30;
+    private int normalFreeCurrentLimit = 50;
+
+    private int algeStallCurrentLimit = 25;
+    private int algeFreeCurrentLimit = 50;
+
     private double coral_m = 0;
     private double coral_b = 0;
 
     private final double SPEED_PRECORAL = 0.40;
     private final double SPEED_INDEXING = 0.25;
-    private final double SPEED_ALGE_EXTRACT = 0.9; //.05
+    private final double SPEED_ALGE_EXTRACT = 0.9; // .05
+    private final double SPEED_ALGE_DEPLOY_PROCESSOR = -SPEED_ALGE_EXTRACT;
+    private final double SPEED_ALGE_DEPLOY_BARGE = -1.0;
+    private final double SPEED_ALGE_HOLDING = 0.1;
+
     private final double SPEED_LEVEL1_DEPLOY = 0.18;
     private final double SPEED_LEVEL2_DEPLOY = 0.9; //0.5
     private final double SPEED_LEVEL3_DEPLOY = -0.55; //.05
@@ -113,7 +123,7 @@ public class Coral extends SubsystemBase {
             case INIT:
                 try {
                     if (/*getUpperSensor() &&*/ m_ElevatorAndArm.isElevatorAndArmAtTarget(ElevAndArmPos.PICKUP)) {
-                        currCoralPhase = CoralPhase.HOLDING;
+                        currCoralPhase = CoralPhase.CORAL_HOLDING;
                     }
                 } catch (NullPointerException e) {
                     System.err.println("Caught a NullPointerException: " + e.getMessage());
@@ -123,17 +133,24 @@ public class Coral extends SubsystemBase {
 
                 break;
 
+
+            case WAITING_4_PICKUP:
+                if ((RobotContainer.getInstance().m_AlgaeIntake.getTargetPivPos() >= AlgaeIntake.PivotPos.CORALPICKUP
+                    .getPivotPos() - RobotContainer.getInstance().m_AlgaeIntake.pivotPosTol) &&
+                    m_ElevatorAndArm.isElevatorAndArmAtTarget(ElevAndArmPos.PICKUP)) {
+                    setCoralPhase(CoralPhase.PRECORAL);
+                }
+
+
             case PRECORAL:
             // check the funnel motor as we might not have it on if the alge intake is
                 // incorrect.  Or if we do not yet have the arm and elevator in position
-                if ((RobotContainer.getInstance().m_AlgaeIntake.getTargetPivPos() >= AlgaeIntake.PivotPos.CORALPICKUP
+                if (!((RobotContainer.getInstance().m_AlgaeIntake.getTargetPivPos() >= AlgaeIntake.PivotPos.CORALPICKUP
                         .getPivotPos() - RobotContainer.getInstance().m_AlgaeIntake.pivotPosTol) &&
-                     m_ElevatorAndArm.isElevatorAndArmAtTarget(ElevAndArmPos.PICKUP)) {
-                        funnelMotor.set(SPEED_FUNNEL_PRECORAL);
-                    
-                } else {
-                    stopFunnel();
+                        m_ElevatorAndArm.isElevatorAndArmAtTarget(ElevAndArmPos.PICKUP))) {
+                        setCoralPhase (CoralPhase.WAITING_4_PICKUP);
                 }
+
                 // Looking for the upper sensor to trip
                 if (getUpperSensor()) {
                     // Sensor Tripped
@@ -144,7 +161,7 @@ public class Coral extends SubsystemBase {
                 } else {
                     // Sensor Tripped
                     SensorTime = RobotMath.getTime() + 0.0;
-                   
+
                 }
             }
                 break;
@@ -170,15 +187,27 @@ public class Coral extends SubsystemBase {
 
             case FINAL_POSITIONING:
                 if (isCoralMotorInPosiiton() && getLowerSensor()) {
-                    currCoralPhase = CoralPhase.HOLDING;
+                    currCoralPhase = CoralPhase.CORAL_HOLDING;
                     m_ElevatorAndArm.setBlockMoves(false);
                     m_ElevatorAndArm.setNewPos(ElevAndArmPos.SAFETYPOS);
                 }
                 break;
-            case HOLDING:
+            case CORAL_HOLDING:
                 setCoralCmdPos(calcCoralCompensation(m_ElevatorAndArm.getArmCurPos()));
-                funnelMotor.set(0);
+                stopFunnel();
                 break;
+
+            case ALGAE_EXTRACT:
+                if (coralMotor.getEncoder().getVelocity() == 0) {
+                    setCoralPhase(CoralPhase.ALGAE_HOLDING);
+                }
+
+                break;
+
+            case ALGAE_HOLDING:
+                // we are holding an ALGAE now...
+                break;
+
 
             default:
                 // do nothing... we are doing something that uses power set
@@ -195,7 +224,7 @@ public class Coral extends SubsystemBase {
 
     public void SetElevatorAndArm(ElevatorAndArm sysElevatorAndArm) {
         m_ElevatorAndArm = sysElevatorAndArm;
-        currCoralPhase = CoralPhase.HOLDING;
+        currCoralPhase = CoralPhase.CORAL_HOLDING;
     }
 
     public String getCoralPhaseString() {
@@ -216,7 +245,7 @@ public class Coral extends SubsystemBase {
     // here. Call these from Commands.
 
     public boolean getIsHolding() {
-        return currCoralPhase == CoralPhase.HOLDING;
+        return currCoralPhase == CoralPhase.CORAL_HOLDING;
     }
 
     public double getCoralCmdPos() {
@@ -260,16 +289,16 @@ public class Coral extends SubsystemBase {
 
     public void autonInit() {
         coralMotor.getEncoder().setPosition(CORAL_PICKUP_POS);
-        currCoralPhase = CoralPhase.HOLDING;
+        currCoralPhase = CoralPhase.CORAL_HOLDING;
     }
     public void stopFunnel() {
-        funnelMotor.set(0);
+        stopFunnel();
     }
 
     // configure the elevator motor spark
 
     private void configCoralMotor() {
-        
+
 
         // config.encoder.positionConversionFactor(Math.PI * elevator_gearDiameter /
         // elevator_gearRatio);
@@ -303,7 +332,7 @@ public class Coral extends SubsystemBase {
         CoralConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
         // config.smartCurrentLimit(50);
-        CoralConfig.smartCurrentLimit(30, 50);
+        CoralConfig.smartCurrentLimit(normalStallCurrentLimit, normalFreeCurrentLimit);
 
         coralMotor.configure(CoralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -369,44 +398,78 @@ public class Coral extends SubsystemBase {
                 // Not sure what to put here but I reserved it a space
                 break;
 
+
+            case WAITING_4_PICKUP:
+                coralMotor.set(0);
+                coralMotor.set(0);
+
             case PRECORAL:
+                CoralConfig.smartCurrentLimit(normalStallCurrentLimit, normalFreeCurrentLimit);
+                coralMotor.configure(CoralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
                 coralMotor.set(SPEED_PRECORAL);
                 funnelMotor.set(SPEED_FUNNEL_PRECORAL);
                 break;
 
             case LEVEL_1_DEPLOY:
                 coralMotor.set(SPEED_LEVEL1_DEPLOY);
-                funnelMotor.set(0);
+                stopFunnel();
                 break;
 
             case LEVEL_2_DEPLOY:
                 coralMotor.set(SPEED_LEVEL2_DEPLOY);
-                funnelMotor.set(0);
+                stopFunnel();
                 break;
 
             case LEVEL_3_DEPLOY:
                 coralMotor.set(SPEED_LEVEL3_DEPLOY);
-                funnelMotor.set(0);
+                stopFunnel();
                 break;
             case LEVEL_4_DEPLOY:
                 coralMotor.set(SPEED_LEVEL4_DEPLOY);
-                funnelMotor.set(0);
+                stopFunnel();
                 break;
 
-            case ALGE_EXTRACT:
+            case ALGAE_EXTRACT:
+                CoralConfig.smartCurrentLimit(normalStallCurrentLimit, normalFreeCurrentLimit);
+                coralMotor.configure(CoralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
                 coralMotor.set(SPEED_ALGE_EXTRACT);
-                funnelMotor.set(0);
+                stopFunnel();
                 break;
+
+            case ALGAE_HOLDING:
+                CoralConfig.smartCurrentLimit(algeStallCurrentLimit, algeFreeCurrentLimit);
+                coralMotor.configure(CoralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+                coralMotor.set(SPEED_ALGE_HOLDING);
+                stopFunnel();
+                break;
+
+            case AlGAE_DEPLOY_PROCESSOR:
+                CoralConfig.smartCurrentLimit(normalStallCurrentLimit, normalFreeCurrentLimit);
+                coralMotor.configure(CoralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+                coralMotor.set(SPEED_ALGE_DEPLOY_PROCESSOR);
+                stopFunnel();
+                break;
+
+
+            case ALGAE_DEPLOY_BARGE:
+                CoralConfig.smartCurrentLimit(normalStallCurrentLimit, normalFreeCurrentLimit);
+                coralMotor.configure(CoralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+                coralMotor.set(SPEED_ALGE_DEPLOY_BARGE);
+                stopFunnel();
+                break;
+
             case STOP:
                 coralMotor.set(0);
-                funnelMotor.set(0);
+                stopFunnel();
                 break;
+
             case CLIMBENABLED:
                 coralMotor.set(0);
-                funnelMotor.set(0);
+                stopFunnel();
                 break;
+
             default:
-                funnelMotor.set(0);
+                stopFunnel();
                 // These are where we set motor Power
         }
     }
@@ -432,6 +495,7 @@ public class Coral extends SubsystemBase {
 
     public enum CoralPhase {
         INIT,
+        WAITING_4_PICKUP,
         PRECORAL,
         // LOOKING_UPPER_SENSOR,
         // TRIPPED_UPPER_SENSOR,
@@ -440,12 +504,15 @@ public class Coral extends SubsystemBase {
         CORAL_INDEX_WAITING,
         // CORAL_INDEX_COMPLETE,
         FINAL_POSITIONING,
-        HOLDING,
+        CORAL_HOLDING,
         LEVEL_1_DEPLOY,
         LEVEL_2_DEPLOY,
         LEVEL_3_DEPLOY,
         LEVEL_4_DEPLOY,
-        ALGE_EXTRACT,
+        ALGAE_EXTRACT,
+        ALGAE_HOLDING,
+        AlGAE_DEPLOY_PROCESSOR,
+        ALGAE_DEPLOY_BARGE,
         STOP,
         CLIMBENABLED
 
