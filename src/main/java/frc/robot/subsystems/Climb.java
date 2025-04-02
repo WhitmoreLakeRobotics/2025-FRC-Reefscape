@@ -188,7 +188,7 @@ public class Climb extends SubsystemBase {
 
     public enum DeployPos {
         START(0),
-        MIDDLE(7.0),
+        MIDDLE(2.5),
         DEPLOY(10.5),
         STOP(0);
 

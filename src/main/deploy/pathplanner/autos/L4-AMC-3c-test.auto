@@ -109,6 +109,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "CORAL DELIVER"
+          }
+        },
+        {
           "type": "wait",
           "data": {
             "waitTime": 0.2

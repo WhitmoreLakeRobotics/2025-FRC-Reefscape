@@ -64,11 +64,11 @@ public class Coral extends SubsystemBase {
     private final double SPEED_ALGE_DEPLOY_BARGE = -1.0;
     private final double SPEED_ALGE_HOLDING = 0.1;
 
-    private final double SPEED_LEVEL1_DEPLOY = 0.18;
+    private final double SPEED_LEVEL1_DEPLOY = 0.3;
     private final double SPEED_LEVEL2_DEPLOY = 0.9; //0.5
     private final double SPEED_LEVEL3_DEPLOY = -0.55; //.05
     private final double SPEED_LEVEL4_DEPLOY = -0.9; //.07
-    private final double SPEED_FUNNEL_PRECORAL = SPEED_PRECORAL;
+    private final double SPEED_FUNNEL_PRECORAL = 0.7;
     private final ClosedLoopSlot CORAL_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
     private final ClosedLoopSlot CORAL_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
     private ClosedLoopSlot CoralCurrentSlot = CORAL_CLOSED_LOOP_SLOT_UP;

@@ -17,7 +17,9 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
-
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkMaxConfigAccessor;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -68,6 +70,7 @@ private boolean bAdrive = false;
 
 private double maxTurnRate = 0.55;
 private PID turnPID = new PID(0.02,0.0,0.0);
+private boolean bTurbo = false;
   //************************end 3668 customizations */
   /**
    * Swerve drive object.
@@ -777,6 +780,25 @@ private PID turnPID = new PID(0.02,0.0,0.0);
     }
   }
 
+  public void setCurrent(){
+    if (bTurbo){
+      swerveDrive.getModules()[0].getDriveMotor().setCurrentLimit(60);
+      swerveDrive.getModules()[1].getDriveMotor().setCurrentLimit(60);
+      swerveDrive.getModules()[2].getDriveMotor().setCurrentLimit(60);
+      swerveDrive.getModules()[3].getDriveMotor().setCurrentLimit(60);      
+      bTurbo = false;
+    } else {
+      swerveDrive.getModules()[0].getDriveMotor().setCurrentLimit(80);
+      swerveDrive.getModules()[1].getDriveMotor().setCurrentLimit(80);
+      swerveDrive.getModules()[2].getDriveMotor().setCurrentLimit(80);
+      swerveDrive.getModules()[3].getDriveMotor().setCurrentLimit(80);   
+      bTurbo = true;
+    }
+  }
+  public boolean getTurbo(){
+   return bTurbo;
+
+  } 
 
   //***************************************end 3668 customizations   */
 
