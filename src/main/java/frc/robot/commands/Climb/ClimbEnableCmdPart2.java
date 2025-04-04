@@ -73,7 +73,7 @@ public class ClimbEnableCmdPart2 extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (m_RobotContainer.m_elevatorAndArm.isElevatorAndArmAtTarget(ElevAndArmPos.OUTOFWAY) &&
+        if (m_RobotContainer.m_elevatorAndArm.isArmAtTarget(ElevAndArmPos.OUTOFWAY) &&
         /* m_RobotContainer.m_Fangs.isLeftAtTarget(Fangs.GuidePos.OUT)&& */ m_RobotContainer.m_Fangs
                 .isRightAtTarget(Fangs.GuidePos.OUT) && !part1done) {
             m_RobotContainer.m_Climb.deployClimb();

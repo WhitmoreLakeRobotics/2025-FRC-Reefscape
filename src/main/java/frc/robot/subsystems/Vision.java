@@ -339,7 +339,7 @@ private int latestID;
         VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
         */
         RIGHT_CAM("right",
-        new Rotation3d(0, Math.toRadians(7.5), Math.toRadians(218)),
+        new Rotation3d(0, Math.toRadians(7.7), Math.toRadians(209)),
         new Translation3d(Units.inchesToMeters(-6.25), // .095
         Units.inchesToMeters(12.375), // .115
         Units.inchesToMeters(8.75)), // 8.44 inches
