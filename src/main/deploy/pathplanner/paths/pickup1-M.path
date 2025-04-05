@@ -35,7 +35,7 @@
     {
       "name": "EA LEVEL4",
       "waypointRelativePos": 0.12787723785165878,
-      "endWaypointRelativePos": 0.601875532821836,
+      "endWaypointRelativePos": 0.654731457800511,
       "command": {
         "type": "named",
         "data": {

@@ -292,10 +292,10 @@ public class RobotContainer {
     Y_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.PICKUP));
 
     Trigger Back_Artic = new Trigger(Articulator.back()); // USE FOR ARTICULATION STOP.
-    Back_Artic.onTrue(new ArticStopCmd());
+    Back_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.LEVEL2));
     Trigger Start_Artic = new Trigger(Articulator.start()); // USE FOR climb part2
     // ARTICULATION COAST.
-    Start_Artic.onTrue(new ClimbEnableCmdPart2());
+    Start_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.LEVEL3));
     Trigger LBumper_Artic = new Trigger(Articulator.leftBumper()); // USE FOR GUIDE RAIL.
     // LBumper_Artic.onTrue(new FangsCmd(Fang.LEFT));
     LBumper_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.ALGAEEXTRACTLOWER));
