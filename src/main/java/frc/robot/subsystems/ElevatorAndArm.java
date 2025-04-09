@@ -67,10 +67,14 @@ public class ElevatorAndArm extends SubsystemBase {
 
     private final ClosedLoopSlot ELEVATOR_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
     private final ClosedLoopSlot ELEVATOR_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
+    private final ClosedLoopSlot ELEVATOR_CLOSED_LOOP_SLOT_THROWING = ClosedLoopSlot.kSlot3;
+
     private ClosedLoopSlot ElevatorCurrentSlot = ELEVATOR_CLOSED_LOOP_SLOT_UP;
 
     private final ClosedLoopSlot ARM_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
     private final ClosedLoopSlot ARM_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
+    private final ClosedLoopSlot ARM_CLOSED_LOOP_SLOT_THROWING = ClosedLoopSlot.kSlot3;
+
     private ClosedLoopSlot ArmCurrentSlot = ARM_CLOSED_LOOP_SLOT_UP;
     public ALGAE_THROWING_STAGE currAlgaeThrowingStage = ALGAE_THROWING_STAGE.OTHER_ACTIONS;
 
@@ -114,7 +118,9 @@ public class ElevatorAndArm extends SubsystemBase {
                 // use external command to throw the ALGAE and enter this
                 if (isElevatorAndArmAtTarget(ElevAndArmPos.ALGAE_THROWING_STARTPOS)){
                     currAlgaeThrowingStage = ALGAE_THROWING_STAGE.ALGAE_THROWING_RELEASE;
-                    setNewPos(ElevAndArmPos.ALGAE_THROWING_FINISHPOS);
+                    setArmCmdPos(ElevAndArmPos.ALGAE_THROWING_FINISHPOS.armPos, ARM_CLOSED_LOOP_SLOT_THROWING);
+                    setElevatorCmdPos(ElevAndArmPos.ALGAE_THROWING_FINISHPOS.elevPos,ELEVATOR_CLOSED_LOOP_SLOT_THROWING);
+                    targetPos = ElevAndArmPos.ALGAE_THROWING_FINISHPOS;
                 }
 
                 break;
@@ -127,9 +133,25 @@ public class ElevatorAndArm extends SubsystemBase {
                 break;
 
             case ALGAE_THROWING_FINISH:
+                // We get to the finish position and are able to stop there
                 if (isElevatorAndArmAtTarget(ElevAndArmPos.ALGAE_THROWING_FINISHPOS)){
                     currAlgaeThrowingStage = ALGAE_THROWING_STAGE.OTHER_ACTIONS;
                     m_coral.setCoralPhase(CoralPhase.STOP);
+                    setNewPos(ElevAndArmPos.SAFETYPOS);
+                }
+
+                // We overshot the arm pos and just need to stop the ossiclations
+                if (armCurPos > ElevAndArmPos.ALGAE_THROWING_FINISHPOS.armPos){
+                    //currAlgaeThrowingStage = ALGAE_THROWING_STAGE.OTHER_ACTIONS;
+                    m_coral.setCoralPhase(CoralPhase.STOP);
+                    setArmCmdPos(ElevAndArmPos.ALGAE_THROWING_FINISHPOS.armPos);
+                }
+
+                // We overshot the Elevator pos and just need to stop the ossiclations
+                if (elevatorCurPos > ElevAndArmPos.ALGAE_THROWING_FINISHPOS.elevPos){
+                    //currAlgaeThrowingStage = ALGAE_THROWING_STAGE.OTHER_ACTIONS;
+                    m_coral.setCoralPhase(CoralPhase.STOP);
+                    setElevatorCmdPos(ElevAndArmPos.ALGAE_THROWING_FINISHPOS.elevPos);
                 }
 
                 break;
@@ -223,8 +245,10 @@ public class ElevatorAndArm extends SubsystemBase {
         }
         targetPos = tpos;
 
-        setElevatorCmdPos(tpos.getElevPos());
-        setArmCmdPos(tpos.getArmPos());
+        setArmCmdPos(targetPos.armPos);
+        setElevatorCmdPos(targetPos.elevPos);
+
+
 
         switch (targetPos) {
             case ALGAEEXTRACTLOWER:
@@ -272,13 +296,24 @@ public class ElevatorAndArm extends SubsystemBase {
     }
 
     private void setElevatorCmdPos(double newPos) {
-        elevatorCmdPos = newPos;
+        //elevatorCmdPos = newPos;
+        ClosedLoopSlot slot;
         if (newPos > elevatorCurPos) {
-            ElevatorCurrentSlot = ELEVATOR_CLOSED_LOOP_SLOT_UP;
+            slot = ELEVATOR_CLOSED_LOOP_SLOT_UP;
         } else {
-            ElevatorCurrentSlot = ELEVATOR_CLOSED_LOOP_SLOT_DOWN;
+            slot = ELEVATOR_CLOSED_LOOP_SLOT_DOWN;
         }
+        //elevatorMotor.getClosedLoopController().setReference(newPos, ControlType.kPosition, ElevatorCurrentSlot);
+        setElevatorCmdPos(newPos, slot);
+    }
+
+
+    private void setElevatorCmdPos(double newPos, ClosedLoopSlot cmdSlot) {
+
+        elevatorCmdPos = newPos;
+        ElevatorCurrentSlot = cmdSlot;
         elevatorMotor.getClosedLoopController().setReference(newPos, ControlType.kPosition, ElevatorCurrentSlot);
+
     }
 
     private void setElevatorAndArmPos(ElevAndArmPos tpos) {
@@ -286,6 +321,7 @@ public class ElevatorAndArm extends SubsystemBase {
         setArmCmdPos(tpos.getArmPos());
 
     }
+
 
     public void stopCmd() {
 
@@ -311,15 +347,25 @@ public class ElevatorAndArm extends SubsystemBase {
 
     // Set the new ArmCommandPos
     private void setArmCmdPos(double newPos) {
-        this.armCmdPos = newPos;
+        // this.armCmdPos = newPos;
+        ClosedLoopSlot slot;
         if (newPos > armCurPos) {
-            ArmCurrentSlot = ARM_CLOSED_LOOP_SLOT_UP;
+            slot = ARM_CLOSED_LOOP_SLOT_UP;
         } else {
-            ArmCurrentSlot = ARM_CLOSED_LOOP_SLOT_DOWN;
+            slot = ARM_CLOSED_LOOP_SLOT_DOWN;
         }
-        armMotor.getClosedLoopController().setReference(newPos,
-                ControlType.kPosition, ArmCurrentSlot);
+        setArmCmdPos(newPos, slot);
     }
+
+    private void setArmCmdPos(double newPos, ClosedLoopSlot cmdSlot) {
+        this.armCmdPos = newPos;
+        ArmCurrentSlot = cmdSlot;
+
+        armMotor.getClosedLoopController().setReference(newPos,
+        ControlType.kPosition, ArmCurrentSlot);
+
+    }
+
 
     public boolean isElevatorAtTarget(ElevAndArmPos tpos) {
 
@@ -363,6 +409,12 @@ public class ElevatorAndArm extends SubsystemBase {
         Elevconfig.closedLoop.maxMotion.allowedClosedLoopError(elevatorPosTol, ELEVATOR_CLOSED_LOOP_SLOT_UP);
         Elevconfig.closedLoop.pidf(0.5, 0.0, 0.0, 0.0, ELEVATOR_CLOSED_LOOP_SLOT_UP);
 
+        //// Throwing Algae Velocity Values
+        Elevconfig.closedLoop.maxMotion.maxAcceleration(5000, ELEVATOR_CLOSED_LOOP_SLOT_THROWING);
+        Elevconfig.closedLoop.maxMotion.maxVelocity(2000, ELEVATOR_CLOSED_LOOP_SLOT_THROWING);
+        Elevconfig.closedLoop.maxMotion.allowedClosedLoopError(elevatorPosTol, ELEVATOR_CLOSED_LOOP_SLOT_THROWING);
+        Elevconfig.closedLoop.pidf(0.5 * 1.5, 0.0, 0.0, 0.0, ELEVATOR_CLOSED_LOOP_SLOT_THROWING);
+
         Elevconfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
         // config.smartCurrentLimit(50);
@@ -393,6 +445,12 @@ public class ElevatorAndArm extends SubsystemBase {
         armConfig.closedLoop.maxMotion.maxVelocity(1000, ARM_CLOSED_LOOP_SLOT_UP);
         armConfig.closedLoop.maxMotion.allowedClosedLoopError(armPosTol, ARM_CLOSED_LOOP_SLOT_UP);
         armConfig.closedLoop.pidf(.027, 0.0, 0.0, 0.0, ARM_CLOSED_LOOP_SLOT_UP);
+
+        //Throwing Alge Velocity Values
+        armConfig.closedLoop.maxMotion.maxAcceleration(25, ARM_CLOSED_LOOP_SLOT_THROWING);
+        armConfig.closedLoop.maxMotion.maxVelocity(1000, ARM_CLOSED_LOOP_SLOT_THROWING);
+        armConfig.closedLoop.maxMotion.allowedClosedLoopError(armPosTol, ARM_CLOSED_LOOP_SLOT_THROWING);
+        armConfig.closedLoop.pidf(.027 * 1.5, 0.0, 0.0, 0.0, ARM_CLOSED_LOOP_SLOT_THROWING);
 
         armConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
 
