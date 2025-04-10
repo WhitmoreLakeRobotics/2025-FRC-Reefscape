@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3544744318181818,
-        "y": 7.22421875
+        "x": 1.6370028409099533,
+        "y": 7.340553977271797
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.484588068181816,
-        "y": 6.459730113636364
+        "x": 2.2721288404295596,
+        "y": 6.500727998943303
       },
       "isLocked": false,
       "linkedName": "PICKUP1"
     },
     {
       "anchor": {
-        "x": 3.6479403409090914,
-        "y": 5.21328125
+        "x": 3.6728693181818186,
+        "y": 5.047088068181818
       },
       "prevControl": {
-        "x": 2.717258522727273,
-        "y": 6.04424715909091
+        "x": 2.866032905107109,
+        "y": 5.951162696210484
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,10 +31,22 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "EA LEVEL4",
+      "waypointRelativePos": 0.12787723785165878,
+      "endWaypointRelativePos": 0.654731457800511,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "EA LEVEL4"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 2.5,
-    "maxAcceleration": 1.5,
+    "maxVelocity": 3.25,
+    "maxAcceleration": 1.875,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

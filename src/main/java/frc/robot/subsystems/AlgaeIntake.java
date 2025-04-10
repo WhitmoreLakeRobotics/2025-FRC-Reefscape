@@ -37,7 +37,7 @@ public class AlgaeIntake extends SubsystemBase {
     private double pivotShaftDiameter = 0.75;
     private double pivotCurPos = 0.0;
     private double pivotCmdPos = PivotPos.START.pivotAngle;
-    private final double pivotPosTol = 5;
+    public final double pivotPosTol = 5;
 
     private PivotPos targetPos = PivotPos.START;
     private Status intakeStatus = Status.STOPPED;

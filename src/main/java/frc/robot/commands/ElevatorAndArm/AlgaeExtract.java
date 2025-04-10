@@ -51,7 +51,7 @@ public class AlgaeExtract extends Command {
 
         if (m_elevator.isElevatorAndArmAtTarget(targPos)){
             bDone = true;
-            m_coral.setCoralPhase(CoralPhase.ALGE_EXTRACT);
+            m_coral.setCoralPhase(CoralPhase.ALGAE_EXTRACT);
         }
 
     }

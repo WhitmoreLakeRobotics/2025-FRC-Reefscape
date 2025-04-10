@@ -1,45 +1,39 @@
 package frc.robot.subsystems;
 
-import frc.robot.RobotContainer;
 import frc.robot.Constants.CanIds;
-import frc.robot.commands.*;
+import frc.robot.RobotContainer;
 import frc.utils.CommonLogic;
 import frc.utils.RobotMath;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import java.lang.reflect.Member;
-import java.util.EventListener;
 
-import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
 
-import com.fasterxml.jackson.databind.deser.DataFormatReaders.Match;
-import com.revrobotics.config.BaseConfig;
-import com.revrobotics.spark.config.AbsoluteEncoderConfig;
-import com.revrobotics.spark.config.ClosedLoopConfig;
+
+
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
-import com.revrobotics.spark.config.MAXMotionConfig;
-import com.revrobotics.spark.config.MAXMotionConfig.MAXMotionPositionMode;
+
+
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkMax;
+
+import javax.lang.model.util.ElementScanner14;
+
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkClosedLoopController;
+
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLowLevel;
-import com.revrobotics.spark.config.AbsoluteEncoderConfig;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import frc.robot.subsystems.ElevatorAndArm;
+
 import frc.robot.subsystems.ElevatorAndArm.ElevAndArmPos;
 
 public class Coral extends SubsystemBase {
     // Elevator Config Parameters
     private SparkMax coralMotor = new SparkMax(CanIds.CORAL_MOTOR, MotorType.kBrushless);
+    private SparkMax funnelMotor = new SparkMax(CanIds.FUNNEL_MOTOR, MotorType.kBrushless);
+    //SparkMaxConfig CoralConfig = new SparkMaxConfig();
 
     public DigitalInput Coralhopper;
     public DigitalInput CoralIntake;
@@ -55,7 +49,7 @@ public class Coral extends SubsystemBase {
     // the mid-line of the coral which we currently believe is between the sensors
     //
     private final double UpperSensorIndexPos = CORAL_PICKUP_POS;
-    private final double LowerSensorIndexPos = CORAL_PICKUP_POS;
+    //private final double LowerSensorIndexPos = CORAL_PICKUP_POS;
 
     private int normalStallCurrentLimit = 30;
     private int normalFreeCurrentLimit = 50;
@@ -68,14 +62,13 @@ public class Coral extends SubsystemBase {
 
     private final double SPEED_PRECORAL = 0.40;
     private final double SPEED_INDEXING = 0.25;
-    private final double SPEED_ALGE_EXTRACT = 0.9; // .05
-    private final double SPEED_ALGE_DEPLOY = -SPEED_ALGE_EXTRACT;
-
-    private final double SPEED_LEVEL1_DEPLOY = 0.18;
-    private final double SPEED_LEVEL2_DEPLOY = 0.9; // 0.5
-    private final double SPEED_LEVEL3_DEPLOY = -0.75; // .05
-    private final double SPEED_LEVEL4_DEPLOY = -0.9; // .07
-
+    private final double SPEED_ALGAE_EXTRACT = 0.9; //.05
+    private final double SPEED_LEVEL1_DEPLOY = 0.3;
+    private final double SPEED_LEVEL2_DEPLOY = 0.9; //0.5
+    private final double SPEED_LEVEL3_DEPLOY = -0.55; //.05
+    private final double SPEED_LEVEL4_DEPLOY = -0.9; //.07
+    private final double SPEED_FUNNEL_PRECORAL = 0.7;
+    private final double SPEED_ALGAE_DEPLOY = -1.0;
     private final ClosedLoopSlot CORAL_CLOSED_LOOP_SLOT_UP = ClosedLoopSlot.kSlot0;
     private final ClosedLoopSlot CORAL_CLOSED_LOOP_SLOT_DOWN = ClosedLoopSlot.kSlot1;
     private ClosedLoopSlot CoralCurrentSlot = CORAL_CLOSED_LOOP_SLOT_UP;
@@ -91,6 +84,7 @@ public class Coral extends SubsystemBase {
 
     public Coral() {
         configCoralMotor();
+        configHopperMotor();
         Coralhopper = new DigitalInput(0);
         CoralIntake = new DigitalInput(1);
     }
@@ -130,7 +124,7 @@ public class Coral extends SubsystemBase {
             case INIT:
                 try {
                     if (/* getUpperSensor() && */ m_ElevatorAndArm.isElevatorAndArmAtTarget(ElevAndArmPos.PICKUP)) {
-                        currCoralPhase = CoralPhase.HOLDING;
+                        currCoralPhase = CoralPhase.CORAL_HOLDING;
                     }
                 } catch (NullPointerException e) {
                     System.err.println("Caught a NullPointerException: " + e.getMessage());
@@ -141,6 +135,16 @@ public class Coral extends SubsystemBase {
                 break;
 
             case PRECORAL:
+            // check the funnel motor as we might not have it on if the alge intake is
+                // incorrect.  Or if we do not yet have the arm and elevator in position
+                if ((RobotContainer.getInstance().m_AlgaeIntake.getTargetPivPos() >= AlgaeIntake.PivotPos.CORALPICKUP
+                        .getPivotPos() - RobotContainer.getInstance().m_AlgaeIntake.pivotPosTol) &&
+                     m_ElevatorAndArm.isElevatorAndArmAtTarget(ElevAndArmPos.PICKUP)) {
+                        funnelMotor.set(SPEED_FUNNEL_PRECORAL);
+
+                } else {
+                    stopFunnel();
+                }
                 // Looking for the upper sensor to trip
                 if (getUpperSensor()) {
                     // Sensor Tripped
@@ -177,24 +181,32 @@ public class Coral extends SubsystemBase {
 
             case FINAL_POSITIONING:
                 if (isCoralMotorInPosiiton() && getLowerSensor()) {
-                    currCoralPhase = CoralPhase.HOLDING;
+                    currCoralPhase = CoralPhase.CORAL_HOLDING;
                     m_ElevatorAndArm.setBlockMoves(false);
                     m_ElevatorAndArm.setNewPos(ElevAndArmPos.SAFETYPOS);
                 }
                 break;
-            case HOLDING:
+            case CORAL_HOLDING:
                 setCoralCmdPos(calcCoralCompensation(m_ElevatorAndArm.getArmCurPos()));
+                funnelMotor.set(0);
                 break;
 
-            case ALGE_EXTRACT:
-                if (coralMotor.getEncoder().getVelocity() == 0) {
-                    coralMotor.set(.1 * SPEED_ALGE_DEPLOY);
+            case ALGAE_EXTRACT:
+                if (CommonLogic.isInRange(coralMotor.getEncoder().getVelocity(),0,5)) {
+                    coralMotor.set(.1 * SPEED_ALGAE_DEPLOY);
+                    currCoralPhase = CoralPhase.ALGAE_HOLD;
+                    if (m_ElevatorAndArm.isElevatorAndArmAtTarget(ElevAndArmPos.ALGAEEXTRACTLOWER) ){
+                        m_ElevatorAndArm.setNewPos(ElevAndArmPos.ALGAECARRYLOWER);
+                    }
+
+                    if (m_ElevatorAndArm.isElevatorAndArmAtTarget(ElevAndArmPos.ALGAEEXTRACTUPPER) ){
+                        m_ElevatorAndArm.setNewPos(ElevAndArmPos.ALGAECARRYUPPER);
+                    }
                 }
-
                 break;
 
-            case ALGE_HOLD:
-
+            case ALGAE_HOLD:
+                // We do nothing here we are holding the Algae
                 break;
 
             default:
@@ -213,7 +225,7 @@ public class Coral extends SubsystemBase {
 
     public void SetElevatorAndArm(ElevatorAndArm sysElevatorAndArm) {
         m_ElevatorAndArm = sysElevatorAndArm;
-        currCoralPhase = CoralPhase.HOLDING;
+        currCoralPhase = CoralPhase.CORAL_HOLDING;
     }
 
     public String getCoralPhaseString() {
@@ -234,7 +246,7 @@ public class Coral extends SubsystemBase {
     // here. Call these from Commands.
 
     public boolean getIsHolding() {
-        return currCoralPhase == CoralPhase.HOLDING;
+        return currCoralPhase == CoralPhase.CORAL_HOLDING;
     }
 
     public double getCoralCmdPos() {
@@ -278,13 +290,16 @@ public class Coral extends SubsystemBase {
 
     public void autonInit() {
         coralMotor.getEncoder().setPosition(CORAL_PICKUP_POS);
-        currCoralPhase = CoralPhase.HOLDING;
+        currCoralPhase = CoralPhase.CORAL_HOLDING;
+    }
+    public void stopFunnel() {
+        funnelMotor.set(0);
     }
 
     // configure the elevator motor spark
 
     private void configCoralMotor() {
-        SparkMaxConfig CoralConfig = new SparkMaxConfig();
+
 
         // config.encoder.positionConversionFactor(Math.PI * elevator_gearDiameter /
         // elevator_gearRatio);
@@ -295,6 +310,8 @@ public class Coral extends SubsystemBase {
         CoralConfig.softLimit.reverseSoftLimitEnabled(false);
         CoralConfig.idleMode(IdleMode.kBrake);
         CoralConfig.openLoopRampRate(0.15);
+        CoralConfig.limitSwitch.forwardLimitSwitchEnabled(false);
+        CoralConfig.limitSwitch.reverseLimitSwitchEnabled(false);
 
         CoralConfig.closedLoop.maxOutput(1.0);
         CoralConfig.closedLoop.minOutput(-1.0);
@@ -322,6 +339,46 @@ public class Coral extends SubsystemBase {
 
     }
 
+    private void configHopperMotor() {
+        SparkMaxConfig FunnelConfig = new SparkMaxConfig();
+
+        // config.encoder.positionConversionFactor(Math.PI * elevator_gearDiameter /
+        // elevator_gearRatio);
+        FunnelConfig.encoder.positionConversionFactor(1);
+        FunnelConfig.inverted(true);
+        FunnelConfig.softLimit.forwardSoftLimitEnabled(false);
+        FunnelConfig.softLimit.reverseSoftLimit(0);
+        FunnelConfig.softLimit.reverseSoftLimitEnabled(false);
+        FunnelConfig.idleMode(IdleMode.kBrake);
+        FunnelConfig.openLoopRampRate(0.15);
+        FunnelConfig.limitSwitch.forwardLimitSwitchEnabled(false);
+        FunnelConfig.limitSwitch.reverseLimitSwitchEnabled(false);
+
+        FunnelConfig.closedLoop.maxOutput(1.0);
+        FunnelConfig.closedLoop.minOutput(-1.0);
+
+        FunnelConfig.closedLoopRampRate(0.15);
+        FunnelConfig.voltageCompensation(9.0);
+        //// Down / outVelocity Values
+        FunnelConfig.closedLoop.maxMotion.maxAcceleration(5000, CORAL_CLOSED_LOOP_SLOT_DOWN);
+        FunnelConfig.closedLoop.maxMotion.maxVelocity(5000, CORAL_CLOSED_LOOP_SLOT_DOWN);
+        FunnelConfig.closedLoop.maxMotion.allowedClosedLoopError(coralPosTol, CORAL_CLOSED_LOOP_SLOT_DOWN);
+        FunnelConfig.closedLoop.pidf(0.4, 0.0, 0.0, 0.0, CORAL_CLOSED_LOOP_SLOT_DOWN);
+
+        //// Up / in Velocity Values
+        FunnelConfig.closedLoop.maxMotion.maxAcceleration(5000, CORAL_CLOSED_LOOP_SLOT_UP);
+        FunnelConfig.closedLoop.maxMotion.maxVelocity(2000, CORAL_CLOSED_LOOP_SLOT_UP);
+        FunnelConfig.closedLoop.maxMotion.allowedClosedLoopError(coralPosTol, CORAL_CLOSED_LOOP_SLOT_UP);
+        FunnelConfig.closedLoop.pidf(0.4, 0.0, 0.0, 0.0, CORAL_CLOSED_LOOP_SLOT_UP);
+
+        FunnelConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+
+        // config.smartCurrentLimit(50);
+        FunnelConfig.smartCurrentLimit(30, 50);
+
+        funnelMotor.configure(FunnelConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    }
     public double calcCoralCompensation(double armPosDeg) {
         // calcuate the new coral position based strictly on the arm angle
         // y = new coral position based on the extreeme values of coral and arm angle
@@ -345,45 +402,53 @@ public class Coral extends SubsystemBase {
                 CoralConfig.smartCurrentLimit(normalStallCurrentLimit, normalFreeCurrentLimit);
                 coralMotor.configure(CoralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
                 coralMotor.set(SPEED_PRECORAL);
+                funnelMotor.set(SPEED_FUNNEL_PRECORAL);
                 break;
 
             case LEVEL_1_DEPLOY:
                 coralMotor.set(SPEED_LEVEL1_DEPLOY);
+                funnelMotor.set(0);
                 break;
 
             case LEVEL_2_DEPLOY:
                 coralMotor.set(SPEED_LEVEL2_DEPLOY);
+                funnelMotor.set(0);
                 break;
 
             case LEVEL_3_DEPLOY:
                 coralMotor.set(SPEED_LEVEL3_DEPLOY);
+                funnelMotor.set(0);
                 break;
 
             case LEVEL_4_DEPLOY:
                 coralMotor.set(SPEED_LEVEL4_DEPLOY);
+                funnelMotor.set(0);
                 break;
 
-            case ALGE_EXTRACT:
+            case ALGAE_EXTRACT:
                 CoralConfig.smartCurrentLimit(algeStallCurrentLimit, algeFreeCurrentLimit);
                 coralMotor.configure(CoralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-                coralMotor.set(SPEED_ALGE_EXTRACT);
+                coralMotor.set(SPEED_ALGAE_EXTRACT);
                 break;
 
-            case AlGE_DEPLOY:
+
+            case AlGAE_DEPLOY:
                 CoralConfig.smartCurrentLimit(normalStallCurrentLimit, normalFreeCurrentLimit);
                 coralMotor.configure(CoralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-                coralMotor.set(SPEED_ALGE_DEPLOY);
+                coralMotor.set(SPEED_ALGAE_DEPLOY);
                 break;
 
             case STOP:
                 coralMotor.set(0);
+                funnelMotor.set(0);
                 break;
 
             case CLIMBENABLED:
                 coralMotor.set(0);
+                funnelMotor.set(0);
                 break;
             default:
-
+                funnelMotor.set(0);
                 // These are where we set motor Power
         }
     }
@@ -417,14 +482,14 @@ public class Coral extends SubsystemBase {
         CORAL_INDEX_WAITING,
         // CORAL_INDEX_COMPLETE,
         FINAL_POSITIONING,
-        HOLDING,
+        CORAL_HOLDING,
         LEVEL_1_DEPLOY,
         LEVEL_2_DEPLOY,
         LEVEL_3_DEPLOY,
         LEVEL_4_DEPLOY,
-        ALGE_EXTRACT,
-        ALGE_HOLD,
-        AlGE_DEPLOY,
+        ALGAE_EXTRACT,
+        ALGAE_HOLD,
+        AlGAE_DEPLOY,
         STOP,
         CLIMBENABLED
 

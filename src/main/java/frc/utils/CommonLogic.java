@@ -53,7 +53,7 @@ public class CommonLogic {
   }
 
   public static double getTime() {
-    return (System.nanoTime() / Math.pow(10, 9));
+    return (System.nanoTime() / Math.pow(10, 9)); // returns time in seconds
   }
 
   public static double calcTurnRate(double deltaHeading, double proportion) {

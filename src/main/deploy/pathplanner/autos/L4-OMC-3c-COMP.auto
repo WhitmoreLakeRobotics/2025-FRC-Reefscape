@@ -17,7 +17,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Cen-Middle"
+                  "pathName": "BMC-E"
                 }
               },
               {
@@ -50,31 +50,79 @@
         {
           "type": "path",
           "data": {
-            "pathName": "center back"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "EA ALGAE1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "center forward"
+            "pathName": "E-pickup2"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.1
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "center algea back"
+            "pathName": "PICKUP2-D"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CORAL DELIVER"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "EA OUTOFWAY"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "D-PICKUP2"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.1
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "PICKUP2-C"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CORAL DELIVER"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "EA OUTOFWAY"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C-PICKUP2"
           }
         }
       ]

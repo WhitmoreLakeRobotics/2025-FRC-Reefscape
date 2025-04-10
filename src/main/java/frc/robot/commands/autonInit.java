@@ -19,7 +19,7 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.AlgaeIntake.PivotPos;
 import frc.robot.subsystems.Coral.CoralPhase;
 import frc.robot.subsystems.ElevatorAndArm.ElevAndArmPos;
-import frc.robot.subsystems.Wipers.GuidePos;
+import frc.robot.subsystems.Fangs.GuidePos;
 
 import java.util.function.DoubleSupplier;
 
@@ -58,7 +58,8 @@ public class autonInit extends Command {
         RobotContainer.getInstance().m_Coral.autonInit();
         RobotContainer.getInstance().m_elevatorAndArm.autonInit();
         RobotContainer.getInstance().m_AlgaeIntake.autonInit();
-        RobotContainer.getInstance().m_Wipers.autonInit();
+        //RobotContainer.getInstance().m_Fangs.autonInit();
+            
         bDone = true;
        // RobotContainer.getInstance().m_elevatorAndArm.setNewPos(ElevAndArmPos.PICKUP);
        // RobotContainer.getInstance().m_Coral.setCoralPhase(CoralPhase.HOLDING);

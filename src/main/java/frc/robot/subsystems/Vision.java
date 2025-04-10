@@ -18,10 +18,14 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTablesJNI;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 import frc.robot.Robot;
 import java.awt.Desktop;
 import java.util.ArrayList;
@@ -47,7 +51,12 @@ import swervelib.telemetry.SwerveDriveTelemetry;
  * https://gitlab.com/ironclad_code/ironclad-2024/-/blob/master/src/main/java/frc/robot/vision/Vision.java?ref_type=heads
  */
 public class Vision {
-
+/***Begin Custom Varibles */
+private Optional<Pose2d> lastCalculatedDist;
+//public final PhotonPoseEstimator poseEstimator;
+StructPublisher<Pose2d> estimatedCaemraPose = NetworkTableInstance.getDefault().getStructTopic("SmartDashboard/Subsystem/Vision/estimatedCameraPose", Pose2d.struct).publish();
+private int latestID;
+/***End Custom Varibles */
   /**
    * April Tag Field Layout of the year.
    */
@@ -142,6 +151,8 @@ public class Vision {
       Optional<EstimatedRobotPose> poseEst = getEstimatedGlobalPose(camera);
       if (poseEst.isPresent()) {
         var pose = poseEst.get();
+        latestID = pose.targetsUsed.get(0).getFiducialId();
+        lastCalculatedDist.of(poseEst.get().estimatedPose.toPose2d());
         swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
             pose.timestampSeconds,
             camera.curStdDevs);
@@ -320,11 +331,18 @@ public class Vision {
     /**
      * Right Camera
      */
-    RIGHT_CAM("right",
+   /* RIGHT_CAM("right",
         new Rotation3d(0, Math.toRadians(0.0), Math.toRadians(191)),
         new Translation3d(-0.075, // .095
             0.115, // .115
             0.30), // 8.44 inches
+        VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
+        */
+        RIGHT_CAM("right",
+        new Rotation3d(0, Math.toRadians(7.7), Math.toRadians(200)),
+        new Translation3d(Units.inchesToMeters(-6.25), // .095
+        Units.inchesToMeters(12.375), // .115
+        Units.inchesToMeters(8.75)), // 8.44 inches
         VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
     /**
      * Center Camera
@@ -600,5 +618,75 @@ public class Vision {
     }
 
   }
+/*****Inserted Custom Code */
+public int getLatestID() { 
+  return latestID;
+}
 
+public Optional<Pose2d> getRobotInTagSpace() {
+    // Get the latest result from the camera
+    PhotonPipelineResult result = Cameras.RIGHT_CAM.getLatestResult().get();
+    
+    // Check if any targets are detected
+    if (result!=null && result.hasTargets()) {
+        // Get the current timestamp
+       
+        
+        // Update the pose estimator with the latest result
+        Optional<EstimatedRobotPose> estimatedPoseOptional = Cameras.RIGHT_CAM.poseEstimator.update(result);
+
+        // Check if a pose was estimated
+        if (estimatedPoseOptional.isPresent()) {
+            EstimatedRobotPose estimatedPose = estimatedPoseOptional.get();
+            // double rotation = estimatedPose.estimatedPose.toPose2d().getRotation().getRadians();
+            double y = estimatedPose.estimatedPose.toPose2d().getRotation().getRadians();
+
+            // Get the ID of the first detected tag
+            //int bestId = getClosestReefSide(estimatedPose.estimatedPose.toPose2d());
+            
+            estimatedCaemraPose.set(estimatedPose.estimatedPose.toPose2d());
+            int bestId=0;
+            double bestDistance = Double.MAX_VALUE;
+            for(PhotonTrackedTarget t : result.getTargets()) {
+              if(!Constants.FieldPositions.isReefID(t.getFiducialId())) continue;
+              // double distance = Math.abs(t.getYaw()-rotation);
+                double distance = Math.abs(t.getBestCameraToTarget().getY());
+
+              if(distance<bestDistance) {
+                bestId=t.getFiducialId();
+                bestDistance=distance;
+              }
+            }
+            //int tagID = result.getBestTarget().getFiducialId();
+            SmartDashboard.putNumber("Subsystem/Vision/BestReefId", bestId);
+            // Retrieve the pose of the detected tag from the field layout
+            Optional<Pose3d> tagPoseOptional = fieldLayout.getTagPose(bestId);
+
+            // Ensure the tag pose is available
+            if (tagPoseOptional.isPresent()) {
+                Pose3d tagPose = tagPoseOptional.get();
+
+                // Compute the robot's pose relative to the tag
+                Pose2d robotPose = estimatedPose.estimatedPose.toPose2d();
+                Pose2d tagPose2d = tagPose.toPose2d();
+                Pose2d robotInTagSpace = robotPose.relativeTo(tagPose2d);
+                lastCalculatedDist = Optional.of(robotInTagSpace);
+
+                // Return the robot's pose in tag space
+                return Optional.of(robotInTagSpace);
+            }
+        }
+    }
+    return lastCalculatedDist;
+}
+public void UpdateTargetList(){
+  //var result = Cameras.RIGHT_CAM.getLatestResult();
+  PhotonPipelineResult result = Cameras.RIGHT_CAM.getLatestResult().get();
+  if(result!=null && result.hasTargets()) {
+    latestID = result.getBestTarget().getFiducialId();
+  }
+  else {
+    latestID = -1;
+  }
+}
 }

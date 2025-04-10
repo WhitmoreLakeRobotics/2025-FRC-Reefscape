@@ -174,7 +174,8 @@ public class ElevatorAndArm extends SubsystemBase {
         switch (targetPos) {
             case ALGAEEXTRACTLOWER:
             case ALGAEEXTRACTUPPER:
-                m_coral.setCoralPhase(CoralPhase.ALGE_EXTRACT);
+                m_coral.setCoralPhase(CoralPhase.ALGAE_EXTRACT);
+                m_coral.stopFunnel();
                 break;
 
             case PICKUP:
@@ -183,6 +184,7 @@ public class ElevatorAndArm extends SubsystemBase {
             default:
                 // I am not sure if we want to go to holding for all other positions
                 // m_coral.setCoralPhase(CoralPhase.HOLDING);
+                m_coral.stopFunnel();
                 break;
         }
 
@@ -304,7 +306,7 @@ public class ElevatorAndArm extends SubsystemBase {
         Elevconfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
         // config.smartCurrentLimit(50);
-        Elevconfig.smartCurrentLimit(35, 50);
+        Elevconfig.smartCurrentLimit(60, 60);
 
         elevatorMotor.configure(Elevconfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -325,7 +327,7 @@ public class ElevatorAndArm extends SubsystemBase {
         armConfig.closedLoop.maxMotion.maxAcceleration(25, ARM_CLOSED_LOOP_SLOT_DOWN);
         armConfig.closedLoop.maxMotion.maxVelocity(1000, ARM_CLOSED_LOOP_SLOT_DOWN);
         armConfig.closedLoop.maxMotion.allowedClosedLoopError(armPosTol, ARM_CLOSED_LOOP_SLOT_DOWN);
-        armConfig.closedLoop.pidf(.009, 0.0, 0.0, 0.0, ARM_CLOSED_LOOP_SLOT_DOWN);
+        armConfig.closedLoop.pidf(.0125, 0.0, 0.0, 0.0, ARM_CLOSED_LOOP_SLOT_DOWN); // was p = 0.009
         //// Up Velocity Values
         armConfig.closedLoop.maxMotion.maxAcceleration(25, ARM_CLOSED_LOOP_SLOT_UP);
         armConfig.closedLoop.maxMotion.maxVelocity(1000, ARM_CLOSED_LOOP_SLOT_UP);
@@ -386,18 +388,21 @@ public class ElevatorAndArm extends SubsystemBase {
         PICKUP(23, 0),
         START(23, 0),
         SAFETYPOS(42, 0),
-        LEVEL1(63, 10),
+        LEVEL1(63, 6), // was 10
         // LEVEL1DEL(62, 20),
-        LEVEL2(53, 37),
+        LEVEL2(53, 22.2), //was 37
         // LEVEL2DEL(51, 40),
-        LEVEL3(168, 7), // was 1.2
+        LEVEL3(168, 2.4), // was 4
         // LEVEL3DEL(166, 7),
-        LEVEL4(160, 65.4), // 1.7
-        LEVEL4OUTOFWAY(183,65.4),
+        LEVEL4(160, 39.24), // was 65.4
+        LEVEL4OUTOFWAY(183,39.24),// was 65.4
         // LEVEL4DEL(166, 65.4),
-        ELVMAX(40, 65.9),
-        ALGAEEXTRACTLOWER(72, 20),
-        ALGAEEXTRACTUPPER(68, 58),
+        ELVMAX(40, 39.54),// was 65.9
+        ALGAEEXTRACTLOWER(72, 12),// was 20
+        ALGAEEXTRACTUPPER(68, 34.8),// was 58
+        ALGAECARRYLOWER(20,18),
+        ALGAECARRYUPPER(20,39.24),
+        ALGAEPROCESSORDeploy(42,0),
         OUTOFWAY(235, 0);
         // CIntake(24, 0), // was 2.5
         // CHold(24, 0),

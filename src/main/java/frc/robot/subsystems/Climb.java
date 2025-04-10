@@ -103,15 +103,20 @@ public class Climb extends SubsystemBase {
 
     public boolean isDeployAtTarget(DeployPos tpos) {
 
-        return (CommonLogic.isInRange(getDeployCurPos(), tpos.getDeployPos(), deployPosTol));
+        return (CommonLogic.isInRange(getDeployCurPos(), tpos.getDeployPos(), deployPosTol * 3));
     }
 
     public void climbInit() {
-        climbMotor.getClosedLoopController().setReference(0, ControlType.kPosition);
-
+        climbMotor.getClosedLoopController().setReference(-2, ControlType.kPosition);
     }
 
     public void deployClimb() {
+        deployMotor.getClosedLoopController().setReference(DeployPos.MIDDLE.getDeployPos(), ControlType.kPosition,
+                CLIMB_CLOSED_LOOP_SLOT_UP);
+
+    }
+
+    public void deployClimbP2() {
         deployMotor.getClosedLoopController().setReference(DeployPos.DEPLOY.getDeployPos(), ControlType.kPosition,
                 CLIMB_CLOSED_LOOP_SLOT_UP);
 
@@ -129,7 +134,7 @@ public class Climb extends SubsystemBase {
         config.idleMode(IdleMode.kBrake);
         //// In Velocity Values
         // config.smartCurrentLimit(50);
-        config.smartCurrentLimit(30, 40);
+        config.smartCurrentLimit(60, 60);
 
         /*
          * AbsoluteEncoderConfig absEncConfig = new AbsoluteEncoderConfig();
@@ -152,7 +157,7 @@ public class Climb extends SubsystemBase {
         config.softLimit.forwardSoftLimitEnabled(true);
         config.softLimit.reverseSoftLimit(-1);
         config.softLimit.reverseSoftLimitEnabled(true);
-        config.closedLoop.maxOutput(0.20);
+        config.closedLoop.maxOutput(1.0);
         config.idleMode(IdleMode.kBrake);
         //// In Velocity Values
         config.closedLoop.maxMotion.maxAcceleration(15000, CLIMB_CLOSED_LOOP_SLOT_DOWN);
@@ -164,10 +169,10 @@ public class Climb extends SubsystemBase {
         config.closedLoop.maxMotion.maxAcceleration(15000, CLIMB_CLOSED_LOOP_SLOT_UP);
         config.closedLoop.maxMotion.maxVelocity(3000, CLIMB_CLOSED_LOOP_SLOT_UP);
         config.closedLoop.maxMotion.allowedClosedLoopError(deployPosTol, CLIMB_CLOSED_LOOP_SLOT_UP);
-        config.closedLoop.pidf(.09, 0.0, 0.0, 0.0, CLIMB_CLOSED_LOOP_SLOT_UP);
+        config.closedLoop.pidf(.16, 0.0, 0.0, 0.0, CLIMB_CLOSED_LOOP_SLOT_UP);
 
         // config.smartCurrentLimit(50);
-        config.smartCurrentLimit(30, 40);
+        config.smartCurrentLimit(60, 60);
 
         /*
          * AbsoluteEncoderConfig absEncConfig = new AbsoluteEncoderConfig();
@@ -183,6 +188,7 @@ public class Climb extends SubsystemBase {
 
     public enum DeployPos {
         START(0),
+        MIDDLE(3.5),
         DEPLOY(10.5),
         STOP(0);
 

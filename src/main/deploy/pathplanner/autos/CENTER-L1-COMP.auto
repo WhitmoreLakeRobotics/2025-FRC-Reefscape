@@ -17,13 +17,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Cen-Middle"
+                  "pathName": "Mid-Center"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "EA LEVEL4"
+                  "name": "EA LEVEL1"
                 }
               }
             ]
@@ -38,37 +38,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.2
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "EA OUTOFWAY"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "center back"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "EA ALGAE1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "center forward"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
+            "waitTime": 0.5
           }
         },
         {

@@ -17,7 +17,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Cen-Middle"
+                  "pathName": "LEVEL1-TMC-J"
                 }
               },
               {
@@ -50,31 +50,86 @@
         {
           "type": "path",
           "data": {
-            "pathName": "center back"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "EA ALGAE1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "center forward"
+            "pathName": "J-pickup1"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.1
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "pickup1-L"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CORAL DELIVER"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "EA OUTOFWAY"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "center algea back"
+            "pathName": "L-pickup1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.1
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "pickup1-M"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CORAL DELIVER"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "EA OUTOFWAY"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M-pickup1"
           }
         }
       ]
