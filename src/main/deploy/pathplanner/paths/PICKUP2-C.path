@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.6785511363636363,
-        "y": 0.7177556818181813
+        "x": 1.6037642045454543,
+        "y": 0.6928267045454538
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4482820465403474,
-        "y": 1.59793521458354
+        "x": 2.3734951147221652,
+        "y": 1.5730062373108122
       },
       "isLocked": false,
       "linkedName": "PICKUP2"
@@ -34,8 +34,8 @@
   "eventMarkers": [
     {
       "name": "EA LEVEL4",
-      "waypointRelativePos": 0.12958226768968475,
-      "endWaypointRelativePos": 0.6513213981244705,
+      "waypointRelativePos": 0.44501278772379105,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {

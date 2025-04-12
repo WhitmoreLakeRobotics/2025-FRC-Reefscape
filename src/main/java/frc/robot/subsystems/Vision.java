@@ -339,10 +339,10 @@ private int latestID;
         VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
         */
         RIGHT_CAM("right",
-        new Rotation3d(0, Math.toRadians(7.7), Math.toRadians(200)),
-        new Translation3d(Units.inchesToMeters(-6.25), // .095
-        Units.inchesToMeters(12.375), // .115
-        Units.inchesToMeters(8.75)), // 8.44 inches
+        new Rotation3d(0, Math.toRadians(12.7), Math.toRadians(203.5)),
+        new Translation3d(Units.inchesToMeters(-12.5), // .095
+        Units.inchesToMeters(6.25), // .115
+        Units.inchesToMeters(8.375)), // 8.44 inches
         VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
     /**
      * Center Camera
