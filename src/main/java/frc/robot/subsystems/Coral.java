@@ -184,7 +184,7 @@ public class Coral extends SubsystemBase {
 
             case ALGAE_EXTRACT:
                 if (CommonLogic.isInRange(coralMotor.getEncoder().getVelocity(),0,5)) {
-                    coralMotor.set(.1 * SPEED_ALGAE_DEPLOY);
+                    coralMotor.set(.55 * SPEED_ALGAE_EXTRACT);
                     currCoralPhase = CoralPhase.ALGAE_HOLD;
                     if (m_ElevatorAndArm.isElevatorAndArmAtTarget(ElevAndArmPos.ALGAEEXTRACTLOWER) ){
                         m_ElevatorAndArm.setNewPos(ElevAndArmPos.ALGAECARRYLOWER);

@@ -50,7 +50,7 @@ public class ElevatorAndArm extends SubsystemBase {
     private double elevatorCmdPos = ElevAndArmPos.START.elevPos;
     private final double elevatorPosTol = 0.25;
 
-    private final double armPosTol = 0.25;
+    private final double armPosTol = 1.0;
     private double arm_gearRatio = (2.89 * 3.61 * 74 / 14);
     private double arm_gearDiameter = 1.685; // 14 tooth
     // https://www.andymark.com/products/35-series-symmetrical-hub-sprockets?via=Z2lkOi8vYW5keW1hcmsvV29ya2FyZWE6Ok5hdmlnYXRpb246OlNlYXJjaFJlc3VsdHMvJTdCJTIycSUyMiUzQSUyMjE0K3Rvb3RoK3Nwcm9ja2V0JTIyJTdE&Tooth%20Count=14%20(am-4790)&quantity=1;
@@ -400,9 +400,9 @@ public class ElevatorAndArm extends SubsystemBase {
         ELVMAX(40, 39.54),// was 65.9
         ALGAEEXTRACTLOWER(72, 12),// was 20
         ALGAEEXTRACTUPPER(68, 34.8),// was 58
-        ALGAECARRYLOWER(20,18),
-        ALGAECARRYUPPER(20,39.24),
-        ALGAEPROCESSORDeploy(42,0),
+        ALGAECARRYLOWER(60,14),
+        ALGAECARRYUPPER(60,36),
+        ALGAEPROCESSORDeploy(37,0),
         OUTOFWAY(235, 0);
         // CIntake(24, 0), // was 2.5
         // CHold(24, 0),

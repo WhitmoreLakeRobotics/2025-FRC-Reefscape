@@ -284,15 +284,17 @@ public class RobotContainer {
     A_Artic.onTrue(new AlgaeCmd(AlgaeIntake.PivotPos.PICKUP, AlgaeIntake.Status.IN));
     Trigger B_Artic = new Trigger(Articulator.b());
     B_Artic.onTrue(new AlgaeCmd(AlgaeIntake.PivotPos.CORALPICKUP, AlgaeIntake.Status.STOPPED));
+  
 
-     Trigger X_Artic = new Trigger(Articulator.x());
-     X_Artic.onTrue(new FangsCmd());
+    Trigger X_Artic = new Trigger(Articulator.x());
+    X_Artic.onTrue(new FangsCmd());
     // X_Artic.onTrue(new CmdCoralIntake());
     Trigger Y_Artic = new Trigger(Articulator.y());
     Y_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.PICKUP));
 
     Trigger Back_Artic = new Trigger(Articulator.back()); // USE FOR ARTICULATION STOP.
-    Back_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.LEVEL2));
+   // Back_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.LEVEL2));
+   Back_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.ALGAEPROCESSORDeploy));
     Trigger Start_Artic = new Trigger(Articulator.start()); // USE FOR climb part2
     // ARTICULATION COAST.
     Start_Artic.onTrue(new EAGoToLevel(ElevAndArmPos.LEVEL3));

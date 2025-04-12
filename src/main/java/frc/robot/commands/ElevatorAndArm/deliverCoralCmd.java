@@ -72,7 +72,9 @@ public class deliverCoralCmd extends Command {
                     m_coral.setCoralPhase(CoralPhase.LEVEL_4_DEPLOY);
                  //   m_elevator.setNewPos(ElevAndArmPos.LEVEL4OUTOFWAY);
                     break;
-
+                case ALGAEPROCESSORDeploy:
+                    m_coral.setCoralPhase(CoralPhase.AlGAE_DEPLOY);
+                    break;
                 default:
                     // DO NOTHING
                     break;
