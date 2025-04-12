@@ -327,7 +327,7 @@ public class ElevatorAndArm extends SubsystemBase {
         armConfig.closedLoop.maxMotion.maxAcceleration(25, ARM_CLOSED_LOOP_SLOT_DOWN);
         armConfig.closedLoop.maxMotion.maxVelocity(1000, ARM_CLOSED_LOOP_SLOT_DOWN);
         armConfig.closedLoop.maxMotion.allowedClosedLoopError(armPosTol, ARM_CLOSED_LOOP_SLOT_DOWN);
-        armConfig.closedLoop.pidf(.0125, 0.0, 0.0, 0.0, ARM_CLOSED_LOOP_SLOT_DOWN); // was p = 0.009
+        armConfig.closedLoop.pidf(.015, 0.0, 0.0, 0.0, ARM_CLOSED_LOOP_SLOT_DOWN); // was p = 0.009
         //// Up Velocity Values
         armConfig.closedLoop.maxMotion.maxAcceleration(25, ARM_CLOSED_LOOP_SLOT_UP);
         armConfig.closedLoop.maxMotion.maxVelocity(1000, ARM_CLOSED_LOOP_SLOT_UP);
