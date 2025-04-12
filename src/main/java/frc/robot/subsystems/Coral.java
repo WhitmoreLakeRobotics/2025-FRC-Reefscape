@@ -156,6 +156,7 @@ public class Coral extends SubsystemBase {
                     // currCoralPhase = CoralPhase.CORAL_INDEX_COMPLETE;
                     // Coral has indexed off the upper sensor
                     SetCoralIndex(UpperSensorIndexPos);
+                    m_ElevatorAndArm.setBlockMoves(false);
                     currCoralPhase = CoralPhase.FINAL_POSITIONING;
                 }
 
@@ -169,9 +170,9 @@ public class Coral extends SubsystemBase {
                 break;
 
             case FINAL_POSITIONING:
-                if (isCoralMotorInPosiiton() && getLowerSensor()) {
+                if (isCoralMotorInPosiiton()/* && getLowerSensor() */) {
                     currCoralPhase = CoralPhase.HOLDING;
-                    m_ElevatorAndArm.setBlockMoves(false);
+                   // m_ElevatorAndArm.setBlockMoves(false); // moved to CORAL_INDEX_WAITING
                     m_ElevatorAndArm.setNewPos(ElevAndArmPos.SAFETYPOS);
                 }
                 break;
