@@ -159,7 +159,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("EA OUTOFWAY", new EAGoToLevel(ElevAndArmPos.LEVEL4OUTOFWAY));
     NamedCommands.registerCommand("CORAL DELIVER", new deliverCoralCmd());
     NamedCommands.registerCommand("EA ALGAE1", new EAGoToLevel(ElevAndArmPos.ALGAEEXTRACTLOWER));
-
+    NamedCommands.registerCommand("EA PROCESSOR", new EAGoToLevel(ElevAndArmPos.ALGAEPROCESSORDeploy));
+    NamedCommands.registerCommand("EA ALGAE2", new EAGoToLevel(ElevAndArmPos.ALGAEEXTRACTUPPER));
+    
     // NamedCommands.registerCommand("CORAL INTAKE", new
     // EAGoToLevel(ElevAndArmPos.CIntake));
     // NamedCommands.registerCommand("EA LEVEL6", new EAGoToLevel(ElevAndArmPos));

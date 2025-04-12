@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.76690340909091,
-        "y": 4.174573863636363
+        "x": 6.451731953083366,
+        "y": 4.097744425352976
       },
       "isLocked": false,
       "linkedName": "middle"
@@ -20,8 +20,8 @@
         "y": 4.016690340909091
       },
       "prevControl": {
-        "x": 5.730823863636363,
-        "y": 4.016690340909091
+        "x": 6.37571866314679,
+        "y": 4.066222447142998
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,19 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "EA ALGAE1",
+      "waypointRelativePos": 0.7860187553282131,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "EA ALGAE1"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.25,
     "maxAcceleration": 1.875,

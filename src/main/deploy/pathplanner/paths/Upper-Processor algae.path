@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.994105113636365,
-        "y": 2.820099431818181
+        "x": 5.102130681818182,
+        "y": 2.886576704545455
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.229133522727274,
-        "y": 1.5437357954545465
+        "x": 5.351420454545455,
+        "y": 2.396306818181818
       },
       "isLocked": false,
-      "linkedName": "E"
+      "linkedName": "algae high"
     },
     {
       "anchor": {
-        "x": 1.6037642045454543,
-        "y": 0.6928267045454538
+        "x": 5.974644886363637,
+        "y": 0.48508522727272635
       },
       "prevControl": {
-        "x": 3.531605113636362,
-        "y": 1.839559659090908
+        "x": 6.125792398529441,
+        "y": 0.2632264328273478
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "PICKUP2"
+      "linkedName": "Processor"
     }
   ],
   "rotationTargets": [],
@@ -33,13 +33,13 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "EA PICKUP",
-      "waypointRelativePos": 0.18,
+      "name": "EA PROCESSOR",
+      "waypointRelativePos": 0.4995737425404979,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "EA PICKUP"
+          "name": "EA PROCESSOR"
         }
       }
     }
@@ -54,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -126.02737338510372
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -61.232350661156225
+    "rotation": -59.53445508054006
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

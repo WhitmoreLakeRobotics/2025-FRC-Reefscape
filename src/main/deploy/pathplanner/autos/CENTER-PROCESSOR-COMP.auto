@@ -5,13 +5,19 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "AUTONINIT"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "TMC-J"
+                  "pathName": "Cen-Middle"
                 }
               },
               {
@@ -30,83 +36,51 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "J-pickup1"
-          }
-        },
-        {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.2
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "CORAL INTAKE"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "EA LEVEL4"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "pickup1-L"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CORAL DELIVER"
+            "name": "EA OUTOFWAY"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "L-pickup1"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "pathName": "center back"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "CORAL INTAKE"
+            "name": "EA ALGAE1"
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "pickup1-M"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "EA LEVEL4"
-                }
-              }
-            ]
+            "pathName": "center forward"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "center algea back"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CENTER-PROCESSOR"
           }
         },
         {

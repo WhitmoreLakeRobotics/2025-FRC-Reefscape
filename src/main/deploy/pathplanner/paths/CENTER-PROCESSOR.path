@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.994105113636365,
-        "y": 2.820099431818181
+        "x": 6.730823863636363,
+        "y": 4.016690340909091
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.229133522727274,
-        "y": 1.5437357954545465
+        "x": 6.415056818181817,
+        "y": 2.9447443181818174
       },
       "isLocked": false,
-      "linkedName": "E"
+      "linkedName": "center Mid"
     },
     {
       "anchor": {
-        "x": 1.6037642045454543,
-        "y": 0.6928267045454538
+        "x": 5.974644886363637,
+        "y": 0.48508522727272635
       },
       "prevControl": {
-        "x": 3.531605113636362,
-        "y": 1.839559659090908
+        "x": 5.974644886363637,
+        "y": 2.072251866521562
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "PICKUP2"
+      "linkedName": "Processor"
     }
   ],
   "rotationTargets": [],
@@ -33,13 +33,24 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "EA PICKUP",
-      "waypointRelativePos": 0.18,
+      "name": "EA PROCESSOR",
+      "waypointRelativePos": 0.7075873827791992,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "EA PICKUP"
+          "name": "EA PROCESSOR"
+        }
+      }
+    },
+    {
+      "name": "CORAL DELIVER",
+      "waypointRelativePos": 0.9735720375106571,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "CORAL DELIVER"
         }
       }
     }
@@ -54,13 +65,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -126.02737338510372
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -61.232350661156225
+    "rotation": 0.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

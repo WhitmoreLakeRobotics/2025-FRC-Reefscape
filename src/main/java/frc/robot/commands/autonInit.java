@@ -58,6 +58,7 @@ public class autonInit extends Command {
         RobotContainer.getInstance().m_Coral.autonInit();
         RobotContainer.getInstance().m_elevatorAndArm.autonInit();
         RobotContainer.getInstance().m_AlgaeIntake.autonInit();
+        RobotContainer.getInstance().m_Climb.climbInit();
         //RobotContainer.getInstance().m_Fangs.autonInit();
             
         bDone = true;
