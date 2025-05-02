@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.6370028409099533,
-        "y": 7.340553977271797
+        "x": 1.7117897727272728,
+        "y": 7.40703125
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2721288404295596,
-        "y": 6.500727998943303
+        "x": 2.3313148476718757,
+        "y": 6.567588770700399
       },
       "isLocked": false,
       "linkedName": "PICKUP1"
     },
     {
       "anchor": {
-        "x": 3.6728693181818186,
-        "y": 5.047088068181818
+        "x": 3.5897727272727273,
+        "y": 5.03046875
       },
       "prevControl": {
-        "x": 2.866032905107109,
-        "y": 5.951162696210484
+        "x": 2.8871075265697623,
+        "y": 5.938029196267134
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,8 +34,8 @@
   "eventMarkers": [
     {
       "name": "EA LEVEL4",
-      "waypointRelativePos": 0.12787723785165878,
-      "endWaypointRelativePos": 0.654731457800511,
+      "waypointRelativePos": 0.45,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
@@ -54,7 +54,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 117.33235949216773
+    "rotation": 119.99999999999999
   },
   "reversed": false,
   "folder": null,

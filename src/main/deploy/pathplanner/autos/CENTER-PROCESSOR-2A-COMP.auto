@@ -38,7 +38,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.15
+            "waitTime": 0.1
           }
         },
         {
@@ -62,7 +62,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.2
+            "waitTime": 0.15
           }
         },
         {
@@ -84,6 +84,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.6
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "processor-upper algae"
@@ -92,19 +98,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.2
+            "waitTime": 0.15
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Upper-Processor algae"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CORAL DELIVER"
           }
         }
       ]

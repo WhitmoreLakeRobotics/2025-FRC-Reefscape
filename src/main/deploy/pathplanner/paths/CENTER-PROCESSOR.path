@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 5.974644886363637,
-        "y": 0.48508522727272635
+        "x": 5.8333806818181815,
+        "y": 0.4800994318181813
       },
       "prevControl": {
-        "x": 5.974644886363637,
-        "y": 2.072251866521562
+        "x": 5.8333806818181815,
+        "y": 2.0672660710670168
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Processor"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -45,7 +45,7 @@
     },
     {
       "name": "CORAL DELIVER",
-      "waypointRelativePos": 0.9735720375106571,
+      "waypointRelativePos": 0.93,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

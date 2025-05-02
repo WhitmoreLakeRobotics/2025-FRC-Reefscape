@@ -53,7 +53,7 @@ public class Coral extends SubsystemBase {
     private final double SPEED_INDEXING = 0.25;
     private final double SPEED_ALGAE_EXTRACT = 0.9; //.05
     private final double SPEED_LEVEL1_DEPLOY = 0.3;
-    private final double SPEED_LEVEL2_DEPLOY = 0.9; //0.5
+    private final double SPEED_LEVEL2_DEPLOY = 0.85; //0.5
     private final double SPEED_LEVEL3_DEPLOY = -0.55; //.05
     private final double SPEED_LEVEL4_DEPLOY = -0.9; //.07
     private final double SPEED_FUNNEL_PRECORAL = 0.7;

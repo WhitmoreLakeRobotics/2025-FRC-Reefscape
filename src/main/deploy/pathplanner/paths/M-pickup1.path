@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.6728693181818186,
-        "y": 5.047088068181818
+        "x": 3.5897727272727273,
+        "y": 5.03046875
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.436896830919963,
-        "y": 6.4804142180311395
+        "x": 2.3538002400108717,
+        "y": 6.463794899849321
       },
       "isLocked": false,
       "linkedName": "M"
     },
     {
       "anchor": {
-        "x": 1.6370028409099533,
-        "y": 7.340553977271797
+        "x": 1.7117897727272728,
+        "y": 7.40703125
       },
       "prevControl": {
-        "x": 2.265366751233188,
-        "y": 6.5962555381531045
+        "x": 2.3401536830505076,
+        "y": 6.662732810881308
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "EA PICKUP",
-      "waypointRelativePos": 0.15345268542199492,
+      "waypointRelativePos": 0.15174765558396433,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -60,7 +60,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 117.33235949216773
+    "rotation": 119.99999999999999
   },
   "useDefaultConstraints": true
 }

@@ -179,7 +179,7 @@ public class RobotContainer {
     // EAGoToLevel(ElevAndArmPos.LEVEL3));
     // SmartDashboard.putData("Arm Pos lvl4", new
     // EAGoToLevel(ElevAndArmPos.LEVEL4));
-
+    SmartDashboard.putData("AUTONINIT", new autonInit());
     SmartDashboard.putData("Algae Pickup", new AlgaeCmd(PivotPos.PICKUP, AlgaeIntake.Status.IN));
     SmartDashboard.putData("Algae Start", new AlgaeCmd(PivotPos.START, AlgaeIntake.Status.STOPPED));
     SmartDashboard.putData("Algae STOP", new AlgaeCmd(PivotPos.STOP, AlgaeIntake.Status.STOPPED));
@@ -396,6 +396,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("Curr Pose theta", m_driveTrain.getPose().getRotation().getDegrees()); 
     SmartDashboard.putNumber("Curr Tag ID", m_driveTrain.vision.getLatestID());
     SmartDashboard.putBoolean("Turbo", m_driveTrain.getTurbo());
+    SmartDashboard.putNumber("DEPLOY POS", m_Climb.getDeployCurPos());
     // SmartDashboard.putBoolean("Hold Coral", m_elevatorAndArm.holdCoral);
   }
 

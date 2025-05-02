@@ -17,7 +17,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "LEVEL1-TMC-J"
+                  "pathName": "BMC-E"
                 }
               },
               {
@@ -50,7 +50,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "J-pickup1"
+            "pathName": "E-pickup2"
           }
         },
         {
@@ -60,16 +60,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "pickup1-L"
-                }
-              }
-            ]
+            "pathName": "PICKUP2-C"
           }
         },
         {
@@ -93,7 +86,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "L-pickup1"
+            "pathName": "C-PICKUP2"
           }
         },
         {
@@ -105,7 +98,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "pickup1-M"
+            "pathName": "PICKUP2-D"
           }
         },
         {
@@ -117,7 +110,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.1
+            "waitTime": 0.2
           }
         },
         {
@@ -129,7 +122,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "M-pickup1"
+            "pathName": "D-PICKUP2"
           }
         }
       ]
