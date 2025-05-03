@@ -56,6 +56,7 @@ private Optional<Pose2d> lastCalculatedDist;
 //public final PhotonPoseEstimator poseEstimator;
 StructPublisher<Pose2d> estimatedCaemraPose = NetworkTableInstance.getDefault().getStructTopic("SmartDashboard/Subsystem/Vision/estimatedCameraPose", Pose2d.struct).publish();
 private int latestID;
+private double VisionTimeStamp;
 /***End Custom Varibles */
   /**
    * April Tag Field Layout of the year.
@@ -151,9 +152,23 @@ private int latestID;
       Optional<EstimatedRobotPose> poseEst = getEstimatedGlobalPose(camera);
       if (poseEst.isPresent()) {
         var pose = poseEst.get();
-        latestID = pose.targetsUsed.get(0).getFiducialId();
-        lastCalculatedDist.of(poseEst.get().estimatedPose.toPose2d());
-        swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
+
+        /*added custom code 3668 here */
+        latestID = pose.targetsUsed.get(0).getFiducialId(); //get used id from last scan 
+        VisionTimeStamp = pose.timestampSeconds;
+        Optional<Pose3d> tagPoseOptional = fieldLayout.getTagPose(latestID);   //get april tag location from last viewed tag id
+        Pose3d tagPose = tagPoseOptional.get();   //convert to actual Pose3d of tag id 
+        // Compute the robot's pose relative to the tag
+        Pose2d robotPose = pose.estimatedPose.toPose2d();   //grab 2d pose of robot relative to field
+        Pose2d tagPose2d = tagPose.toPose2d();  // get 2d pose from 3d of april tag location
+        Pose2d robotInTagSpace = robotPose.relativeTo(tagPose2d);  //calc robot postion relative to tag 
+        lastCalculatedDist = Optional.of(robotInTagSpace);  // store robot location 
+
+
+       // lastCalculatedDist.of(poseEst.get().estimatedPose.toPose2d());
+        /* end of custom code 3668 */
+       
+       swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
             pose.timestampSeconds,
             camera.curStdDevs);
       }
@@ -622,6 +637,9 @@ private int latestID;
 public int getLatestID() { 
   return latestID;
 }
+public double getVisionTimestamp(){
+  return VisionTimeStamp;
+}
 
 public Optional<Pose2d> getRobotInTagSpace() {
     // Get the latest result from the camera
@@ -650,7 +668,7 @@ public Optional<Pose2d> getRobotInTagSpace() {
             for(PhotonTrackedTarget t : result.getTargets()) {
               if(!Constants.FieldPositions.isReefID(t.getFiducialId())) continue;
               // double distance = Math.abs(t.getYaw()-rotation);
-                double distance = Math.abs(t.getBestCameraToTarget().getY());
+                double distance = Math.abs(t.getBestCameraToTarget().getY());   // why is this get Y and not GetX??
 
               if(distance<bestDistance) {
                 bestId=t.getFiducialId();

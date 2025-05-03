@@ -30,10 +30,10 @@ public class cmdAutoTurn extends Command {
     var alliance = DriverStation.getAlliance();
     if (alliance.get() == Alliance.Red){
         RobotContainer.getInstance().m_driveTrain.setTurnHeading(rHeading);
-        RobotContainer.getInstance().m_driveTrain.setAdutoTurn();
+        RobotContainer.getInstance().m_driveTrain.setAutoTurn();
     } else {
         RobotContainer.getInstance().m_driveTrain.setTurnHeading(bHeading);
-        RobotContainer.getInstance().m_driveTrain.setAdutoTurn();
+        RobotContainer.getInstance().m_driveTrain.setAutoTurn();
 
     }
     }

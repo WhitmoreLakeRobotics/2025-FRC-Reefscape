@@ -765,7 +765,7 @@ private boolean bTurbo = false;
     }
   
 
-  public void setAdutoTurn(){
+  public void setAutoTurn(){
     turnPID.resetErrors();
     bAdrive = true;
   }

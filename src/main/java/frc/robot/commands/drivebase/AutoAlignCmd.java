@@ -1,6 +1,7 @@
 
 package frc.robot.commands.drivebase;
 
+import java.util.Currency;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
@@ -28,6 +29,8 @@ public class AutoAlignCmd extends Command{
     private PIDController thetaController = new PIDController(Constants.SwerveConstants.kPTheta, 0, 0);
 
 
+    Optional<Pose2d> currentPoseOpt;
+
     public AutoAlignCmd(Supplier<Optional<Pose2d>> poseSupplier,  IntSupplier idSupplier, boolean left, DriveTrain swerve){
         this.poseSupplier = poseSupplier;
         this.idSupplier = idSupplier;
@@ -35,17 +38,19 @@ public class AutoAlignCmd extends Command{
         this.swerve = swerve;
 
     }
+    public AutoAlignCmd(Optional<Pose2d> LastCalcPostion, int SourceTag, boolean bleft, DriveTrain swerve ){
+        currentPoseOpt = LastCalcPostion;
+    }
 
     @Override
     public void initialize() {
         
     }
 
+
     @Override
     public void execute(){
-        Optional<Pose2d> currentPoseOpt = poseSupplier.get();
-
-
+    
     if(currentPoseOpt.isPresent()) {
 
       Pose2d currentPose = currentPoseOpt.get();
