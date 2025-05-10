@@ -15,14 +15,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.DriveTrain;
+import frc.utils.CommonLogic;
 
 public class AutoAlignCmd extends Command{
     Supplier<Optional<Pose2d>> poseSupplier;
     IntSupplier idSupplier;
     boolean left;
     DriveTrain swerve;
+    double timestamp;
     public Pose2d distFromTag;
     private PIDController xController = new PIDController(Constants.SwerveConstants.kPX, 0, 0);
     private PIDController yController = new PIDController(Constants.SwerveConstants.kPY, 0, 0);
@@ -30,6 +33,7 @@ public class AutoAlignCmd extends Command{
 
 
     Optional<Pose2d> currentPoseOpt;
+    int CurrentID;
 
     public AutoAlignCmd(Supplier<Optional<Pose2d>> poseSupplier,  IntSupplier idSupplier, boolean left, DriveTrain swerve){
         this.poseSupplier = poseSupplier;
@@ -38,8 +42,9 @@ public class AutoAlignCmd extends Command{
         this.swerve = swerve;
 
     }
-    public AutoAlignCmd(Optional<Pose2d> LastCalcPostion, int SourceTag, boolean bleft, DriveTrain swerve ){
-        currentPoseOpt = LastCalcPostion;
+    public AutoAlignCmd( boolean bleft, DriveTrain swerve){
+        left = bleft;
+        this.swerve = swerve;
     }
 
     @Override
@@ -50,8 +55,11 @@ public class AutoAlignCmd extends Command{
 
     @Override
     public void execute(){
+        currentPoseOpt = RobotContainer.getInstance().m_driveTrain.vision.lastCalculatedDist;  //should be converted to method
+        timestamp = RobotContainer.getInstance().m_driveTrain.vision.getVisionTimestamp();
+        CurrentID = RobotContainer.getInstance().m_driveTrain.vision.getLatestID();
     
-    if(currentPoseOpt.isPresent()) {
+    if(currentPoseOpt.isPresent() && ((timestamp + 5) >= CommonLogic.getTime())) {
 
       Pose2d currentPose = currentPoseOpt.get();
       distFromTag = currentPose;

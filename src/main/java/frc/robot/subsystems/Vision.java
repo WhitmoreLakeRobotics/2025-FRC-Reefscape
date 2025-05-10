@@ -52,10 +52,11 @@ import swervelib.telemetry.SwerveDriveTelemetry;
  */
 public class Vision {
 /***Begin Custom Varibles */
-private Optional<Pose2d> lastCalculatedDist;
+public Optional<Pose2d> lastCalculatedDist;
+public Pose2d LastCalcVisionLocation;
 //public final PhotonPoseEstimator poseEstimator;
 StructPublisher<Pose2d> estimatedCaemraPose = NetworkTableInstance.getDefault().getStructTopic("SmartDashboard/Subsystem/Vision/estimatedCameraPose", Pose2d.struct).publish();
-private int latestID;
+public int latestID;
 private double VisionTimeStamp;
 /***End Custom Varibles */
   /**
@@ -152,6 +153,7 @@ private double VisionTimeStamp;
       Optional<EstimatedRobotPose> poseEst = getEstimatedGlobalPose(camera);
       if (poseEst.isPresent()) {
         var pose = poseEst.get();
+        //System.out.println("timestamp " + pose.timestampSeconds);
 
         /*added custom code 3668 here */
         latestID = pose.targetsUsed.get(0).getFiducialId(); //get used id from last scan 
@@ -160,6 +162,7 @@ private double VisionTimeStamp;
         Pose3d tagPose = tagPoseOptional.get();   //convert to actual Pose3d of tag id 
         // Compute the robot's pose relative to the tag
         Pose2d robotPose = pose.estimatedPose.toPose2d();   //grab 2d pose of robot relative to field
+        LastCalcVisionLocation = robotPose;
         Pose2d tagPose2d = tagPose.toPose2d();  // get 2d pose from 3d of april tag location
         Pose2d robotInTagSpace = robotPose.relativeTo(tagPose2d);  //calc robot postion relative to tag 
         lastCalculatedDist = Optional.of(robotInTagSpace);  // store robot location 

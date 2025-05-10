@@ -13,6 +13,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.Climb.ClimbEnableCmd;
 import frc.robot.commands.Climb.ClimbEnableCmdPart2;
@@ -230,8 +231,8 @@ public class RobotContainer {
    // DDown_Drive.onTrue(new cmdAutoTurn(0, 180));
 
     Trigger DLeft_Drive = new Trigger(drive_Controller.povLeft());
-    DLeft_Drive.onTrue(new EAGoToLevel(ElevAndArmPos.PICKUP));
-   // DLeft_Drive.whileTrue(new AutoAlignCmd(() -> m_driveTrain.vision.getRobotInTagSpace(), () -> m_driveTrain.vision.getLatestID(), true, m_driveTrain));
+  //  DLeft_Drive.onTrue(new EAGoToLevel(ElevAndArmPos.PICKUP));
+    DLeft_Drive.whileTrue(new AutoAlignCmd(true, m_driveTrain));
     
 
     Trigger DUp_Drive = new Trigger(drive_Controller.povUp()); // GH
@@ -391,9 +392,10 @@ public class RobotContainer {
     SmartDashboard.putNumber("Deploy Motor Cur Pos", m_Climb.getDeployCurPos());
     SmartDashboard.putNumber("Climb Motor Cur Pos", m_Climb.getClimbCurPos());
     m_field.setRobotPose(m_driveTrain.getPose());
-    SmartDashboard.putNumber("Curr Pose x", m_driveTrain.getPose().getX());
-    SmartDashboard.putNumber("Curr Pose y", m_driveTrain.getPose().getY());
-    SmartDashboard.putNumber("Curr Pose theta", m_driveTrain.getPose().getRotation().getDegrees()); 
+    SmartDashboard.putNumber("Curr Pose x", m_driveTrain.vision.lastCalculatedDist.get().getX());
+    SmartDashboard.putNumber("Curr Pose y", m_driveTrain.vision.lastCalculatedDist.get().getY());
+    SmartDashboard.putNumber("Curr Pose theta", m_driveTrain.vision.lastCalculatedDist.get().getRotation().getDegrees()); 
+    SmartDashboard.putNumber("vision latency",m_driveTrain.vision.getVisionTimestamp());
     SmartDashboard.putNumber("Curr Tag ID", m_driveTrain.vision.getLatestID());
     SmartDashboard.putBoolean("Turbo", m_driveTrain.getTurbo());
     SmartDashboard.putNumber("DEPLOY POS", m_Climb.getDeployCurPos());
