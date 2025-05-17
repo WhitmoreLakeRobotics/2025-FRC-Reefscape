@@ -128,7 +128,7 @@ public class Constants {
   public static class SwerveConstants {
     public static final double kPX = 1.5;
     public static final double kPY = 1.25;
-    public static final double kPTheta = 1.5;
+    public static final double kPTheta = 0.2;
     public static final double kXTolerance = 0.00; //Meters
     public static final double kYTolerance = 0.00; //Meters
     public static final double kThetaTolerance = 0;

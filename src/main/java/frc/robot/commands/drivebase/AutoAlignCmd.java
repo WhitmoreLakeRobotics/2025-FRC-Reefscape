@@ -19,6 +19,7 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.DriveTrain;
 import frc.utils.CommonLogic;
+import frc.utils.PID;
 
 public class AutoAlignCmd extends Command{
     Supplier<Optional<Pose2d>> poseSupplier;
@@ -26,10 +27,12 @@ public class AutoAlignCmd extends Command{
     boolean left;
     DriveTrain swerve;
     double timestamp;
+    boolean bdone = false;
     public Pose2d distFromTag;
     private PIDController xController = new PIDController(Constants.SwerveConstants.kPX, 0, 0);
     private PIDController yController = new PIDController(Constants.SwerveConstants.kPY, 0, 0);
     private PIDController thetaController = new PIDController(Constants.SwerveConstants.kPTheta, 0, 0);
+    PID turnPID = new PID(0.02,0.0,0.0);
 
 
     Optional<Pose2d> currentPoseOpt;
@@ -59,31 +62,47 @@ public class AutoAlignCmd extends Command{
         timestamp = RobotContainer.getInstance().m_driveTrain.vision.getVisionTimestamp();
         CurrentID = RobotContainer.getInstance().m_driveTrain.vision.getLatestID();
     
-    if(currentPoseOpt.isPresent() && ((timestamp + 5) >= CommonLogic.getTime())) {
+    if(currentPoseOpt.isPresent() ) {
 
       Pose2d currentPose = currentPoseOpt.get();
       distFromTag = currentPose;
 
+
+
+
+
       double xPower = MathUtil.clamp(xController.calculate(currentPose.getX(), left ? Constants.VisionConstants.leftAlignmentX : Constants.VisionConstants.rightAlignmentX), -1, 1);
       double yPower = MathUtil.clamp(yController.calculate(currentPose.getY(), left ? Constants.VisionConstants.leftAlignmentY : Constants.VisionConstants.rightAlignmentY), -1, 1);
-      double thetaPower = thetaController.calculate(currentPose.getRotation().getRadians(), Constants.VisionConstants.thetaAlignment);
+      //double thetaPower = thetaController.calculate(currentPose.getRotation().getRadians(), Constants.VisionConstants.thetaAlignment);
+      double thetaPower =  CommonLogic.CapMotorPower(turnPID.calcPIDF(0, currentPose.getRotation().getDegrees()), -0.30, .3)  ;
+
       SmartDashboard.putNumber("Subsystem/Vision/actualAlignmentX",currentPose.getX());
       SmartDashboard.putNumber("Subsystem/Vision/actualAlignmentY",currentPose.getY());
       SmartDashboard.putNumber("Subsystem/Vision/actualAlignmentTheta",currentPose.getRotation().getRadians());
       SmartDashboard.putNumber("Subsystem/Vision/xPOut",xPower);
       SmartDashboard.putNumber("Subsystem/Vision/yPOut",yPower);
       SmartDashboard.putNumber("Subsystem/Vision/thetaOut",thetaPower);
-       swerve.drive(new ChassisSpeeds(-yPower, xPower, thetaPower));
+       swerve.drive(new ChassisSpeeds(-0, 0, -thetaPower));
+
+       inTolarance();
     }
     
 
 }
 
+public void inTolarance(){
+    if ((Math.abs(distFromTag.getX()-(left ? Constants.VisionConstants.leftAlignmentX : Constants.VisionConstants.rightAlignmentX))<VisionConstants.xTolerance) 
+    && (Math.abs(distFromTag.getY()-(left ? Constants.VisionConstants.leftAlignmentY : Constants.VisionConstants.rightAlignmentY))<VisionConstants.yTolerance)
+    && (Math.abs(distFromTag.getRotation().getRadians()-Constants.VisionConstants.thetaAlignment)<VisionConstants.thetaTolerance)){
+        bdone = true;
+    }
+}
+
 
     @Override
     public boolean isFinished(){
-        return (Math.abs(distFromTag.getX()-(left ? Constants.VisionConstants.leftAlignmentX : Constants.VisionConstants.rightAlignmentX))<VisionConstants.xTolerance) 
-        && (Math.abs(distFromTag.getY()-(left ? Constants.VisionConstants.leftAlignmentY : Constants.VisionConstants.rightAlignmentY))<VisionConstants.yTolerance)
-        && (Math.abs(distFromTag.getRotation().getRadians()-Constants.VisionConstants.thetaAlignment)<VisionConstants.thetaTolerance); 
+        return bdone;
+        
+       
     } 
 }
