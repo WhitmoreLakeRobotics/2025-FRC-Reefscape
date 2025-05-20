@@ -68,13 +68,12 @@ public class AutoAlignCmd extends Command{
       distFromTag = currentPose;
 
 
-
-
-
-      double xPower = MathUtil.clamp(xController.calculate(currentPose.getX(), left ? Constants.VisionConstants.leftAlignmentX : Constants.VisionConstants.rightAlignmentX), -1, 1);
-      double yPower = MathUtil.clamp(yController.calculate(currentPose.getY(), left ? Constants.VisionConstants.leftAlignmentY : Constants.VisionConstants.rightAlignmentY), -1, 1);
-      //double thetaPower = thetaController.calculate(currentPose.getRotation().getRadians(), Constants.VisionConstants.thetaAlignment);
-      double thetaPower =  CommonLogic.CapMotorPower(turnPID.calcPIDF(0, currentPose.getRotation().getDegrees()), -0.30, .3)  ;
+      //double xPower = MathUtil.clamp(xController.calculate(currentPose.getX(), left ? Constants.VisionConstants.leftAlignmentX : Constants.VisionConstants.rightAlignmentX), -1, 1);
+      double xPower =  50*CommonLogic.CapMotorPower(turnPID.calcPIDF(0, currentPose.getX()), -0.30, .3)  ;
+      //double yPower = MathUtil.clamp(yController.calculate(currentPose.getY(), left ? Constants.VisionConstants.leftAlignmentY : Constants.VisionConstants.rightAlignmentY), -1, 1);
+      double yPower =  50*CommonLogic.CapMotorPower(turnPID.calcPIDF(0, currentPose.getY()), -0.30, .3)  ;
+      double thetaPower = thetaController.calculate(currentPose.getRotation().getDegrees(), Constants.VisionConstants.thetaAlignment);
+      //double thetaPower =  5*CommonLogic.CapMotorPower(turnPID.calcPIDF(0, currentPose.getRotation().getDegrees()), -0.30, .3)  ;
 
       SmartDashboard.putNumber("Subsystem/Vision/actualAlignmentX",currentPose.getX());
       SmartDashboard.putNumber("Subsystem/Vision/actualAlignmentY",currentPose.getY());
@@ -82,7 +81,7 @@ public class AutoAlignCmd extends Command{
       SmartDashboard.putNumber("Subsystem/Vision/xPOut",xPower);
       SmartDashboard.putNumber("Subsystem/Vision/yPOut",yPower);
       SmartDashboard.putNumber("Subsystem/Vision/thetaOut",thetaPower);
-       swerve.drive(new ChassisSpeeds(-0, 0, -thetaPower));
+       swerve.drive(new ChassisSpeeds(0, yPower, thetaPower));
 
        inTolarance();
     }
