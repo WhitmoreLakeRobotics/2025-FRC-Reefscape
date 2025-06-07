@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -53,7 +54,7 @@ import swervelib.telemetry.SwerveDriveTelemetry;
 public class Vision {
 /***Begin Custom Varibles */
 public Optional<Pose2d> lastCalculatedDist;
-public Pose2d LastCalcVisionLocation;
+public Pose2d LastCalcVisionLocation = new Pose2d(new Translation2d(16.0, 4.000), Rotation2d.fromDegrees(180));;
 //public final PhotonPoseEstimator poseEstimator;
 StructPublisher<Pose2d> estimatedCaemraPose = NetworkTableInstance.getDefault().getStructTopic("SmartDashboard/Subsystem/Vision/estimatedCameraPose", Pose2d.struct).publish();
 public int latestID;

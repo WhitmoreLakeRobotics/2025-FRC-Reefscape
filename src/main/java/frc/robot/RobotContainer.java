@@ -232,7 +232,8 @@ public class RobotContainer {
 
     Trigger DLeft_Drive = new Trigger(drive_Controller.povLeft());
   //  DLeft_Drive.onTrue(new EAGoToLevel(ElevAndArmPos.PICKUP));
-    DLeft_Drive.whileTrue(new AutoAlignCmd(true, m_driveTrain));
+   // DLeft_Drive.whileTrue(new AutoAlignCmd(true, m_driveTrain));
+   DLeft_Drive.whileTrue(m_driveTrain.driveToPose(m_driveTrain.returnPose2d(m_driveTrain.vision.getLatestID())));
     
 
     Trigger DUp_Drive = new Trigger(drive_Controller.povUp()); // GH
@@ -391,14 +392,17 @@ public class RobotContainer {
     SmartDashboard.putBoolean("Algae Intake", m_AlgaeIntake.AlgIntake.get());
     SmartDashboard.putNumber("Deploy Motor Cur Pos", m_Climb.getDeployCurPos());
     SmartDashboard.putNumber("Climb Motor Cur Pos", m_Climb.getClimbCurPos());
-    m_field.setRobotPose(m_driveTrain.getPose());
-    SmartDashboard.putNumber("Curr Pose x", m_driveTrain.vision.lastCalculatedDist.get().getX());
-    SmartDashboard.putNumber("Curr Pose y", m_driveTrain.vision.lastCalculatedDist.get().getY());
-    SmartDashboard.putNumber("Curr Pose theta", m_driveTrain.vision.lastCalculatedDist.get().getRotation().getDegrees()); 
+   // m_field.setRobotPose(m_driveTrain.getPose());
+    SmartDashboard.putNumber("Curr Pose x", m_driveTrain.vision.LastCalcVisionLocation.getX());
+    SmartDashboard.putNumber("Curr Pose y", m_driveTrain.vision.LastCalcVisionLocation.getY());
+    SmartDashboard.putNumber("Curr Pose theta", m_driveTrain.vision.LastCalcVisionLocation.getRotation().getDegrees()); 
     SmartDashboard.putNumber("vision latency",m_driveTrain.vision.getVisionTimestamp());
     SmartDashboard.putNumber("Curr Tag ID", m_driveTrain.vision.getLatestID());
     SmartDashboard.putBoolean("Turbo", m_driveTrain.getTurbo());
     SmartDashboard.putNumber("DEPLOY POS", m_Climb.getDeployCurPos());
+    SmartDashboard.putNumber("Field Pose X", m_driveTrain.getSwerveDrive().getPose().getX());
+    SmartDashboard.putNumber("Field Pose Y", m_driveTrain.getSwerveDrive().getPose().getY());
+    SmartDashboard.putNumber("Field Pose Theta", m_driveTrain.getSwerveDrive().getPose().getRotation().getDegrees());
     // SmartDashboard.putBoolean("Hold Coral", m_elevatorAndArm.holdCoral);
   }
 

@@ -285,8 +285,7 @@ private boolean bTurbo = false;
    * @param pose Target {@link Pose2d} to go to.
    * @return PathFinding command
    */
-  public Command driveToPose(Pose2d pose)
-  {
+  public Command driveToPose(Pose2d pose){
 // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(
         swerveDrive.getMaximumChassisVelocity(), 4.0,
@@ -799,6 +798,22 @@ private boolean bTurbo = false;
    return bTurbo;
 
   } 
+  public Pose2d returnPose2d(int targetID) {
+    Pose2d newDestination;
+    
+    switch (targetID) {
+      case 8:
+        newDestination = new Pose2d(new Translation2d(13.756, 5.262), Rotation2d.fromDegrees(63.80));
+        break;
+    
+      default:
+      //newDestination = new Pose2d(swerveDrive.getPose().getTranslation(), swerveDrive.getPose().getRotation());
+      newDestination = new Pose2d(new Translation2d(16.0, 4.5), Rotation2d.fromDegrees(0));
+    }
+    return newDestination;
+
+    
+  }
 
   //***************************************end 3668 customizations   */
 

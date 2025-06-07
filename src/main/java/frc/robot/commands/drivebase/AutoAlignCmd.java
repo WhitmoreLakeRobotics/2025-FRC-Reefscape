@@ -81,7 +81,7 @@ public class AutoAlignCmd extends Command{
       SmartDashboard.putNumber("Subsystem/Vision/xPOut",xPower);
       SmartDashboard.putNumber("Subsystem/Vision/yPOut",yPower);
       SmartDashboard.putNumber("Subsystem/Vision/thetaOut",thetaPower);
-       swerve.drive(new ChassisSpeeds(xPower, yPower, thetaPower));
+       swerve.drive(new ChassisSpeeds(0, 0, thetaPower));
 
        inTolarance();
     }
