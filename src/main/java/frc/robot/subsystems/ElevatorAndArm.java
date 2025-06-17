@@ -403,6 +403,7 @@ public class ElevatorAndArm extends SubsystemBase {
         ALGAECARRYLOWER(60,14),
         ALGAECARRYUPPER(60,36),
         ALGAEPROCESSORDeploy(37,0),
+        ALGAETOSS(183, 39.24),
         OUTOFWAY(235, 0);
         // CIntake(24, 0), // was 2.5
         // CHold(24, 0),

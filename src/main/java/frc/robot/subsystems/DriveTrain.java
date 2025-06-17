@@ -802,7 +802,7 @@ private boolean bTurbo = false;
     Pose2d newDestination;
     
     switch (targetID) {
-      case 8:
+      case (8):
         newDestination = new Pose2d(new Translation2d(13.756, 5.262), Rotation2d.fromDegrees(63.80));
         break;
     

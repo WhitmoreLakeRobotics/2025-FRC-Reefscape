@@ -438,6 +438,12 @@ public class Coral extends SubsystemBase {
                 coralMotor.set(0);
                 funnelMotor.set(0);
                 break;
+            case ALGAE_TOSS:
+                CoralConfig.smartCurrentLimit(normalStallCurrentLimit, normalFreeCurrentLimit);
+                coralMotor.configure(CoralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+                coralMotor.set(SPEED_ALGAE_DEPLOY);
+                funnelMotor.set(0);
+                break;
             default:
                 funnelMotor.set(0);
                 // These are where we set motor Power
@@ -481,6 +487,7 @@ public class Coral extends SubsystemBase {
         ALGAE_EXTRACT,
         ALGAE_HOLD,
         AlGAE_DEPLOY,
+        ALGAE_TOSS,
         STOP,
         CLIMBENABLED
 

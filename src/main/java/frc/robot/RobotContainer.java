@@ -233,7 +233,7 @@ public class RobotContainer {
     Trigger DLeft_Drive = new Trigger(drive_Controller.povLeft());
   //  DLeft_Drive.onTrue(new EAGoToLevel(ElevAndArmPos.PICKUP));
    // DLeft_Drive.whileTrue(new AutoAlignCmd(true, m_driveTrain));
-   DLeft_Drive.whileTrue(m_driveTrain.driveToPose(m_driveTrain.returnPose2d(m_driveTrain.vision.getLatestID())));
+    DLeft_Drive.whileTrue(m_driveTrain.driveToPose(m_driveTrain.returnPose2d(m_driveTrain.vision.getLatestID())));
     
 
     Trigger DUp_Drive = new Trigger(drive_Controller.povUp()); // GH
