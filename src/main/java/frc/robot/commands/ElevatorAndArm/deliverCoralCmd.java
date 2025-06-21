@@ -60,49 +60,67 @@ public class deliverCoralCmd extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (m_elevator.isElevatorAndArmAtTarget(targElevAndArmPos)) {
+      //  if (m_elevator.isElevatorAndArmAtTarget(targElevAndArmPos)) {
             switch (targElevAndArmPos) {
 
                 case LEVEL1:
+                if (m_elevator.isElevatorAndArmAtTarget(targElevAndArmPos)){
                     m_coral.setCoralPhase(CoralPhase.LEVEL_1_DEPLOY);
                     bDone = true;
+                    }
                     break;
 
                 case LEVEL2:
+                if (m_elevator.isElevatorAndArmAtTarget(targElevAndArmPos)){
                     m_coral.setCoralPhase(CoralPhase.LEVEL_2_DEPLOY);
                     bDone = true;
+                    }
                     break;
 
                 case LEVEL3:
+                if (m_elevator.isElevatorAndArmAtTarget(targElevAndArmPos)){
                     m_coral.setCoralPhase(CoralPhase.LEVEL_3_DEPLOY);
                     bDone = true;
+                    }
                     break;
 
                 case LEVEL4:
+                if (m_elevator.isElevatorAndArmAtTarget(targElevAndArmPos)){
                     m_coral.setCoralPhase(CoralPhase.LEVEL_4_DEPLOY);
                     bDone = true;
+                    }
                  //   m_elevator.setNewPos(ElevAndArmPos.LEVEL4OUTOFWAY);
                     break;
                 case ALGAEPROCESSORDeploy:
+                if (m_elevator.isElevatorAndArmAtTarget(targElevAndArmPos)){
                     m_coral.setCoralPhase(CoralPhase.AlGAE_DEPLOY);
                     bDone = true;
+                    }
                     break;
                 case ALGAECARRYUPPER:
                     case ALGAECARRYLOWER:
                     case ALGAETOSS:
                     m_elevator.setNewPos(ElevatorAndArm.ElevAndArmPos.ALGAETOSS);
-                    if (RobotMath.getTime() >= endTime) {
+                    //if (RobotMath.getTime() >= endTime) {
+                     //   if (m_elevator.getArmCurPos() >= 100) {
                     m_coral.setCoralPhase(CoralPhase.ALGAE_TOSS);
                     bDone = true;
-                    }
+                    //}
+                    
                     break;
+                   // case ALGAETOSS:
+                    //if (m_elevator.getArmCurPos() >= 60) {
+                      //  m_coral.setCoralPhase(CoralPhase.ALGAE_TOSS);
+                        //bDone = true;
+                        //}
+                    //break;
                 default:
                 bDone = true;
                     // DO NOTHING
                     break;
             }
             
-        }
+      //  }
     }
 
     // Called once the command ends or is interrupted.

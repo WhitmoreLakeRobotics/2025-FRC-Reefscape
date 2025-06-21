@@ -68,6 +68,10 @@ public class Coral extends SubsystemBase {
     private ElevatorAndArm m_ElevatorAndArm = null;
 
     private double SensorTime = 0.0;
+    private double delay = 0.50;
+    private double startTime = 0.0;
+    private double endTime = 0.0;
+
 
     public boolean isIntaking = false;
 
@@ -76,6 +80,9 @@ public class Coral extends SubsystemBase {
         configHopperMotor();
         Coralhopper = new DigitalInput(0);
         CoralIntake = new DigitalInput(1);
+
+        startTime = RobotMath.getTime();
+        endTime = startTime + delay; 
     }
 
     public void setElevatorAndArmSystem(ElevatorAndArm newElevatorAndArm) {
@@ -441,7 +448,9 @@ public class Coral extends SubsystemBase {
             case ALGAE_TOSS:
                 CoralConfig.smartCurrentLimit(normalStallCurrentLimit, normalFreeCurrentLimit);
                 coralMotor.configure(CoralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+                if (RobotMath.getTime() >= endTime) {
                 coralMotor.set(SPEED_ALGAE_DEPLOY);
+                }
                 funnelMotor.set(0);
                 break;
             default:
