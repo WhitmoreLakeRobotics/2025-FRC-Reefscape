@@ -68,7 +68,7 @@ public class Coral extends SubsystemBase {
     private ElevatorAndArm m_ElevatorAndArm = null;
 
     private double SensorTime = 0.0;
-    private double delay = 0.15;
+    private double delay = 0.09;
     private double startTime = 0.0;
     private double endTime = 0.0;
     private boolean bAlgaeTossp1 = true;

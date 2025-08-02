@@ -59,6 +59,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.subsystems.*;
 import frc.robot.commands.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.drivebase.AutoAlignCmd;
+import frc.robot.commands.drivebase.DriveToPos;
 import frc.robot.commands.drivebase.cmdAutoTurn;
 import frc.robot.commands.drivebase.cmdResetGyro;
 import frc.robot.commands.drivebase.cmdTurbo;
@@ -233,7 +234,7 @@ public class RobotContainer {
     Trigger DLeft_Drive = new Trigger(drive_Controller.povLeft());
   //  DLeft_Drive.onTrue(new EAGoToLevel(ElevAndArmPos.PICKUP));
    // DLeft_Drive.whileTrue(new AutoAlignCmd(true, m_driveTrain));
-    DLeft_Drive.whileTrue(m_driveTrain.driveToPose(m_driveTrain.returnPose2d(m_driveTrain.vision.getLatestID())));
+    DLeft_Drive.whileTrue(new DriveToPos());
     
 
     Trigger DUp_Drive = new Trigger(drive_Controller.povUp()); // GH
