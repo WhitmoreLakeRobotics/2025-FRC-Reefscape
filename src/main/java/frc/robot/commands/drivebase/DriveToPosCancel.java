@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotContainer;
 
-public class DriveToPos extends Command {
+public class DriveToPosCancel extends Command {
     private boolean bDone = false;
     private double bHeading;
     private double rHeading;
@@ -17,7 +17,7 @@ public class DriveToPos extends Command {
     private Pose2d newTarget;
 
     
-    public DriveToPos() {
+    public DriveToPosCancel() {
 
         // m_subsystem = subsystem;
         // addRequirements(m_subsystem);
@@ -41,7 +41,7 @@ public class DriveToPos extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        CommandScheduler.getInstance().schedule(RobotContainer.getInstance().m_driveTrain.driveToPose(newTarget)); 
+        CommandScheduler.getInstance().cancel(RobotContainer.getInstance().m_driveTrain.driveToPose(newTarget)); 
         bDone = true;
         end(false);
     }
@@ -49,7 +49,7 @@ public class DriveToPos extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        CommandScheduler.getInstance().cancel(RobotContainer.getInstance().m_driveTrain.driveToPose(newTarget));
+        //CommandScheduler.getInstance().cancel(RobotContainer.getInstance().m_driveTrain.driveToPose(newTarget));
         bDone = true;
     }
 

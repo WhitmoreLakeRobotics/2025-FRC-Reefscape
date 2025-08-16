@@ -805,6 +805,9 @@ private boolean bTurbo = false;
       case (8):
         newDestination = new Pose2d(new Translation2d(13.756, 5.262), Rotation2d.fromDegrees(63.80));
         break;
+      case (9):
+        newDestination = new Pose2d(new Translation2d(12.367, 5.141), Rotation2d.fromDegrees(122.27));
+        break;
     
       default:
       //newDestination = new Pose2d(swerveDrive.getPose().getTranslation(), swerveDrive.getPose().getRotation());
