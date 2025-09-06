@@ -59,7 +59,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.subsystems.*;
 import frc.robot.commands.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.drivebase.AutoAlignCmd;
-import frc.robot.commands.drivebase.DriveToPosCancel;
 import frc.robot.commands.drivebase.DriveToPos;
 import frc.robot.commands.drivebase.cmdAutoTurn;
 import frc.robot.commands.drivebase.cmdResetGyro;
@@ -235,7 +234,7 @@ public class RobotContainer {
     Trigger DLeft_Drive = new Trigger(drive_Controller.povLeft());
   //  DLeft_Drive.onTrue(new EAGoToLevel(ElevAndArmPos.PICKUP));
    // DLeft_Drive.whileTrue(new AutoAlignCmd(true, m_driveTrain));
-    DLeft_Drive.whileTrue(new DriveToPos());
+    DLeft_Drive.whileTrue(new DriveToPos(true));
    // DLeft_Drive.onFalse(new DriveToPosCancel());
     DLeft_Drive.onFalse(driveFieldOrientedDirectAngle);
     
@@ -245,7 +244,9 @@ public class RobotContainer {
     //DUp_Drive.onTrue(new cmdAutoTurn(180, 0));
 
     Trigger DRight_Drive = new Trigger(drive_Controller.povRight());
-    DRight_Drive.onTrue(new EAGoToLevel(ElevAndArmPos.ALGAEEXTRACTUPPER));
+    //DRight_Drive.onTrue(new EAGoToLevel(ElevAndArmPos.ALGAEEXTRACTUPPER));
+    DRight_Drive.whileTrue(new DriveToPos(false));
+    DRight_Drive.onFalse(driveFieldOrientedDirectAngle);
 
     Trigger A_Drive = new Trigger(drive_Controller.a()); // CD
     // A_Drive.onTrue(new EAGoToLevel(ElevAndArmPos.ALGAEEXTRACTLOWER));

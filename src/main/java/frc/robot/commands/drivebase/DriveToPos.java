@@ -15,10 +15,11 @@ public class DriveToPos extends Command {
     private double rHeading;
     private int latestID;
     private Pose2d newTarget;
+    private boolean isLeft = true;
 
     
-    public DriveToPos() {
-
+    public DriveToPos(boolean isLeft) {
+        this.isLeft = isLeft;
         // m_subsystem = subsystem;
         // addRequirements(m_subsystem);
 
@@ -33,7 +34,7 @@ public class DriveToPos extends Command {
     public void initialize() {
         bDone = false;
         latestID = RobotContainer.getInstance().m_driveTrain.vision.getLatestID();
-        newTarget = RobotContainer.getInstance().m_driveTrain.returnPose2d(latestID);
+        newTarget = RobotContainer.getInstance().m_driveTrain.returnPose2d(latestID, isLeft);
 
    
     }
