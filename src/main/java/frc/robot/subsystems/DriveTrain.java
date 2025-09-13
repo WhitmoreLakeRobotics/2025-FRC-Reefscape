@@ -822,7 +822,7 @@ private boolean bTurbo = false;
         break;
       case (12):
         //newDestination = new Pose2d(new Translation2d(13.571, 2.794), Rotation2d.fromDegrees(117.225));
-        newDestination = TARGETPOS.POS12.getLefPose2d();
+        newDestination = TARGETPOS.POS6.getLefPose2d();
         break;
       case (7):
         //newDestination = new Pose2d(new Translation2d(14.399, 3.831), Rotation2d.fromDegrees(180.0));
@@ -855,7 +855,7 @@ private boolean bTurbo = false;
         break;
       case (12):
         //newDestination = new Pose2d(new Translation2d(13.571, 2.794), Rotation2d.fromDegrees(117.225));
-        newDestination = TARGETPOS.POS12.getRightPose2d();
+        newDestination = TARGETPOS.POS6.getRightPose2d();
         break;
       case (7):
         //newDestination = new Pose2d(new Translation2d(14.399, 3.831), Rotation2d.fromDegrees(180.0));
@@ -873,18 +873,33 @@ private boolean bTurbo = false;
     return newDestination;
   }
   public enum TARGETPOS {
-    POS8(new Pose2d(new Translation2d(13.756, 5.262), Rotation2d.fromDegrees(-120.256)),
-          new Pose2d(new Translation2d(13.831, 5.077), Rotation2d.fromDegrees(-120.256))),
-    POS9(new Pose2d(new Translation2d(12.255, 5.207), Rotation2d.fromDegrees(61.874)),
-          new Pose2d(new Translation2d(12.255, 5.067), Rotation2d.fromDegrees(61.874))),
-    POS10(new Pose2d(new Translation2d(11.747, 4.180), Rotation2d.fromDegrees(0.0)),
-           new Pose2d(new Translation2d(11.747, 3.930), Rotation2d.fromDegrees(0.0))),
-    POS11(new Pose2d(new Translation2d(12.285, 2.953), Rotation2d.fromDegrees(61.193)),
-           new Pose2d(new Translation2d(12.544, 2.774), Rotation2d.fromDegrees(61.193))),
-    POS12(new Pose2d(new Translation2d(13.571, 2.794), Rotation2d.fromDegrees(117.225)),
-            new Pose2d(new Translation2d(13.831, 2.953), Rotation2d.fromDegrees(117.225))),
-    POS7(new Pose2d(new Translation2d(14.399, 3.831), Rotation2d.fromDegrees(180.0)),
-          new Pose2d(new Translation2d(14.429, 4.190), Rotation2d.fromDegrees(180.0))),
+    POS8(new Pose2d(new Translation2d(13.861, 5.067), Rotation2d.fromDegrees(60.0)),
+          new Pose2d(new Translation2d(13.571, 5.237), Rotation2d.fromDegrees(60.0))),
+    POS9(new Pose2d(new Translation2d(12.524, 5.227), Rotation2d.fromDegrees(120.000)),
+          new Pose2d(new Translation2d(12.255, 5.067), Rotation2d.fromDegrees(120.000))),
+    POS10(new Pose2d(new Translation2d(11.747, 4.180), Rotation2d.fromDegrees(180.0)),
+           new Pose2d(new Translation2d(11.747, 3.930), Rotation2d.fromDegrees(180.0))),
+    POS11(new Pose2d(new Translation2d(12.285, 2.953), Rotation2d.fromDegrees(-120.000)),
+           new Pose2d(new Translation2d(12.544, 2.774), Rotation2d.fromDegrees(-120.000))),
+    POS6(new Pose2d(new Translation2d(13.571, 2.794), Rotation2d.fromDegrees(-60.0)),
+            new Pose2d(new Translation2d(13.831, 2.953), Rotation2d.fromDegrees(-60.0))),
+    POS7(new Pose2d(new Translation2d(14.399, 3.831), Rotation2d.fromDegrees(0.0)),
+          new Pose2d(new Translation2d(14.429, 4.190), Rotation2d.fromDegrees(0.0))),
+
+
+
+    BPOS17(new Pose2d(new Translation2d(3.600, 2.973), Rotation2d.fromDegrees(-120.00)),
+          new Pose2d(new Translation2d(3.959, 2.853), Rotation2d.fromDegrees(-120.00))),
+    BPOS18(new Pose2d(new Translation2d(3.151, 4.190), Rotation2d.fromDegrees(180.0)),
+          new Pose2d(new Translation2d(3.151, 3.880), Rotation2d.fromDegrees(180.0))),
+    BPOS19(new Pose2d(new Translation2d(3.999, 5.256), Rotation2d.fromDegrees(120.000)),
+          new Pose2d(new Translation2d(3.680, 5.087), Rotation2d.fromDegrees(120.000))),
+    BPOS20(new Pose2d(new Translation2d(11.747, 4.180), Rotation2d.fromDegrees(60.0)),
+           new Pose2d(new Translation2d(11.747, 3.930), Rotation2d.fromDegrees(60.0))),
+    BPOS21(new Pose2d(new Translation2d(5.833, 3.870), Rotation2d.fromDegrees(0.0)),
+          new Pose2d(new Translation2d(5.823, 4.16), Rotation2d.fromDegrees(0.00))),
+    BPOS22(new Pose2d(new Translation2d(4.996, 2.794), Rotation2d.fromDegrees(-60.000)), 
+            new Pose2d(new Translation2d(5.275, 3.003), Rotation2d.fromDegrees(-60.000))),
     DEFAULT(new Pose2d(new Translation2d(16.0, 4.5), Rotation2d.fromDegrees(0)),
               new Pose2d(new Translation2d(16.0, 4.5), Rotation2d.fromDegrees(0)));
       
