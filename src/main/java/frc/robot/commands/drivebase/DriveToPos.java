@@ -18,8 +18,8 @@ public class DriveToPos extends Command {
     private boolean isLeft = true;
 
     
-    public DriveToPos(boolean isLeft) {
-        this.isLeft = isLeft;
+    public DriveToPos(boolean isLeft2) {
+        this.isLeft = isLeft2;
         // m_subsystem = subsystem;
         // addRequirements(m_subsystem);
 

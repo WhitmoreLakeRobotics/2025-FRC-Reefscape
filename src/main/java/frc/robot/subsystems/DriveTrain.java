@@ -806,33 +806,51 @@ private boolean bTurbo = false;
     switch (targetID) {
       case (8):
         //newDestination = new Pose2d(new Translation2d(13.756, 5.262), Rotation2d.fromDegrees(63.80));
-        newDestination = TARGETPOS.POS8.getLefPose2d();
+        newDestination = TARGETPOS.POS8.getLeftPose2d();
         break;
       case (9):
         //newDestination = new Pose2d(new Translation2d(12.367, 5.141), Rotation2d.fromDegrees(122.27));
-        newDestination = TARGETPOS.POS9.getLefPose2d();
+        newDestination = TARGETPOS.POS9.getLeftPose2d();
         break;
       case (10):
         //newDestination = new Pose2d(new Translation2d(11.747, 4.180), Rotation2d.fromDegrees(0.0));
-        newDestination = TARGETPOS.POS10.getLefPose2d();
+        newDestination = TARGETPOS.POS10.getLeftPose2d();
         break;
       case (11):
         //newDestination = new Pose2d(new Translation2d(12.285, 2.953), Rotation2d.fromDegrees(61.193));
-        newDestination = TARGETPOS.POS11.getLefPose2d();
+        newDestination = TARGETPOS.POS11.getLeftPose2d();
         break;
-      case (12):
+      case (6):
         //newDestination = new Pose2d(new Translation2d(13.571, 2.794), Rotation2d.fromDegrees(117.225));
-        newDestination = TARGETPOS.POS6.getLefPose2d();
+        newDestination = TARGETPOS.POS6.getLeftPose2d();
         break;
       case (7):
         //newDestination = new Pose2d(new Translation2d(14.399, 3.831), Rotation2d.fromDegrees(180.0));
-        newDestination = TARGETPOS.POS7.getLefPose2d();
+        newDestination = TARGETPOS.POS7.getLeftPose2d();
+        break;
+        case(17):
+        newDestination = TARGETPOS.BPOS17.getLeftPose2d();
+        break;
+      case(18):
+        newDestination = TARGETPOS.BPOS18.getLeftPose2d();
+        break;
+      case(19):
+        newDestination = TARGETPOS.BPOS19.getLeftPose2d();
+        break;
+      case(20):
+        newDestination = TARGETPOS.BPOS20.getLeftPose2d();
+        break;
+      case(21):
+        newDestination = TARGETPOS.BPOS21.getLeftPose2d();
+        break;
+      case(22):
+        newDestination = TARGETPOS.BPOS22.getLeftPose2d();
         break;
     
       default:
       //newDestination = new Pose2d(swerveDrive.getPose().getTranslation(), swerveDrive.getPose().getRotation());
       //newDestination = new Pose2d(new Translation2d(16.0, 4.5), Rotation2d.fromDegrees(0));
-      newDestination = TARGETPOS.DEFAULT.getLefPose2d();
+      newDestination = TARGETPOS.DEFAULT.getLeftPose2d();
     }
     } else {
 
@@ -853,7 +871,7 @@ private boolean bTurbo = false;
         //newDestination = new Pose2d(new Translation2d(12.285, 2.953), Rotation2d.fromDegrees(61.193));
         newDestination = TARGETPOS.POS11.getRightPose2d();
         break;
-      case (12):
+      case (6):
         //newDestination = new Pose2d(new Translation2d(13.571, 2.794), Rotation2d.fromDegrees(117.225));
         newDestination = TARGETPOS.POS6.getRightPose2d();
         break;
@@ -861,6 +879,25 @@ private boolean bTurbo = false;
         //newDestination = new Pose2d(new Translation2d(14.399, 3.831), Rotation2d.fromDegrees(180.0));
         newDestination = TARGETPOS.POS7.getRightPose2d();
         break;
+      case(17):
+        newDestination = TARGETPOS.BPOS17.getRightPose2d();
+        break;
+      case(18):
+        newDestination = TARGETPOS.BPOS18.getRightPose2d();
+        break;
+      case(19):
+        newDestination = TARGETPOS.BPOS19.getRightPose2d();
+        break;
+      case(20):
+        newDestination = TARGETPOS.BPOS20.getRightPose2d();
+        break;
+      case(21):
+        newDestination = TARGETPOS.BPOS21.getRightPose2d();
+        break;
+      case(22):
+        newDestination = TARGETPOS.BPOS22.getRightPose2d();
+        break;
+
     
       default:
       //newDestination = new Pose2d(swerveDrive.getPose().getTranslation(), swerveDrive.getPose().getRotation());
@@ -918,7 +955,7 @@ private boolean bTurbo = false;
     }
 
 
-    public Pose2d getLefPose2d(){
+    public Pose2d getLeftPose2d(){
       return leftPose2d;
 
     }
