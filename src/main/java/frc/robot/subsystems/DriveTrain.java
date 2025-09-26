@@ -787,10 +787,10 @@ private boolean bTurbo = false;
       swerveDrive.getModules()[3].getDriveMotor().setCurrentLimit(60);      
       bTurbo = false;
     } else {
-      swerveDrive.getModules()[0].getDriveMotor().setCurrentLimit(80);
-      swerveDrive.getModules()[1].getDriveMotor().setCurrentLimit(80);
-      swerveDrive.getModules()[2].getDriveMotor().setCurrentLimit(80);
-      swerveDrive.getModules()[3].getDriveMotor().setCurrentLimit(80);   
+      swerveDrive.getModules()[0].getDriveMotor().setCurrentLimit(37);//was 80
+      swerveDrive.getModules()[1].getDriveMotor().setCurrentLimit(37);//was 80
+      swerveDrive.getModules()[2].getDriveMotor().setCurrentLimit(37);//was 80
+      swerveDrive.getModules()[3].getDriveMotor().setCurrentLimit(37);//was 80
       bTurbo = true;
     }
   }
@@ -806,51 +806,33 @@ private boolean bTurbo = false;
     switch (targetID) {
       case (8):
         //newDestination = new Pose2d(new Translation2d(13.756, 5.262), Rotation2d.fromDegrees(63.80));
-        newDestination = TARGETPOS.POS8.getLeftPose2d();
+        newDestination = TARGETPOS.POS8.getLefPose2d();
         break;
       case (9):
         //newDestination = new Pose2d(new Translation2d(12.367, 5.141), Rotation2d.fromDegrees(122.27));
-        newDestination = TARGETPOS.POS9.getLeftPose2d();
+        newDestination = TARGETPOS.POS9.getLefPose2d();
         break;
       case (10):
         //newDestination = new Pose2d(new Translation2d(11.747, 4.180), Rotation2d.fromDegrees(0.0));
-        newDestination = TARGETPOS.POS10.getLeftPose2d();
+        newDestination = TARGETPOS.POS10.getLefPose2d();
         break;
       case (11):
         //newDestination = new Pose2d(new Translation2d(12.285, 2.953), Rotation2d.fromDegrees(61.193));
-        newDestination = TARGETPOS.POS11.getLeftPose2d();
+        newDestination = TARGETPOS.POS11.getLefPose2d();
         break;
-      case (6):
+      case (12):
         //newDestination = new Pose2d(new Translation2d(13.571, 2.794), Rotation2d.fromDegrees(117.225));
-        newDestination = TARGETPOS.POS6.getLeftPose2d();
+        newDestination = TARGETPOS.POS6.getLefPose2d();
         break;
       case (7):
         //newDestination = new Pose2d(new Translation2d(14.399, 3.831), Rotation2d.fromDegrees(180.0));
-        newDestination = TARGETPOS.POS7.getLeftPose2d();
-        break;
-        case(17):
-        newDestination = TARGETPOS.BPOS17.getLeftPose2d();
-        break;
-      case(18):
-        newDestination = TARGETPOS.BPOS18.getLeftPose2d();
-        break;
-      case(19):
-        newDestination = TARGETPOS.BPOS19.getLeftPose2d();
-        break;
-      case(20):
-        newDestination = TARGETPOS.BPOS20.getLeftPose2d();
-        break;
-      case(21):
-        newDestination = TARGETPOS.BPOS21.getLeftPose2d();
-        break;
-      case(22):
-        newDestination = TARGETPOS.BPOS22.getLeftPose2d();
+        newDestination = TARGETPOS.POS7.getLefPose2d();
         break;
     
       default:
       //newDestination = new Pose2d(swerveDrive.getPose().getTranslation(), swerveDrive.getPose().getRotation());
       //newDestination = new Pose2d(new Translation2d(16.0, 4.5), Rotation2d.fromDegrees(0));
-      newDestination = TARGETPOS.DEFAULT.getLeftPose2d();
+      newDestination = TARGETPOS.DEFAULT.getLefPose2d();
     }
     } else {
 
@@ -871,7 +853,7 @@ private boolean bTurbo = false;
         //newDestination = new Pose2d(new Translation2d(12.285, 2.953), Rotation2d.fromDegrees(61.193));
         newDestination = TARGETPOS.POS11.getRightPose2d();
         break;
-      case (6):
+      case (12):
         //newDestination = new Pose2d(new Translation2d(13.571, 2.794), Rotation2d.fromDegrees(117.225));
         newDestination = TARGETPOS.POS6.getRightPose2d();
         break;
@@ -879,25 +861,6 @@ private boolean bTurbo = false;
         //newDestination = new Pose2d(new Translation2d(14.399, 3.831), Rotation2d.fromDegrees(180.0));
         newDestination = TARGETPOS.POS7.getRightPose2d();
         break;
-      case(17):
-        newDestination = TARGETPOS.BPOS17.getRightPose2d();
-        break;
-      case(18):
-        newDestination = TARGETPOS.BPOS18.getRightPose2d();
-        break;
-      case(19):
-        newDestination = TARGETPOS.BPOS19.getRightPose2d();
-        break;
-      case(20):
-        newDestination = TARGETPOS.BPOS20.getRightPose2d();
-        break;
-      case(21):
-        newDestination = TARGETPOS.BPOS21.getRightPose2d();
-        break;
-      case(22):
-        newDestination = TARGETPOS.BPOS22.getRightPose2d();
-        break;
-
     
       default:
       //newDestination = new Pose2d(swerveDrive.getPose().getTranslation(), swerveDrive.getPose().getRotation());
@@ -909,19 +872,45 @@ private boolean bTurbo = false;
   }
     return newDestination;
   }
+
+  public Pose2d returnPosePickup(boolean isLeft,int isBlue) {
+    if(isLeft){
+      if(isBlue == 1){
+        //is left and blue
+        return TARGETPOS.BPICKUP.leftPose2d;
+      }else {  //is red  
+        //is left and red
+        return TARGETPOS.PICKUP.leftPose2d;
+      }
+    }else{  //is right
+      if(isBlue == 1){
+        //is right and blue
+        return TARGETPOS.BPICKUP.rightPose2d;
+      }else {  //is red
+        //is right and red
+        return TARGETPOS.PICKUP.rightPose2d;
+        
+      }
+    }
+
+
+  }
+
   public enum TARGETPOS {
     POS8(new Pose2d(new Translation2d(13.861, 5.067), Rotation2d.fromDegrees(60.0)),
           new Pose2d(new Translation2d(13.571, 5.237), Rotation2d.fromDegrees(60.0))),
     POS9(new Pose2d(new Translation2d(12.524, 5.227), Rotation2d.fromDegrees(120.000)),
           new Pose2d(new Translation2d(12.255, 5.067), Rotation2d.fromDegrees(120.000))),
     POS10(new Pose2d(new Translation2d(11.747, 4.180), Rotation2d.fromDegrees(180.0)),
-           new Pose2d(new Translation2d(11.747, 3.930), Rotation2d.fromDegrees(180.0))),
+           new Pose2d(new Translation2d(11.747, 3.870), Rotation2d.fromDegrees(180.0))),
     POS11(new Pose2d(new Translation2d(12.285, 2.953), Rotation2d.fromDegrees(-120.000)),
-           new Pose2d(new Translation2d(12.544, 2.774), Rotation2d.fromDegrees(-120.000))),
+           new Pose2d(new Translation2d(12.534, 2.823), Rotation2d.fromDegrees(-120.000))),
     POS6(new Pose2d(new Translation2d(13.571, 2.794), Rotation2d.fromDegrees(-60.0)),
             new Pose2d(new Translation2d(13.831, 2.953), Rotation2d.fromDegrees(-60.0))),
-    POS7(new Pose2d(new Translation2d(14.399, 3.831), Rotation2d.fromDegrees(0.0)),
-          new Pose2d(new Translation2d(14.429, 4.190), Rotation2d.fromDegrees(0.0))),
+    POS7(new Pose2d(new Translation2d(14.389, 3.870), Rotation2d.fromDegrees(0.0)),
+          new Pose2d(new Translation2d(14.389, 4.190), Rotation2d.fromDegrees(0.0))),
+    PICKUP(new Pose2d(new Translation2d(15.915, 0.620), Rotation2d.fromDegrees(-60.00)),
+          new Pose2d(new Translation2d(15.951, 7.400),Rotation2d.fromDegrees(60.00))),
 
 
 
@@ -937,6 +926,8 @@ private boolean bTurbo = false;
           new Pose2d(new Translation2d(5.823, 4.16), Rotation2d.fromDegrees(0.00))),
     BPOS22(new Pose2d(new Translation2d(4.996, 2.794), Rotation2d.fromDegrees(-60.000)), 
             new Pose2d(new Translation2d(5.275, 3.003), Rotation2d.fromDegrees(-60.000))),
+    BPICKUP(new Pose2d(new Translation2d(1.685, 7.380), Rotation2d.fromDegrees(120.00)),
+            new Pose2d(new Translation2d(1.604, 0.693),Rotation2d.fromDegrees(-120.00))),
     DEFAULT(new Pose2d(new Translation2d(16.0, 4.5), Rotation2d.fromDegrees(0)),
               new Pose2d(new Translation2d(16.0, 4.5), Rotation2d.fromDegrees(0)));
       
@@ -955,7 +946,7 @@ private boolean bTurbo = false;
     }
 
 
-    public Pose2d getLeftPose2d(){
+    public Pose2d getLefPose2d(){
       return leftPose2d;
 
     }

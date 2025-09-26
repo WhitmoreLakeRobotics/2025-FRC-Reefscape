@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.995767045454546,
-        "y": 5.246519886363636
+        "x": 3.938778409090909,
+        "y": 5.216605113636364
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.918835227272728,
-        "y": 3.441661931818182
+        "x": 3.0413352272727265,
+        "y": 6.114048295454545
       },
       "isLocked": false,
       "linkedName": "LK"
     },
     {
       "anchor": {
-        "x": 2.6823579545454543,
-        "y": 6.692400568181817
+        "x": 1.6951704545454547,
+        "y": 7.37046875
       },
       "prevControl": {
-        "x": 3.1809375,
-        "y": 5.974446022727273
+        "x": 2.1937499999999988,
+        "y": 6.652514204545455
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,19 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "EA PICKUP",
+      "waypointRelativePos": 0.15073115860517478,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "EA PICKUP"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.25,
     "maxAcceleration": 1.875,
@@ -42,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 125.88213724620422
+    "rotation": 126.15818543980829
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -119.63838368815135
+    "rotation": 117.37770277133171
   },
   "useDefaultConstraints": true
 }

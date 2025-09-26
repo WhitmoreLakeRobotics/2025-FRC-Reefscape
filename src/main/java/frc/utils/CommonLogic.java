@@ -7,6 +7,10 @@
 
 package frc.utils;
 
+import java.util.Optional;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.RobotContainer;
 
 // import frc.robot.Constants.Profiler_Constants_DriveTrain;
@@ -15,6 +19,7 @@ import frc.robot.RobotContainer;
  * Add your docs here.
  */
 public class CommonLogic {
+
 
   public static double CapMotorPower(double MotorPower, double negCapValue, double posCapValue) {
     // logic to cap the motor power between a good range
@@ -108,5 +113,24 @@ public class CommonLogic {
     return (delta * P) + F_hold;
 
   }
+
+public static int getIsBlue() {
+    Optional<Alliance> ally = DriverStation.getAlliance();
+    if (ally.isPresent()) {
+        if (ally.get() == Alliance.Red) {
+            // is blue = false
+            return 0;
+        }
+        if (ally.get() == Alliance.Blue) {
+            // is blue = true
+            return 1;
+        }
+    } else {
+        // naptime
+        return -1;
+    }
+        return -1;
+}
+
 
 }

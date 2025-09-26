@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.6823579545454543,
-        "y": 6.692400568181817
+        "x": 1.6951704545454547,
+        "y": 7.37046875
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.3018830294900585,
-        "y": 5.852958088882216
+        "x": 2.31469552949006,
+        "y": 6.531026270700399
       },
       "isLocked": false,
       "linkedName": "PICKUP1"
@@ -54,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 119.99999999999999
+    "rotation": 116.25024236968888
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 125.88213724620422
+    "rotation": 126.15818543980829
   },
   "useDefaultConstraints": true
 }

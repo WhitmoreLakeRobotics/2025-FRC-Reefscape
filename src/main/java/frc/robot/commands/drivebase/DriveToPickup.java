@@ -2,24 +2,26 @@ package frc.robot.commands.drivebase;
 
 import javax.swing.RootPaneContainer;
 
+import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotContainer;
+import frc.utils.CommonLogic;
 
-public class DriveToPos extends Command {
+public class DriveToPickup extends Command {
     private boolean bDone = false;
     private double bHeading;
     private double rHeading;
     private int latestID;
     private Pose2d newTarget;
     private boolean isLeft = true;
-    private boolean isBlue = false;
+    private int isBlue = -1;
 
     
-    public DriveToPos(boolean isLeft2) {
+    public DriveToPickup(boolean isLeft2) {
         this.isLeft = isLeft2;
         // m_subsystem = subsystem;
         // addRequirements(m_subsystem);
@@ -27,15 +29,7 @@ public class DriveToPos extends Command {
         
 
     }
-    public DriveToPos(boolean isLeft2, boolean isBlue) {
-        this.isLeft = isLeft2;
-        this.isBlue = isBlue;
-        // m_subsystem = subsystem;
-        // addRequirements(m_subsystem);
 
-        
-
-    }
     // if fixedDist = false => stagPosition is suposed to recieve the percantage to
     // be traversed in stag, in 0.xx format
 
@@ -43,8 +37,8 @@ public class DriveToPos extends Command {
     @Override
     public void initialize() {
         bDone = false;
-        latestID = RobotContainer.getInstance().m_driveTrain.vision.getLatestID();
-        newTarget = RobotContainer.getInstance().m_driveTrain.returnPose2d(latestID, isLeft);
+       // latestID = RobotContainer.getInstance().m_driveTrain.vision.getLatestID();
+        newTarget = RobotContainer.getInstance().m_driveTrain.returnPosePickup( isLeft, CommonLogic.getIsBlue());
 
    
     }
