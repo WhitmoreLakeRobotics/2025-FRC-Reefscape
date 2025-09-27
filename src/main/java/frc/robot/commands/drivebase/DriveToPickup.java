@@ -4,6 +4,8 @@ import javax.swing.RootPaneContainer;
 
 import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,7 +40,7 @@ public class DriveToPickup extends Command {
     public void initialize() {
         bDone = false;
        // latestID = RobotContainer.getInstance().m_driveTrain.vision.getLatestID();
-        newTarget = RobotContainer.getInstance().m_driveTrain.returnPosePickup( isLeft, CommonLogic.getIsBlue());
+        newTarget = returnPosePickup( isLeft, CommonLogic.getIsBlue());
 
    
     }
@@ -69,4 +71,60 @@ public class DriveToPickup extends Command {
         return false;
 
     }
+  public Pose2d returnPosePickup(boolean isLeft,int isBlue) {
+    if(isLeft){
+      if(isBlue == 1){
+        //is left and blue
+        return TARGETPOS.BPICKUP.leftPose2d;
+      }else {  //is red  
+        //is left and red
+        return TARGETPOS.PICKUP.leftPose2d;
+      }
+    }else{  //is right
+      if(isBlue == 1){
+        //is right and blue
+        return TARGETPOS.BPICKUP.rightPose2d;
+      }else {  //is red
+        //is right and red
+        return TARGETPOS.PICKUP.rightPose2d;
+        
+      }
+    }
+
+
+  }
+
+  public enum TARGETPOS {
+
+    PICKUP(new Pose2d(new Translation2d(15.915, 0.620), Rotation2d.fromDegrees(-60.00)),
+          new Pose2d(new Translation2d(15.951, 7.400),Rotation2d.fromDegrees(60.00))),
+    BPICKUP(new Pose2d(new Translation2d(1.685, 7.380), Rotation2d.fromDegrees(120.00)),
+            new Pose2d(new Translation2d(1.604, 0.693),Rotation2d.fromDegrees(-120.00))),
+    DEFAULT(new Pose2d(new Translation2d(16.0, 4.5), Rotation2d.fromDegrees(0)),
+              new Pose2d(new Translation2d(16.0, 4.5), Rotation2d.fromDegrees(0)));
+      
+
+
+
+
+
+    private Pose2d leftPose2d;
+    private Pose2d rightPose2d;
+
+
+    TARGETPOS(Pose2d leftPose2d, Pose2d rightPose2d){
+      this.leftPose2d = leftPose2d;
+      this.rightPose2d = rightPose2d;
+    }
+
+
+    public Pose2d getLefPose2d(){
+      return leftPose2d;
+
+    }
+    public Pose2d getRightPose2d(){
+      return rightPose2d;
+
+    }
+  }
 }
