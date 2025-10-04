@@ -14,7 +14,7 @@ package frc.robot.commands.Climb;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Fangs;
+import frc.robot.subsystems.DiverAssist;
 import frc.robot.subsystems.Coral.CoralPhase;
 import frc.robot.subsystems.ElevatorAndArm.ElevAndArmPos;
 
@@ -70,7 +70,7 @@ public class ClimbEnableCmd extends Command {
     public void execute() {
         if (m_RobotContainer.m_elevatorAndArm.isElevatorAndArmAtTarget(ElevAndArmPos.OUTOFWAY) &&
         /* m_RobotContainer.m_Fangs.isLeftAtTarget(Fangs.GuidePos.OUT)&& */ m_RobotContainer.m_Fangs
-                .isRightAtTarget(Fangs.GuidePos.OUT)) {
+                .isRightAtTarget(DiverAssist.GuidePos.OUT)) {
             m_RobotContainer.m_Climb.deployClimb();
             bDone = true;
             end(false);

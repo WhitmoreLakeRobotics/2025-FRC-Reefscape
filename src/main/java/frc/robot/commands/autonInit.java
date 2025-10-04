@@ -19,7 +19,7 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.AlgaeIntake.PivotPos;
 import frc.robot.subsystems.Coral.CoralPhase;
 import frc.robot.subsystems.ElevatorAndArm.ElevAndArmPos;
-import frc.robot.subsystems.Fangs.GuidePos;
+import frc.robot.subsystems.DiverAssist.GuidePos;
 
 import java.util.function.DoubleSupplier;
 
