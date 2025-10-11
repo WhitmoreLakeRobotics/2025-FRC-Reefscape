@@ -1,10 +1,18 @@
 package frc.robot.subsystems;
 
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.CanIds;
-
+import frc.robot.commands.drivebase.DriveToPickup.TARGETPOS;
+import frc.robot.subsystems.Coral.CoralPhase;
 import frc.utils.CommonLogic;
-
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import java.util.ArrayList; // Ensure this import is complete and used in the code
+import java.util.List;
+
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkMax;
@@ -16,35 +24,39 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkBase.ResetMode;
 
 public class DiverAssist extends SubsystemBase {
-    // Elevator Config Parameters
-    private SparkMax leftMotor = new SparkMax(CanIds.RIGHT_GUIDE, MotorType.kBrushless);
-    private SparkMax rightMotor = new SparkMax(CanIds.LEFT_GUIDE, MotorType.kBrushless);
+    
+    private DAStatus currStatus = DAStatus.INIT;
+    private DriveTrain driveTrain;
+    private Pose2d robotPose;
+    private CoralPhase currCoralPhase;
+    private Coral coral;
 
-   // private double pivot_gearRatio = (2.89 * 5.23 * 5.23);
-   // private double pivotShaftDiameter = 0.75;
-    private double leftCurPos = 0.0;
-    private double rightCurrPos = 0.0;
-   // private double pivotCmdPos = GuidePos.START.guideAngle;
-    private final double pivotPosTol = 0.1;
 
-    private GuidePos rightTargetPos = GuidePos.ZERO;
-    private GuidePos leftTargetPos = GuidePos.ZERO;
+    
 
-    private final ClosedLoopSlot GUIDE_CLOSED_LOOP_SLOT = ClosedLoopSlot.kSlot0;
-    private ClosedLoopSlot GuideCurrentSlot = GUIDE_CLOSED_LOOP_SLOT;
-    public GuidePos leftTarget = DiverAssist.GuidePos.START;
-    public GuidePos rightTarget = DiverAssist.GuidePos.START;
+    
 
     public DiverAssist() {
-        configMotors();
+        
 
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        leftCurPos = leftMotor.getEncoder().getPosition();
-        rightCurrPos = rightMotor.getEncoder().getPosition();
+        switch (currStatus)  {
+            case RUNNING:
+                getSubsystemState();
+                break;
+            case INIT:
+                getSubsystems();
+                getSubsystemState();
+                currStatus = DAStatus.RUNNING;
+                break;
+        
+            default:
+                break;
+        }
 
         // Arm direction is positive when cmdPos is greater than curPos
         /*
@@ -65,8 +77,56 @@ public class DiverAssist extends SubsystemBase {
 
     public void disablePeriodic() {
 
-        rightMotor.getClosedLoopController().setIAccum(0);
-        leftMotor.getClosedLoopController().setIAccum(0);
+        
+    }
+
+    private void getSubsystems() {
+        driveTrain = RobotContainer.getInstance().m_driveTrain;
+
+        coral = RobotContainer.getInstance().m_Coral;
+
+    }
+
+    private void getSubsystemState() {
+        robotPose = driveTrain.getPose();
+
+        currCoralPhase = coral.getCoralPhase();
+        
+    }
+
+    private void determineCurrentAction() {
+        // Determine what action we need to take based on the current state of the
+        // subsystems
+
+    }
+
+    private void determinePossibleTargets(){
+        // Determine what targets are closest based on the current state of the
+        // subsystems.
+
+    }
+
+    private void determineBestTarget() {
+        // Determine what target is best based on the current state of the subsystems.
+
+    }
+
+    private void setDriveTarget() {
+        // Set the target for the drivebase based on the current state of the
+        // subsystems.
+
+    }
+
+    private void determineLikelyActions() {
+        // Determine what actions are possible based on the current state of the
+        // subsystems.
+
+    }
+
+    private void executeAction() {
+        // Execute the action determined by the current state of the subsystems.
+        // This may be a simple command or a complex sequence of commands.
+        // Need to set articulation and drivebase targets.
     }
 
     // Put methods for controlling this subsystem
@@ -74,117 +134,60 @@ public class DiverAssist extends SubsystemBase {
 
     // expose the current position
     public void autonInit() {
-        setRightCmdPos(GuidePos.START);
-        setLeftCmdPos(GuidePos.START); //left currently not on the robot.
-    }
 
-    public double getLeftCurPos() {
-        return leftCurPos;
-    }
-
-    public double getLeftTargetPos() {
-        return leftTargetPos.guideAngle;
-    }
-
-    public double getRightTargetPos() {
-        return rightTargetPos.guideAngle;
-    }
-
-    public double getRightCurPos() {
-        return rightCurrPos;
-    }
-
-    // Set the new ArmCommandPos
-    public void setLeftCmdPos(GuidePos newPos) {
-        leftTargetPos = newPos;
-
-        leftMotor.getClosedLoopController().setReference(newPos.guideAngle,
-        ControlType.kPosition, GuideCurrentSlot);
-    }
-
-    public void setRightCmdPos(GuidePos newPos) {
-        rightTargetPos = newPos;
-
-        rightMotor.getClosedLoopController().setReference(newPos.guideAngle,
-                ControlType.kPosition, GuideCurrentSlot);
-    }
-
-    public boolean isLeftAtTarget(GuidePos tpos) {
-
-        return (CommonLogic.isInRange(getLeftCurPos(), tpos.getGuidePos(), 2 * pivotPosTol));
-    }
-
-    public boolean isRightAtTarget(GuidePos tpos) {
-
-        return (CommonLogic.isInRange(getRightCurPos(), tpos.getGuidePos(), 2 * pivotPosTol));
-    }
-
-    public void leftRightOut() {
-        setLeftCmdPos(GuidePos.OUT);
-        setRightCmdPos(GuidePos.OUT);
-
-    }
-    // configure the elevator motor spark
-
-    private void configMotors() {
-
-        SparkMaxConfig config = new SparkMaxConfig();
-        config.encoder.positionConversionFactor(1);
-        config.inverted(true);
-        config.softLimit.forwardSoftLimit(50);
-        config.softLimit.forwardSoftLimitEnabled(true);
-        config.softLimit.reverseSoftLimit(-1);
-        config.softLimit.reverseSoftLimitEnabled(true);
-        config.idleMode(IdleMode.kBrake);
-        config.limitSwitch.forwardLimitSwitchEnabled(false);
-        config.limitSwitch.reverseLimitSwitchEnabled(false);
-       // config.hardLimit.enableForward(false);
-        //// In Velocity Values
-        config.closedLoop.maxMotion.maxAcceleration(30000, GUIDE_CLOSED_LOOP_SLOT);
-        config.closedLoop.maxMotion.maxVelocity(6000, GUIDE_CLOSED_LOOP_SLOT);
-        config.closedLoop.pidf(0.12, 0.0, 0.0, 0.0, GUIDE_CLOSED_LOOP_SLOT);
-
-        //// Out Velocity Values
-
-        // config.smartCurrentLimit(50);
-        config.smartCurrentLimit(10, 20);
-
-        /*
-         * AbsoluteEncoderConfig absEncConfig = new AbsoluteEncoderConfig();
-         * absEncConfig.zeroOffset(0.649);
-         * absEncConfig.inverted(false);
-         * absEncConfig.positionConversionFactor(360);
-         * 
-         * config.absoluteEncoder.apply(absEncConfig);
-         */
-        leftMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-        config.inverted(false);
-        rightMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }
 
-    public enum Fang {
-        LEFT,
-        RIGHT;
-
+    public Targets[] getTargets(String type) {
+    List<Targets> result = new ArrayList<Targets>();
+    for (Targets targets : Targets.values()) {
+        if (targets.getTargetType() == type) {
+            result.add(targets);
+        }
     }
+    return result.toArray(new Targets[result.size()]);
+}
 
-    public enum GuidePos {
-        ZERO(0.0),
-        START(1.1),
-        OUT(41);
 
-        private final double guideAngle;
+    public enum DAStatus {
+        INIT, // Initialization is averything up to the point of where we are connected to our subsystems.
+        RUNNING, // Cheaking the data and running it.
+        STOP; // The end when connection is lost.
 
+       // private final double guideAngle;
+        /* 
         GuidePos(double pivotAngle) {
             this.guideAngle = pivotAngle;
         }
-
+        
         public double getGuidePos() {
             return guideAngle;
         }
+        */
+    }
 
+    public enum Targets {
+        PICKUPLEFT(new Pose2d(6.0, 1.5, new Rotation2d(Math.toRadians(0.0))), "PICKUP"),
+        PICKUPRIGHT(new Pose2d(6.0, 5.5, new Rotation2d(Math.toRadians(0.0))), "PICKUP"),
+        ID8LEFT(new Pose2d(12.0, 1.5, new Rotation2d(Math.toRadians(0.0))), "DEPLOY"),
+        ID8RIGHT(new Pose2d(12.0, 5.5, new Rotation2d(Math.toRadians(0.0))), "DEPLOY"),
+        CLIMBLEFT(new Pose2d(18.0, 1.5, new Rotation2d(Math.toRadians(0.0))),"END");
+
+        private final Pose2d targetPose;
+        private final String targetType;
+        Targets(Pose2d targetPose, String targetType) {
+            this.targetPose = targetPose;
+            this.targetType = targetType;
+
+        }
+
+        public Pose2d getTargetPose() {
+            return targetPose;
+        }
+
+        public String getTargetType() {
+            return targetType;
+        }
     }
 
 }

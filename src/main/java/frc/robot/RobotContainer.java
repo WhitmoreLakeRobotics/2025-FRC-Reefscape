@@ -23,7 +23,7 @@ import frc.robot.commands.algae.AlgaeCmd;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.AlgaeIntake.PivotPos;
 import frc.robot.subsystems.ElevatorAndArm.ElevAndArmPos;
-import frc.robot.subsystems.DiverAssist.Fang;
+import frc.robot.subsystems.Fangs.Fang;
 import swervelib.SwerveInputStream;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -89,7 +89,7 @@ public class RobotContainer {
   public final ElevatorAndArm m_elevatorAndArm = new ElevatorAndArm();
   public final Coral m_Coral = new Coral();
   public final AlgaeIntake m_AlgaeIntake = new AlgaeIntake();
-  public final DiverAssist m_Fangs = new DiverAssist();
+  public final frc.robot.subsystems.Fangs m_Fangs = new Fangs();
   public final Climb m_Climb = new Climb();
   // Joysticks
   private final CommandXboxController Articulator = new CommandXboxController(1);
@@ -388,8 +388,8 @@ public class RobotContainer {
     SmartDashboard.putNumber("Left Guid Target", m_Fangs.getLeftTargetPos());
     SmartDashboard.putNumber("Right Guide Pos", m_Fangs.getRightCurPos());
     SmartDashboard.putNumber("Right Guid Target", m_Fangs.getRightTargetPos());
-    SmartDashboard.putBoolean("Right Fang", m_Fangs.isRightAtTarget(DiverAssist.GuidePos.OUT));
-    SmartDashboard.putBoolean("Left Fang", m_Fangs.isLeftAtTarget(DiverAssist.GuidePos.OUT));
+    SmartDashboard.putBoolean("Right Fang", m_Fangs.isRightAtTarget(Fangs.GuidePos.OUT));
+    SmartDashboard.putBoolean("Left Fang", m_Fangs.isLeftAtTarget(Fangs.GuidePos.OUT));
     SmartDashboard.putBoolean("holdCoral", m_Coral.getIsHolding());
     SmartDashboard.putNumber("Coral Cur Pos", m_Coral.getCoralCurPos());
     SmartDashboard.putString("CoralPhase", m_Coral.getCoralPhaseString());

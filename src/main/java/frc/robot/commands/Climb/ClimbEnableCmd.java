@@ -17,6 +17,7 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.DiverAssist;
 import frc.robot.subsystems.Coral.CoralPhase;
 import frc.robot.subsystems.ElevatorAndArm.ElevAndArmPos;
+import frc.robot.subsystems.Fangs;
 
 import java.util.function.DoubleSupplier;
 
@@ -70,7 +71,7 @@ public class ClimbEnableCmd extends Command {
     public void execute() {
         if (m_RobotContainer.m_elevatorAndArm.isElevatorAndArmAtTarget(ElevAndArmPos.OUTOFWAY) &&
         /* m_RobotContainer.m_Fangs.isLeftAtTarget(Fangs.GuidePos.OUT)&& */ m_RobotContainer.m_Fangs
-                .isRightAtTarget(DiverAssist.GuidePos.OUT)) {
+                .isRightAtTarget(Fangs.GuidePos.OUT)) {
             m_RobotContainer.m_Climb.deployClimb();
             bDone = true;
             end(false);
