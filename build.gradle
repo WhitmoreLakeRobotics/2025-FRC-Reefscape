@@ -1,6 +1,7 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2025.3.2"
+    id("org.hidetake.ssh") version "2.12.0"
 }
 
 java {
@@ -106,7 +107,44 @@ tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
 }
 
+
+
+
+repositories {
+    mavenCentral()
+}
+
+remotes {
+    rioServer {
+        host = '10.36.68.1'
+        user = 'admin'
+        password = '' // Or use an identity file for better security
+        // identity = file('~/.ssh/id_rsa')
+    }
+}
+
+tasks.register('rebootRio') {
+    description 'Runs a shutdown -r now command on the RoboRio via SSH'
+    // remotes myServer // Reference the remote defined above
+
+    // Define the actions to perform
+    doLast {
+        ssh.run {
+            session(remotes.rioServer) {
+                // Execute a single command
+                execute 'sleep 3; sudo shutdown -r now'
+                // Execute multiple commands or a script
+                //execute '''
+                //    cd /app
+                //    ./gradlew clean build
+                //'''
+
+            }
+        }
+    }
+}
+
 // make the rioRebot execute following the deploy task
 tasks.named('deploy').configure {
-    finalizedBy 'rioReboot:rebootRio'
+    finalizedBy 'rebootRio'
 }
